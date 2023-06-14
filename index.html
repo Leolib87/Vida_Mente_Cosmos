@@ -1,134 +1,86 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Visualizaciones D3.js</title>
+  <meta charset="utf-8">
+  <title>Gráfico Treemap con D3.js</title>
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <style>
-    /* Estilos CSS para el contenedor del treemap */
-    #treemap-container {
-      width: 600px;
-      height: 400px;
-    }
-
-    /* Estilos CSS para el contenedor de la visualización de redes */
-    #network-container {
-      width: 600px;
-      height: 400px;
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
     }
   </style>
 </head>
-
 <body>
-  <h1>Visualizaciones D3.js</h1>
-
-  <h2>Treemap</h2>
-  <div id="treemap-container"></div>
-
-  <h2>Visualización de Redes</h2>
-  <div id="network-container"></div>
+  <h1>Gráfico Treemap con D3.js</h1>
+  <div id="chart"></div>
 
   <script>
-    // Datos simulados para el treemap
-    const treemapData = {
-      name: 'Científicos',
-      children: [
-        { name: 'Albert Einstein', citas: 1000 },
-        { name: 'Isaac Newton', citas: 900 },
-        { name: 'Marie Curie', citas: 800 },
-        { name: 'Galileo Galilei', citas: 700 },
-        { name: 'Nikola Tesla', citas: 600 },
-        { name: 'Charles Darwin', citas: 500 },
-        { name: 'Ada Lovelace', citas: 400 },
-        { name: 'Stephen Hawking', citas: 300 },
-        { name: 'Alan Turing', citas: 200 },
-        { name: 'Rosalind Franklin', citas: 100 }
-      ]
-    };
+// Datos de ejemplo para los científicos famosos y el número de publicaciones
+var data = [
+  { name: "Albert Einstein", publications: 300 },
+  { name: "Marie Curie", publications: 200 },
+  { name: "Isaac Newton", publications: 250 },
+  { name: "Stephen Hawking", publications: 150 },
+  { name: "Galileo Galilei", publications: 180 },
+];
 
-    // Crear el treemap
-    const treemapContainer = d3.select('#treemap-container');
-    const treemapWidth = parseInt(treemapContainer.style('width'));
-    const treemapHeight = parseInt(treemapContainer.style('height'));
+// Configuración del tamaño del gráfico
+var width = 800;
+var height = 400;
 
-    const treemap = d3.treemap()
-      .size([treemapWidth, treemapHeight]);
+// Definir una escala de colores
+var colorScale = d3.scaleOrdinal(d3.schemeCategory10);
 
-    const root = d3.hierarchy(treemapData)
-      .sum(d => d.citas);
+// Crear el elemento SVG
+var svg = d3.select("#chart")
+  .append("svg")
+  .attr("width", width)
+  .attr("height", height);
 
-    treemap(root);
+// Crear la jerarquía de datos
+var root = d3.hierarchy({ children: data })
+  .sum(d => d.publications);
 
-    treemapContainer.selectAll('rect')
-      .data(root.leaves())
-      .join('rect')
-      .attr('x', d => d.x0)
-      .attr('y', d => d.y0)
-      .attr('width', d => d.x1 - d.x0)
-      .attr('height', d => d.y1 - d.y0)
-      .attr('fill', 'steelblue')
-      .attr('stroke', 'white');
+// Crear el generador de treemap
+var treemap = d3.treemap()
+  .size([width, height]);
 
-    treemapContainer.selectAll('text')
-      .data(root.leaves())
-      .join('text')
-      .attr('x', d => d.x0 + 5)
-      .attr('y', d => d.y0 + 15)
-      .text(d => d.data.name)
-      .attr('fill', 'white');
+// Generar el treemap
+treemap(root);
 
-    // Datos simulados para la visualización de redes
-    const networkData = {
-      nodes: [
-        { id: 'Albert Einstein' },
-        { id: 'Isaac Newton' },
-        { id: 'Marie Curie' },
-        { id: 'Galileo Galilei' },
-        { id: 'Nikola Tesla' }
-      ],
-      links: [
-        { source: 'Albert Einstein', target: 'Isaac Newton' },
-        { source: 'Albert Einstein', target: 'Marie Curie' },
-        { source: 'Marie Curie', target: 'Galileo Galilei' },
-        { source: 'Nikola Tesla', target: 'Galileo Galilei' },
-        { source: 'Galileo Galilei', target: 'Isaac Newton' }
-      ]
-    };
+// Crear los rectángulos para representar los datos
+svg.selectAll("rect")
+  .data(root.leaves())
+  .enter()
+  .append("rect")
+  .attr("x", d => d.x0)
+  .attr("y", d => d.y0)
+  .attr("width", d => d.x1 - d.x0)
+  .attr("height", d => d.y1 - d.y0)
+  .attr("fill", (d, i) => colorScale(i)); // Asignar color en función del índice
 
-    // Crear la visualización de redes
-    const networkContainer = d3.select('#network-container');
-    const networkWidth = parseInt(networkContainer.style('width'));
-    const networkHeight = parseInt(networkContainer.style('height'));
+// Agregar etiquetas de texto para el nombre y el porcentaje
+svg.selectAll("text")
+  .data(root.leaves())
+  .enter()
+  .append("text")
+  .attr("x", d => d.x0 + 5)
+  .attr("y", d => d.y0 + 20)
+  .text(d => d.data.name)
+  .attr("fill", "white");
 
-    const simulation = d3.forceSimulation(networkData.nodes)
-      .force('link', d3.forceLink(networkData.links).id(d => d.id))
-      .force('charge', d3.forceManyBody().strength(-100))
-      .force('center', d3.forceCenter(networkWidth / 2, networkHeight / 2));
+svg.selectAll(".percentage")
+  .data(root.leaves())
+  .enter()
+  .append("text")
+  .attr("class", "percentage")
+  .attr("x", d => d.x0 + 5)
+  .attr("y", d => d.y0 + 40)
+  .text(d => d.data.publications + " (" + ((d.x1 - d.x0) * (d.y1 - d.y0) * 100 / (width * height)).toFixed(2) + "%)")
+  .attr("fill", "black");
 
-    const links = networkContainer.selectAll('line')
-      .data(networkData.links)
-      .join('line')
-      .attr('stroke', 'gray');
 
-    const nodes = networkContainer.selectAll('circle')
-      .data(networkData.nodes)
-      .join('circle')
-      .attr('r', 8)
-      .attr('fill', 'steelblue');
-
-    simulation.on('tick', () => {
-      links
-        .attr('x1', d => d.source.x)
-        .attr('y1', d => d.source.y)
-        .attr('x2', d => d.target.x)
-        .attr('y2', d => d.target.y);
-
-      nodes
-        .attr('cx', d => d.x)
-        .attr('cy', d => d.y);
-    });
   </script>
 </body>
-
 </html>
