@@ -2,30 +2,21 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Treemap y Gráfico de Redes con D3.js</title>
+  <title>Gráfico Treemap con D3.js</title>
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <style>
-    #treemap {
-      width: 400px;
-      height: 400px;
-      float: left;
-    }
-
-    #network {
-      width: 600px;
-      height: 400px;
-      float: left;
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
     }
   </style>
 </head>
 <body>
-  <h1>Treemap y Gráfico de Redes con D3.js</h1>
-
-  <div id="treemap"></div>
-  <div id="network"></div>
+  <h1>Gráfico Treemap con D3.js</h1>
+  <div id="chart"></div>
 
   <script>
-    // Datos de ejemplo para los científicos famosos y el número de publicaciones
+// Datos de ejemplo para los científicos famosos y el número de publicaciones
 var data = [
   { name: "Albert Einstein", publications: 300 },
   { name: "Marie Curie", publications: 200 },
@@ -88,8 +79,9 @@ svg.selectAll(".percentage")
   .attr("y", d => d.y0 + 40)
   .text(d => d.data.publications + " (" + ((d.x1 - d.x0) * (d.y1 - d.y0) * 100 / (width * height)).toFixed(2) + "%)")
   .attr("fill", "black");
+
+
   </script>
-  <script src="network.js"></script>
 </body>
 </html>
 
