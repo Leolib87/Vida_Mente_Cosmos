@@ -3,182 +3,80 @@
 <head>
   <meta charset="utf-8">
   <title>Varios Gráficos con D3.js</title>
-    <style>
+  <script src="https://d3js.org/d3.v6.min.js"></script>
+  <style>
     .chart {
       margin-bottom: 20px;
     }
   </style>
+  <script src="https://d3js.org/d3.v6.min.js"></script>
+  <script src="script2.js"></script>
+  <script src="script3.js"></script>
 </head>
 <body>
   <h1>Varios Gráficos con D3.js</h1>
 
-  <div id="chart1" class="chart">
-    <script>
-    // Datos de ejemplo: científicos famosos y su número de citas
-    const scientists = [
-      { name: "Albert Einstein", citations: 3156 },
-      { name: "Marie Curie", citations: 2784 },
-      { name: "Isaac Newton", citations: 2142 },
-      { name: "Charles Darwin", citations: 1921 },
-      { name: "Nikola Tesla", citations: 1756 },
-      { name: "Galileo Galilei", citations: 1567 },
-      { name: "Stephen Hawking", citations: 1432 },
-      { name: "Ada Lovelace", citations: 12310 }
-    ];
+  <div id="chart1" class="chart"> 
+  /div>
 
-    // Crear los nodos y enlaces del gráfico
-    const nodes = scientists.map(d => ({ name: d.name, citations: d.citations }));
-    const links = scientists.map(d => ({ source: 0, target: scientists.indexOf(d) }));
-
-    // Crear el contenedor SVG
-    const svg = d3.select("svg"),
-      width = +svg.attr("width"),
-      height = +svg.attr("height");
-
-    // Escala para el tamaño de los nodos basado en el número de citas
-    const scale = d3.scaleLinear()
-      .domain([0, d3.max(scientists, d => d.citations)])
-      .range([5, 20]);
-
-    // Crear la simulación de la fuerza de la red
-    const simulation = d3.forceSimulation(nodes)
-      .force("charge", d3.forceManyBody().strength(-100))
-      .force("link", d3.forceLink(links).distance(100).id(d => d.index))
-      .force("center", d3.forceCenter(width / 2, height / 2));
-
-    // Crear los enlaces
-    const link = svg.append("g")
-      .attr("class", "links")
-      .selectAll("line")
-      .data(links)
-      .enter().append("line")
-      .attr("stroke-width", 1)
-      .attr("stroke", "#999")
-      .attr("stroke-opacity", 0.6);
-
-    // Crear los nodos
-    const node = svg.append("g")
-      .attr("class", "nodes")
-      .selectAll("circle")
-      .data(nodes)
-      .enter().append("circle")
-      .attr("r", d => scale(d.citations))
-      .attr("fill", "#ccc")
-      .attr("stroke", "#fff")
-      .attr("stroke-width", 1.5)
-      .call(d3.drag()
-        .on("start", dragstarted)
-        .on("drag", dragged)
-        .on("end", dragended));
-
-    // Agregar etiquetas a los nodos
-    const labels = svg.append("g")
-      .attr("class", "labels")
-      .selectAll("text")
-      .data(nodes)
-      .enter().append("text")
-      .attr("dy", 5)
-      .text(d => d.name);
-
-    // Definir las acciones de arrastrar los nodos
-    function dragstarted(event, d) {
-      if (!event.active) simulation.alphaTarget(0.3).restart();
-      d.fx = d.x;
-      d.fy = d.y;
-    }
-
-    function dragged(event, d) {
-      d.fx = event.x;
-      d.fy = event.y;
-    }
-
-    function dragended(event, d) {
-      if (!event.active) simulation.alphaTarget(0);
-      d.fx = null;
-      d.fy = null;
-    }
-
-    // Actualizar la simulación en cada iteración
-    simulation.on("tick", () => {
-      link
-        .attr("x1", d => d.source.x)
-        .attr("y1", d => d.source.y)
-        .attr("x2", d => d.target.x)
-        .attr("y2", d => d.target.y);
-
-      node
-        .attr("cx", d => d.x)
-        .attr("cy", d => d.y);
-
-      labels
-        .attr("x", d => d.x)
-        .attr("y", d => d.y);
-    });
-  </script>
-  
-  </div>
-  <div id="chart2" class="chart">
   <script>
     // Datos de ejemplo para los científicos famosos y el número de publicaciones
-var data = [
-  { name: "Albert Einstein", publications: 300 },
-  { name: "Marie Curie", publications: 200 },
-  { name: "Isaac Newton", publications: 250 },
-  { name: "Stephen Hawking", publications: 150 },
-  { name: "Galileo Galilei", publications: 180 },
-];
+    var data = [
+      { name: "Albert Einstein", publications: 300 },
+      { name: "Marie Curie", publications: 200 },
+      { name: "Isaac Newton", publications: 250 },
+      { name: "Stephen Hawking", publications: 150 },
+      { name: "Galileo Galilei", publications: 180 },
+    ];
 
-// Configuración del tamaño del gráfico
-var width = 800;
-var height = 400;
+    // Configuración del tamaño del gráfico
+    var width = 800;
+    var height = 400;
 
-// Definir una escala de colores
-var colorScale = d3.scaleOrdinal(d3.schemeCategory10);
+    // Crear el elemento SVG
+    var svg = d3.select("#chart")
+      .append("svg")
+      .attr("width", width)
+      .attr("height", height);
 
-// Crear el elemento SVG
-var svg = d3.select("#chart")
-  .append("svg")
-  .attr("width", width)
-  .attr("height", height);
+    // Crear la jerarquía de datos
+    var root = d3.hierarchy({ children: data })
+      .sum(d => d.publications);
 
-// Crear la jerarquía de datos
-var root = d3.hierarchy({ children: data })
-  .sum(d => d.publications);
+    // Crear el generador de treemap
+    var treemap = d3.treemap()
+      .size([width, height]);
 
-// Crear el generador de treemap
-var treemap = d3.treemap()
-  .size([width, height]);
+    // Generar el treemap
+    treemap(root);
 
-// Generar el treemap
-treemap(root);
+    // Crear los rectángulos para representar los datos
+    svg.selectAll("rect")
+      .data(root.leaves())
+      .enter()
+      .append("rect")
+      .attr("x", d => d.x0)
+      .attr("y", d => d.y0)
+      .attr("width", d => d.x1 - d.x0)
+      .attr("height", d => d.y1 - d.y0)
+      .attr("fill", "steelblue");
 
-// Crear los rectángulos para representar los datos
-svg.selectAll("rect")
-  .data(root.leaves())
-  .enter()
-  .append("rect")
-  .attr("x", d => d.x0)
-  .attr("y", d => d.y0)
-  .attr("width", d => d.x1 - d.x0)
-  .attr("height", d => d.y1 - d.y0)
-  .attr("fill", (d, i) => colorScale(i)); // Asignar color en función del índice
-
-// Agregar etiquetas de texto
-svg.selectAll("text")
-  .data(root.leaves())
-  .enter()
-  .append("text")
-  .attr("x", d => d.x0 + 5)
-  .attr("y", d => d.y0 + 20)
-  .text(d => d.data.name)
-  .attr("fill", "white");
-  </script>  
-  
-  </div>
-  <div id="chart3" class="chart"></div>
-
-  <script src="https://d3js.org/d3.v6.min.js"></script>
-  <script src="https://d3js.org/d3.v7.min.js"></script>
-  <script src="script3.js"></script>
+    // Agregar etiquetas de texto
+    svg.selectAll("text")
+      .data(root.leaves())
+      .enter()
+      .append("text")
+      .attr("x", d => d.x0 + 5)
+      .attr("y", d => d.y0 + 20)
+      .text(d => d.data.name)
+      .attr("fill", "white");
+  </script>
 </body>
 </html>
+    </div>
+  <div id="chart2" class="chart"></div>
+  <div id="chart3" class="chart"></div>
+</body>
+</html>
+
+
