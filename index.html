@@ -1,86 +1,101 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
   <title>Gráfico Treemap con D3.js</title>
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <style>
-    body {
+    text {
       font-family: Arial, sans-serif;
-      margin: 20px;
     }
   </style>
 </head>
 <body>
-  <h1>Gráfico Treemap con D3.js</h1>
   <div id="chart"></div>
 
   <script>
-// Datos de ejemplo para los científicos famosos y el número de publicaciones
-var data = [
-  { name: "Wataka", publications: 30 },
-  { name: "Marie Curie", publications: 200 },
-  { name: "Isaac Newton", publications: 250 },
-  { name: "Stephen Hawking", publications: 150 },
-  { name: "Galileo Galilei", publications: 180 },
-];
+    // Datos de ejemplo
+    var data = [
+      { name: "Albert Einstein", citations: 1000 },
+      { name: "Marie Curie", citations: 800 },
+      { name: "Isaac Newton", citations: 700 },
+      { name: "Galileo Galilei", citations: 600 },
+      { name: "Nikola Tesla", citations: 550 },
+      { name: "Charles Darwin", citations: 500 },
+      { name: "Louis Pasteur", citations: 450 },
+      { name: "Thomas Edison", citations: 400 },
+      { name: "Max Planck", citations: 350 },
+      { name: "Ada Lovelace", citations: 300 },
+      { name: "Stephen Hawking", citations: 250 },
+      { name: "Leonardo da Vinci", citations: 200 },
+      { name: "Niels Bohr", citations: 150 },
+      { name: "Marie Curie II", citations: 100 },
+      { name: "Alan Turing", citations: 90 },
+      { name: "Rosalind Franklin", citations: 80 },
+      { name: "Jane Goodall", citations: 70 },
+      { name: "Edwin Hubble", citations: 60 },
+      { name: "James Watson", citations: 50 },
+      { name: "Francis Crick", citations: 40 },
+      { name: "Alexander Fleming", citations: 30 },
+      { name: "Carl Linnaeus", citations: 20 }
+      // Agrega más datos aquí...
+    ];
 
-// Configuración del tamaño del gráfico
-var width = 800;
-var height = 400;
+    // Configuración del tamaño del gráfico
+    var width = 800;
+    var height = 600;
 
-// Definir una escala de colores
-var colorScale = d3.scaleOrdinal(d3.schemeCategory10);
+    // Crea el layout de treemap
+    var treemap = d3.treemap()
+      .size([width, height])
+      .padding(1)
+      .round(true);
 
-// Crear el elemento SVG
-var svg = d3.select("#chart")
-  .append("svg")
-  .attr("width", width)
-  .attr("height", height);
+    // Crea un contenedor SVG para el gráfico
+    var svg = d3.select("#chart")
+      .append("svg")
+      .attr("width", width)
+      .attr("height", height);
 
-// Crear la jerarquía de datos
-var root = d3.hierarchy({ children: data })
-  .sum(d => d.publications);
+    // Convierte los datos en una jerarquía de nodos
+    var root = d3.hierarchy({ children: data })
+      .sum(function(d) { return d.citations; });
 
-// Crear el generador de treemap
-var treemap = d3.treemap()
-  .size([width, height]);
+    // Genera los nodos del treemap
+    treemap(root);
 
-// Generar el treemap
-treemap(root);
+    // Escala de colores
+    var colorScale = d3.scaleOrdinal(d3.schemeCategory10);
 
-// Crear los rectángulos para representar los datos
-svg.selectAll("rect")
-  .data(root.leaves())
-  .enter()
-  .append("rect")
-  .attr("x", d => d.x0)
-  .attr("y", d => d.y0)
-  .attr("width", d => d.x1 - d.x0)
-  .attr("height", d => d.y1 - d.y0)
-  .attr("fill", (d, i) => colorScale(i)); // Asignar color en función del índice
+    // Crea los rectángulos del treemap
+    svg.selectAll("rect")
+      .data(root.leaves())
+      .enter()
+      .append("rect")
+      .attr("x", function(d) { return d.x0; })
+      .attr("y", function(d) { return d.y0; })
+      .attr("width", function(d) { return d.x1 - d.x0; })
+      .attr("height", function(d) { return d.y1 - d.y0; })
+      .attr("fill", function(d, i) { return colorScale(i); });
 
-// Agregar etiquetas de texto para el nombre y el porcentaje
-svg.selectAll("text")
-  .data(root.leaves())
-  .enter()
-  .append("text")
-  .attr("x", d => d.x0 + 5)
-  .attr("y", d => d.y0 + 20)
-  .text(d => d.data.name)
-  .attr("fill", "white");
-
-svg.selectAll(".percentage")
-  .data(root.leaves())
-  .enter()
-  .append("text")
-  .attr("class", "percentage")
-  .attr("x", d => d.x0 + 5)
-  .attr("y", d => d.y0 + 40)
-  .text(d => d.data.publications + " (" + ((d.x1 - d.x0) * (d.y1 - d.y0) * 100 / (width * height)).toFixed(2) + "%)")
-  .attr("fill", "black");
-
+    // Agrega etiquetas de texto a los rectángulos
+    svg.selectAll("text")
+      .data(root.leaves())
+      .enter()
+      .append("text")
+      .attr("x", function(d) { return d.x0 + 5; })
+      .attr("y", function(d) { return d.y0 + 15; })
+      .text(function(d) {
+        var percentage = (d.data.citations / root.value) * 100;
+        return d.data.name + " (" + percentage.toFixed(2) + "%)";
+      })
+      .attr("fill", "white")
+      .style("font-size", function(d) {
+        var fontSize = Math.min(Math.sqrt((d.x1 - d.x0) * (d.y1 - d.y0)) / 2, 5);
+        return fontSize + "px";
+      });
 
   </script>
 </body>
 </html>
+
+
