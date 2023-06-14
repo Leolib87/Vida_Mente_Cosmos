@@ -1,87 +1,57 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
-  <title>Gráfico Treemap con D3.js</title>
-  <script src="https://d3js.org/d3.v7.min.js"></script>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-    }
-  </style>
-</head>
-<body>
-  <h1>Gráfico Treemap con D3.js</h1>
-  <div id="chart"></div>
+  <head>
+    <meta charset="utf-8" />
+    <title>Gráficos con D3.js</title>
+    <style>
+      #treemap {
+        margin-bottom: 20px;
+      }
 
-  <script>
-// Datos de ejemplo para los científicos famosos y el número de publicaciones
-var data = [
-  { name: "Albert Einstein", publications: 300 },
-  { name: "Marie Curie", publications: 200 },
-  { name: "Isaac Newton", publications: 250 },
-  { name: "Stephen Hawking", publications: 150 },
-  { name: "Galileo Galilei", publications: 180 },
-];
+      .node {
+        background: steelblue;
+        width: 10px;
+        height: 10px;
+        position: absolute;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Gráficos con D3.js</h1>
+    <div id="treemap"></div>
+    <div id="network"></div>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script>
+      // Datos de ejemplo (reemplaza con tus propios datos)
+      const datos = [
+        { cientifico: 'Albert Einstein', citas: 100 },
+        { cientifico: 'Marie Curie', citas: 80 },
+        { cientifico: 'Isaac Newton', citas: 70 },
+        // Agrega más datos...
+      ];
 
-// Configuración del tamaño del gráfico
-var width = 800;
-var height = 400;
+      // Colores para los nodos
+      const colores = d3.scaleOrdinal(d3.schemeCategory10);
 
-// Definir una escala de colores
-var colorScale = d3.scaleOrdinal(d3.schemeCategory10);
+      // Gráfico Treemap
+      const treemap = d3.treemap().size([800, 400]).padding(1);
 
-// Crear el elemento SVG
-var svg = d3.select("#chart")
-  .append("svg")
-  .attr("width", width)
-  .attr("height", height);
+      d3.select('#treemap')
+        .selectAll('div')
+        .data(datos)
+        .enter()
+        .append('div')
+        .style('background', (d, i) => colores(i))
+        .style('width', (d) => d.citas * 10 + 'px')
+        .style('height', '20px')
+        .text((d) => d.cientifico);
 
-// Crear la jerarquía de datos
-var root = d3.hierarchy({ children: data })
-  .sum(d => d.publications);
+      // Gráfico de Redes
+      // Código para crear el gráfico de redes con D3.js
 
-// Crear el generador de treemap
-var treemap = d3.treemap()
-  .size([width, height]);
+      // ... Agrega tu código para el gráfico de redes ...
 
-// Generar el treemap
-treemap(root);
-
-// Crear los rectángulos para representar los datos
-svg.selectAll("rect")
-  .data(root.leaves())
-  .enter()
-  .append("rect")
-  .attr("x", d => d.x0)
-  .attr("y", d => d.y0)
-  .attr("width", d => d.x1 - d.x0)
-  .attr("height", d => d.y1 - d.y0)
-  .attr("fill", (d, i) => colorScale(i)); // Asignar color en función del índice
-
-// Agregar etiquetas de texto para el nombre y el porcentaje
-svg.selectAll("text")
-  .data(root.leaves())
-  .enter()
-  .append("text")
-  .attr("x", d => d.x0 + 5)
-  .attr("y", d => d.y0 + 20)
-  .text(d => d.data.name)
-  .attr("fill", "white");
-
-svg.selectAll(".percentage")
-  .data(root.leaves())
-  .enter()
-  .append("text")
-  .attr("class", "percentage")
-  .attr("x", d => d.x0 + 5)
-  .attr("y", d => d.y0 + 40)
-  .text(d => d.data.publications + " (" + ((d.x1 - d.x0) * (d.y1 - d.y0) * 100 / (width * height)).toFixed(2) + "%)")
-  .attr("fill", "black");
-
-
-  </script>
-</body>
+    </script>
+  </body>
 </html>
 
