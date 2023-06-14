@@ -1,25 +1,134 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Formulario de contacto</title>
+  <meta charset="utf-8">
+  <title>Gráfico de Red de Científicos Famosos</title>
+  <script src="https://d3js.org/d3.v6.min.js"></script>
+  <style>
+    .link {
+      stroke: #999;
+      stroke-opacity: 0.6;
+    }
+
+    .node circle {
+      stroke: #fff;
+      stroke-width: 1.5px;
+    }
+
+    .node text {
+      font: 12px sans-serif;
+      pointer-events: none;
+      text-anchor: middle;
+      fill: #000;
+    }
+  </style>
 </head>
 <body>
-  <h1>Formulario de contacto</h1>
-  
-  <form action="procesar_formulario.php" method="POST">
-    <label for="nombre">Nombre:</label>
-    <input type="text" id="nombre" name="nombre" required>
-    <br>
-    
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" required>
-    <br>
-    
-    <label for="mensaje">Mensaje:</label>
-    <textarea id="mensaje" name="mensaje" rows="4" required></textarea>
-    <br>
-    
-    <input type="submit" value="Enviar">
-  </form>
+  <svg width="960" height="600"></svg>
+  <script>
+    // Datos de ejemplo: científicos famosos y su número de citas
+    const scientists = [
+      { name: "Albert Einstein", citations: 3156 },
+      { name: "Marie Curie", citations: 2784 },
+      { name: "Isaac Newton", citations: 2142 },
+      { name: "Charles Darwin", citations: 1921 },
+      { name: "Nikola Tesla", citations: 1756 },
+      { name: "Galileo Galilei", citations: 1567 },
+      { name: "Stephen Hawking", citations: 1432 },
+      { name: "Ada Lovelace", citations: 12310 }
+    ];
+
+    // Crear los nodos y enlaces del gráfico
+    const nodes = scientists.map(d => ({ name: d.name, citations: d.citations }));
+    const links = scientists.map(d => ({ source: 0, target: scientists.indexOf(d) }));
+
+    // Crear el contenedor SVG
+    const svg = d3.select("svg"),
+      width = +svg.attr("width"),
+      height = +svg.attr("height");
+
+    // Escala para el tamaño de los nodos basado en el número de citas
+    const scale = d3.scaleLinear()
+      .domain([0, d3.max(scientists, d => d.citations)])
+      .range([5, 20]);
+
+    // Crear la simulación de la fuerza de la red
+    const simulation = d3.forceSimulation(nodes)
+      .force("charge", d3.forceManyBody().strength(-100))
+      .force("link", d3.forceLink(links).distance(100).id(d => d.index))
+      .force("center", d3.forceCenter(width / 2, height / 2));
+
+    // Crear los enlaces
+    const link = svg.append("g")
+      .attr("class", "links")
+      .selectAll("line")
+      .data(links)
+      .enter().append("line")
+      .attr("stroke-width", 1)
+      .attr("stroke", "#999")
+      .attr("stroke-opacity", 0.6);
+
+    // Crear los nodos
+    const node = svg.append("g")
+      .attr("class", "nodes")
+      .selectAll("circle")
+      .data(nodes)
+      .enter().append("circle")
+      .attr("r", d => scale(d.citations))
+      .attr("fill", "#ccc")
+      .attr("stroke", "#fff")
+      .attr("stroke-width", 1.5)
+      .call(d3.drag()
+        .on("start", dragstarted)
+        .on("drag", dragged)
+        .on("end", dragended));
+
+    // Agregar etiquetas a los nodos
+    const labels = svg.append("g")
+      .attr("class", "labels")
+      .selectAll("text")
+      .data(nodes)
+      .enter().append("text")
+      .attr("dy", 5)
+      .text(d => d.name);
+
+    // Definir las acciones de arrastrar los nodos
+    function dragstarted(event, d) {
+      if (!event.active) simulation.alphaTarget(0.3).restart();
+      d.fx = d.x;
+      d.fy = d.y;
+    }
+
+    function dragged(event, d) {
+      d.fx = event.x;
+      d.fy = event.y;
+    }
+
+    function dragended(event, d) {
+      if (!event.active) simulation.alphaTarget(0);
+      d.fx = null;
+      d.fy = null;
+    }
+
+    // Actualizar la simulación en cada iteración
+    simulation.on("tick", () => {
+      link
+        .attr("x1", d => d.source.x)
+        .attr("y1", d => d.source.y)
+        .attr("x2", d => d.target.x)
+        .attr("y2", d => d.target.y);
+
+      node
+        .attr("cx", d => d.x)
+        .attr("cy", d => d.y);
+
+      labels
+        .attr("x", d => d.x)
+        .attr("y", d => d.y);
+    });
+  </script>
 </body>
 </html>
+
+
+
