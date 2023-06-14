@@ -1,101 +1,139 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Gráfico Treemap con D3.js</title>
-  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <title>Gráfico de Red con D3.js</title>
+  <script src="https://d3js.org/d3.v6.min.js"></script>
   <style>
-    text {
-      font-family: Arial, sans-serif;
+    .link {
+      stroke: black;
+      stroke-opacity: 0.6;
+    }
+
+    .node {
+      fill: steelblue;
+      stroke: #fff;
+      stroke-width: 2px;
+    }
+
+    .label {
+      font-size: 12px;
+      text-anchor: middle;
+      fill: white;
     }
   </style>
 </head>
 <body>
-  <div id="chart"></div>
+  <svg width="800" height="600"></svg>
 
   <script>
-    // Datos de ejemplo
-    var data = [
-      { name: "Albert Einstein", citations: 1000 },
-      { name: "Marie Curie", citations: 800 },
-      { name: "Isaac Newton", citations: 700 },
-      { name: "Galileo Galilei", citations: 600 },
-      { name: "Nikola Tesla", citations: 550 },
-      { name: "Charles Darwin", citations: 500 },
-      { name: "Louis Pasteur", citations: 450 },
-      { name: "Thomas Edison", citations: 400 },
-      { name: "Max Planck", citations: 350 },
-      { name: "Ada Lovelace", citations: 300 },
-      { name: "Stephen Hawking", citations: 250 },
-      { name: "Leonardo da Vinci", citations: 200 },
-      { name: "Niels Bohr", citations: 150 },
-      { name: "Marie Curie II", citations: 100 },
-      { name: "Alan Turing", citations: 90 },
-      { name: "Rosalind Franklin", citations: 80 },
-      { name: "Jane Goodall", citations: 70 },
-      { name: "Edwin Hubble", citations: 60 },
-      { name: "James Watson", citations: 50 },
-      { name: "Francis Crick", citations: 40 },
-      { name: "Alexander Fleming", citations: 30 },
-      { name: "Carl Linnaeus", citations: 20 }
-      // Agrega más datos aquí...
+    // Datos de ejemplo (puedes reemplazarlos con tus propios datos)
+    const data = [
+      { id: 1, name: "Científico 1", citations: 10, collaborations: [3,5,1 ] },
+      { id: 2, name: "Científico 2", citations: 15, collaborations: [1,5] },
+      { id: 3, name: "Científico 3", citations: 5, collaborations: [4,1] },
+      { id: 4, name: "Científico 4", citations: 8, collaborations: [5,1] },
+      { id: 5, name: "Científico 5", citations: 12, collaborations: [4,1] },
+      // ...agrega los datos de los otros científicos
     ];
 
-    // Configuración del tamaño del gráfico
-    var width = 800;
-    var height = 600;
+    const svg = d3.select("svg");
+    const width = +svg.attr("width");
+    const height = +svg.attr("height");
 
-    // Crea el layout de treemap
-    var treemap = d3.treemap()
-      .size([width, height])
-      .padding(1)
-      .round(true);
+    // Calcula el total de citas
+    const totalCitations = data.reduce((acc, d) => acc + d.citations, 0);
 
-    // Crea un contenedor SVG para el gráfico
-    var svg = d3.select("#chart")
-      .append("svg")
-      .attr("width", width)
-      .attr("height", height);
+    // Escala para el tamaño de los nodos (depende del número de citas)
+    const radiusScale = d3.scaleLinear()
+      .domain([0, d3.max(data, d => d.citations)])
+      .range([5, 30]);
 
-    // Convierte los datos en una jerarquía de nodos
-    var root = d3.hierarchy({ children: data })
-      .sum(function(d) { return d.citations; });
+    // Escala para el color de los nodos
+    const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
 
-    // Genera los nodos del treemap
-    treemap(root);
+    // Genera la simulación de fuerza de D3
+    const simulation = d3.forceSimulation(data)
+      .force("charge", d3.forceManyBody().strength(-50))
+      .force("center", d3.forceCenter(width / 2, height / 2))
+      .force("collision", d3.forceCollide().radius(d => radiusScale(d.citations) + 2))
+      .force("link", d3.forceLink().links(generateLinks(data)).id(d => d.id))
+      .on("tick", update);
 
-    // Escala de colores
-    var colorScale = d3.scaleOrdinal(d3.schemeCategory10);
+    // Crea los nodos del gráfico
+    const nodes = svg.selectAll(".node")
+      .data(data)
+      .enter().append("circle")
+      .attr("class", "node")
+      .attr("r", d => radiusScale(d.citations))
+      .attr("fill", (d, i) => colorScale(i))
+      .call(d3.drag()
+        .on("start", dragStarted)
+        .on("drag", dragged)
+        .on("end", dragEnded));
 
-    // Crea los rectángulos del treemap
-    svg.selectAll("rect")
-      .data(root.leaves())
-      .enter()
-      .append("rect")
-      .attr("x", function(d) { return d.x0; })
-      .attr("y", function(d) { return d.y0; })
-      .attr("width", function(d) { return d.x1 - d.x0; })
-      .attr("height", function(d) { return d.y1 - d.y0; })
-      .attr("fill", function(d, i) { return colorScale(i); });
+    // Crea las conexiones del gráfico
+    const links = svg.selectAll(".link")
+      .data(generateLinks(data))
+      .enter().append("line")
+      .attr("class", "link");
 
-    // Agrega etiquetas de texto a los rectángulos
-    svg.selectAll("text")
-      .data(root.leaves())
-      .enter()
-      .append("text")
-      .attr("x", function(d) { return d.x0 + 5; })
-      .attr("y", function(d) { return d.y0 + 15; })
-      .text(function(d) {
-        var percentage = (d.data.citations / root.value) * 100;
-        return d.data.name + " (" + percentage.toFixed(2) + "%)";
-      })
-      .attr("fill", "white")
-      .style("font-size", function(d) {
-        var fontSize = Math.min(Math.sqrt((d.x1 - d.x0) * (d.y1 - d.y0)) / 2, 5);
-        return fontSize + "px";
+    // Etiquetas para los nodos
+    const labels = svg.selectAll(".label")
+      .data(data)
+      .enter().append("text")
+      .attr("class", "label")
+      .text(d => d.name)
+      .attr("text-anchor", "middle")
+      .attr("dy", 4)
+      .attr("fill", "white");
+
+    // Actualiza la posición de los nodos, las conexiones y las etiquetas
+    function update() {
+      nodes.attr("cx", d => d.x)
+        .attr("cy", d => d.y);
+
+      links.attr("x1", d => d.source.x)
+        .attr("y1", d => d.source.y)
+        .attr("x2", d => d.target.x)
+        .attr("y2", d => d.target.y);
+
+      labels.attr("x", d => d.x)
+        .attr("y", d => d.y);
+    }
+
+    // Genera los enlaces (conexiones) entre los científicos
+    function generateLinks(data) {
+      const links = [];
+      data.forEach(d => {
+        d.collaborations.forEach(collaboratorId => {
+          const source = data.find(item => item.id === d.id);
+          const target = data.find(item => item.id === collaboratorId);
+          links.push({ source, target });
+        });
       });
+      return links;
+    }
 
+    // Funciones para la interacción de arrastrar los nodos
+    function dragStarted(event, d) {
+      if (!event.active) simulation.alphaTarget(0.3).restart();
+      d.fx = d.x;
+      d.fy = d.y;
+    }
+
+    function dragged(event, d) {
+      d.fx = event.x;
+      d.fy = event.y;
+    }
+
+    function dragEnded(event, d) {
+      if (!event.active) simulation.alphaTarget(0);
+      d.fx = null;
+      d.fy = null;
+    }
   </script>
 </body>
 </html>
+
 
 
