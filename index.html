@@ -20,7 +20,11 @@
 </head>
 <body>
   <h1>Treemap y Gráfico de Redes con D3.js</h1>
-  <div id="treemap">
+
+  <div id="treemap"></div>
+  <div id="network"></div>
+
+  <script src="treemap.js">
     // Datos de ejemplo para los científicos famosos y el número de publicaciones
 var data = [
   { name: "Albert Einstein", publications: 300 },
@@ -83,10 +87,9 @@ svg.selectAll(".percentage")
   .attr("x", d => d.x0 + 5)
   .attr("y", d => d.y0 + 40)
   .text(d => d.data.publications + " (" + ((d.x1 - d.x0) * (d.y1 - d.y0) * 100 / (width * height)).toFixed(2) + "%)")
-  .attr("fill", "black");</div>
-  <div id="network"></div>
-
-  <script src="treemap.js"></script>
+  .attr("fill", "black");
+  </script>
   <script src="network.js"></script>
 </body>
 </html>
+
