@@ -7,7 +7,7 @@
     .chart {
       width: 400px;
       height: 300px;
-      margin-bottom: 20px;
+      margin: 0 auto 20px;
     }
 
     .tooltip {
@@ -18,50 +18,70 @@
       font-size: 12px;
       pointer-events: none;
     }
+
+    /* Estilo para centrar los gráficos */
+    .chart-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      margin-bottom: 40px;
+    }
   </style>
 </head>
 <body>
-  <h1>Tipos de Gráficos en d3.js</h1>
+  <h1 style="text-align: center;">Tipos de Gráficos en d3.js</h1>
   
   <!-- Gráfico de Barras -->
-  <div id="barChart">
-    <h2>Gráfico de Barras</h2>
-    <p>El gráfico de barras es utilizado para representar la distribución de valores en diferentes categorías. Es ideal para comparar magnitudes entre categorías.</p>
+  <div id="barChart" class="chart-container">
+    <h2 style="text-align: center;">Gráfico de Barras</h2>
+    <p style="text-align: justify;">El gráfico de barras es utilizado para representar la distribución de valores en diferentes categorías. Es ideal para comparar magnitudes entre categorías.</p>
     <svg class="chart"></svg>
-    <footer>
+    <footer style="text-align: center;">
       <p>Pie de gráfico: Información adicional sobre el gráfico de barras.</p>
     </footer>
   </div>
 
   <!-- Gráfico de Líneas -->
-  <div id="lineChart">
-    <h2>Gráfico de Líneas</h2>
-    <p>El gráfico de líneas muestra la tendencia o cambio en los datos a lo largo del tiempo. Es útil para visualizar la evolución de una variable a lo largo de un período.</p>
+  <div id="lineChart" class="chart-container">
+    <h2 style="text-align: center;">Gráfico de Líneas</h2>
+    <p style="text-align: justify;">El gráfico de líneas muestra la tendencia o cambio en los datos a lo largo del tiempo. Es útil para visualizar la evolución de una variable a lo largo de un período.</p>
     <svg class="chart"></svg>
-    <footer>
+    <footer style="text-align: center;">
       <p>Pie de gráfico: Información adicional sobre el gráfico de líneas.</p>
     </footer>
   </div>
 
   <!-- Gráfico de Pastel -->
-  <div id="pieChart">
-    <h2>Gráfico de Pastel</h2>
-    <p>El gráfico de pastel representa la proporción de diferentes categorías en un conjunto de datos. Se utiliza para visualizar la distribución relativa de los datos y destacar las partes en relación con el todo.</p>
+  <div id="pieChart" class="chart-container">
+    <h2 style="text-align: center;">Gráfico de Pastel</h2>
+    <p style="text-align: justify;">El gráfico de pastel representa la proporción de diferentes categorías en un conjunto de datos. Se utiliza para visualizar la distribución relativa de los datos y destacar las partes en relación con el todo.</p>
     <svg class="chart"></svg>
-    <footer>
+    <footer style="text-align: center;">
       <p>Pie de gráfico: Información adicional sobre el gráfico de pastel.</p>
     </footer>
   </div>
 
   <!-- Gráfico de Área -->
-  <div id="areaChart">
-    <h2>Gráfico de Área</h2>
-    <p>El gráfico de área muestra la distribución y cambio en los valores a lo largo del tiempo. Es útil para visualizar patrones de comportamiento y comparar tendencias entre diferentes categorías.</p>
+  <div id="areaChart" class="chart-container">
+    <h2 style="text-align: center;">Gráfico de Área</h2>
+    <p style="text-align: justify;">El gráfico de área muestra la distribución y cambio en los valores a lo largo del tiempo. Es útil para visualizar patrones de comportamiento y comparar tendencias entre diferentes categorías.</p>
     <svg class="chart"></svg>
-    <footer>
+    <footer style="text-align: center;">
       <p>Pie de gráfico: Información adicional sobre el gráfico de área.</p>
     </footer>
   </div>
+
+  <!-- Gráfico de Treemap -->
+  <div id="treemapChart" class="chart-container">
+    <h2 style="text-align: center;">Gráfico de Treemap</h2>
+    <p style="text-align: justify;">El gráfico de Treemap muestra la distribución jerárquica de datos utilizando rectángulos anidados. Es útil para representar categorías y subcategorías con sus respectivos tamaños proporcionales.</p>
+    <svg class="chart"></svg>
+    <footer style="text-align: center;">
+      <p>Pie de gráfico: Información adicional sobre el gráfico de Treemap.</p>
+    </footer>
+  </div>
+
 
   <script src="https://d3js.org/d3.v6.min.js"></script>
   <script>
@@ -336,8 +356,98 @@
       .attr("transform", "rotate(-90)")
       .text("Valores (unidad)");
 
+    // Gráfico de Treemap
+    const treemapChart = d3.select("#treemapChart")
+      .select("svg")
+      .attr("width", 400)
+      .attr("height", 300);
+
+    const treemap = d3.treemap()
+      .size([400, 300])
+      .padding(1);
+
+    const treemapData = {
+      name: "Root",
+      children: [
+        { name: "Category 1", value: 10 },
+        { name: "Category 2", value: 20 },
+        { name: "Category 3", value: 10 },
+        { name: "Category 4", value: 5 },
+        { name: "Category 5", value: 5 },
+        { name: "Category 6", value: 10 },
+        { name: "Category 7", value: 10 },
+        { name: "Category 8", value: 10 },
+        { name: "Category 9", value: 10 },
+        { name: "Category 10", value: 10 },
+      ]
+    };
+
+    const root = d3.hierarchy(treemapData)
+      .sum(d => d.value);
+
+    treemap(root);
+
+    const nodes = treemapChart.selectAll("g")
+      .data(root.leaves())
+      .enter()
+      .append("g")
+      .attr("transform", d => `translate(${d.x0},${d.y0})`);
+
+    nodes.append("rect")
+      .attr("width", d => d.x1 - d.x0)
+      .attr("height", d => d.y1 - d.y0)
+      .attr("fill", (d, i) => colors[i % colors.length]);
+
+    // Agregar porcentaje al pasar el cursor sobre el rectángulo del treemap
+    function handleTreemapMouseOver(event, d) {
+      const percentage = formatPercentage(d.data.value / root.value);
+      const tooltip = treemapChart.append("g")
+        .attr("class", "tooltip")
+        .style("display", "none");
+
+      tooltip.append("rect")
+        .attr("width", 80)
+        .attr("height", 40)
+        .attr("fill", "#fff")
+        .attr("stroke", "#ccc");
+
+      tooltip.append("text")
+        .attr("x", 40)
+        .attr("y", 20)
+        .attr("text-anchor", "middle")
+        .attr("dominant-baseline", "middle")
+        .attr("font-size", "10px")
+        .text(`Valor: ${formatNumber(d.data.value)}`);
+
+      tooltip.append("text")
+        .attr("x", 40)
+        .attr("y", 35)
+        .attr("text-anchor", "middle")
+        .attr("dominant-baseline", "middle")
+        .attr("font-size", "10px")
+        .text(`Porcentaje: ${percentage}`);
+
+      tooltip.attr("transform", `translate(${event.offsetX + 10}, ${event.offsetY - 50})`)
+        .style("display", "block");
+    }
+
+    function handleTreemapMouseOut() {
+      treemapChart.select(".tooltip").remove();
+    }
+
+    nodes.append("text")
+      .attr("x", d => (d.x1 - d.x0) / 2)
+      .attr("y", d => (d.y1 - d.y0) / 2)
+      .attr("text-anchor", "middle")
+      .attr("dominant-baseline", "middle")
+      .attr("font-size", "10px")
+      .text(d => d.data.name);
+
+    nodes.on("mouseover", handleTreemapMouseOver)
+      .on("mouseout", handleTreemapMouseOut);
   </script>
 </body>
 </html>
+
 
 
