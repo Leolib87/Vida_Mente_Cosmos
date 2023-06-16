@@ -1,211 +1,183 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Gráfico de Red con D3.js</title>
-  <script src="https://d3js.org/d3.v6.min.js"></script>
+  <title>Gráfico de Redes de Palabras</title>
   <style>
-    .link {
-      stroke: black;
-      stroke-opacity: 0.6;
-      stroke-width: d => Math.sqrt(d.source.citations + d.target.citations) + 1;
+    /* Estilo para el gráfico */
+    svg {
+      background-color: #f5f5f5;
     }
 
     .node {
-      fill: color-mix(in srgb, color percentage, color percentage);
+      stroke: #fff;
+      stroke-width: 1.5px;
+      cursor: move;
     }
 
-    .label {
-      font-size: 5px;
-      text-anchor: middle;
-      fill: black; /* Color del texto en negro */
+    .link {
+      stroke: #999;
+      stroke-opacity: 0.6;
     }
   </style>
 </head>
 <body>
+  <h1>Gráfico de Redes de Palabras</h1>
+  
+  <p>Este es un ejemplo de un gráfico de redes de palabras que muestra la frecuencia de las palabras y la fuerza de conexión entre ellas.</p>
+
   <svg width="800" height="600"></svg>
 
+  <footer>
+    <p>Pie de figura: Información adicional sobre el gráfico.</p>
+  </footer>
+
+  <script src="https://d3js.org/d3.v6.min.js"></script>
   <script>
-    // Datos de ejemplo (puedes reemplazarlos con tus propios datos)
-    const data = [
-      { id: 1, name: "wataka 1", citations: 10, collaborations: [2, 3, 4] },
-      { id: 2, name: "Científico 2", citations: 25, collaborations: [1, 3, 5] },
-      { id: 3, name: "Científico 3", citations: 5, collaborations: [1, 2, 4] },
-      { id: 4, name: "Científico 4", citations: 8, collaborations: [1, 2, 5] },
-      { id: 5, name: "Científico 5", citations: 12, collaborations: [20, 14] },
-      { id: 6, name: "Científico 6", citations: 10, collaborations: [1, 2, 4] },
-      { id: 7, name: "Científico 7", citations: 15, collaborations: [1, , 5] },
-      { id: 8, name: "Científico 8", citations: 5, collaborations: [1, 2, 4] },
-      { id: 9, name: "Científico 9", citations: 8, collaborations: [1, 3, 5] },
-      { id: 10, name: "Científico 10", citations: 12, collaborations: [1, 4] },
-      { id: 11, name: "wataka 11", citations: 10, collaborations: [2, 3, 4] },
-      { id: 12, name: "Científico 12", citations: 1, collaborations: [1, 16, 5] },
-      { id: 13, name: "Científico 13", citations: 5, collaborations: [1, 2, 4] },
-      { id: 14, name: "Científico 14", citations: 8, collaborations: [17, 12, 5] },
-      { id: 15, name: "Científico 15", citations: 12, collaborations: [1, 4] },
-      { id: 16, name: "Científico 16", citations: 10, collaborations: [11, 2, 4] },
-      { id: 17, name: "Científico 17", citations: 15, collaborations: [19, , 5] },
-      { id: 18, name: "Científico 18", citations: 5, collaborations: [18, 12, 4] },
-      { id: 19, name: "Científico 19", citations: 8, collaborations: [1, 3, 15] },
-      { id: 20, name: "Científico 20", citations: 12, collaborations: [1, 4] },
-      { id: 21, name: "wataka 21", citations: 10, collaborations: [2, 3, 4] },
-      { id: 22, name: "Científico 22", citations: 25, collaborations: [1, 3, 5] },
-      { id: 23, name: "Científico 23", citations: 5, collaborations: [1, 2, 4] },
-      { id: 24, name: "Científico 24", citations: 8, collaborations: [1, 2, 5] },
-      { id: 25, name: "Científico 25", citations: 12, collaborations: [20, 14] },
-      { id: 26, name: "Científico 26", citations: 10, collaborations: [1, 2, 4] },
-      { id: 27, name: "Científico 27", citations: 15, collaborations: [1, , 5] },
-      { id: 28, name: "Científico 28", citations: 5, collaborations: [1, 2, 4] },
-      { id: 29, name: "Científico 29", citations: 8, collaborations: [1, 3, 5] },
-      { id: 30, name: "Científico 30", citations: 12, collaborations: [1, 4] },
-      { id: 31, name: "wataka 31", citations: 10, collaborations: [2, 3, 4] },
-      { id: 32, name: "Científico 32", citations: 1, collaborations: [1, 16, 5] },
-      { id: 33, name: "Científico 33", citations: 5, collaborations: [1, 2, 4] },
-      { id: 34, name: "Científico 34", citations: 8, collaborations: [17, 12, 5] },
-      { id: 35, name: "Científico 35", citations: 12, collaborations: [1, 4] },
-      { id: 36, name: "Científico 36", citations: 10, collaborations: [11, 2, 4] },
-      { id: 37, name: "Científico 37", citations: 15, collaborations: [19, , 5] },
-      { id: 38, name: "Científico 38", citations: 5, collaborations: [18, 12, 4] },
-      { id: 39, name: "Científico 39", citations: 8, collaborations: [1, 3, 15] },
-      { id: 40, name: "Científico 40", citations: 12, collaborations: [1, 4] },
-      { id: 41, name: "wataka 41", citations: 10, collaborations: [2, 3, 4] },
-      { id: 42, name: "Científico 42", citations: 25, collaborations: [1, 3, 5] },
-      { id: 43, name: "Científico 43", citations: 5, collaborations: [1, 2, 4] },
-      { id: 44, name: "Científico 44", citations: 8, collaborations: [1, 2, 5] },
-      { id: 45, name: "Científico 45", citations: 12, collaborations: [20, 14] },
-      { id: 46, name: "Científico 46", citations: 10, collaborations: [1, 2, 4] },
-      { id: 47, name: "Científico 47", citations: 15, collaborations: [1, , 5] },
-      { id: 48, name: "Científico 48", citations: 5, collaborations: [1, 2, 4] },
-      { id: 49, name: "Científico 49", citations: 8, collaborations: [1, 3, 5] },
-      { id: 50, name: "Científico 50", citations: 12, collaborations: [1, 4] },
-      { id: 51, name: "wataka 51", citations: 10, collaborations: [2, 3, 4] },
-      { id: 52, name: "Científico 52", citations: 1, collaborations: [1, 16, 5] },
-      { id: 53, name: "Científico 53", citations: 5, collaborations: [1, 2, 4] },
-      { id: 54, name: "Científico 54", citations: 8, collaborations: [17, 12, 5] },
-      { id: 55, name: "Científico 55", citations: 12, collaborations: [1, 4] },
-      { id: 56, name: "Científico 56", citations: 10, collaborations: [11, 2, 4] },
-      { id: 57, name: "Científico 57", citations: 15, collaborations: [19, , 5] },
-      { id: 58, name: "Científico 58", citations: 5, collaborations: [18, 12, 4] },
-      { id: 59, name: "Científico 59", citations: 8, collaborations: [1, 3, 15] },
-      { id: 60, name: "Científico 60", citations: 12, collaborations: [1, 4] },
-      { id: 61, name: "wataka 61", citations: 10, collaborations: [2, 3, 4] },
-      { id: 62, name: "Científico 62", citations: 25, collaborations: [1, 3, 5] },
-      { id: 63, name: "Científico 63", citations: 5, collaborations: [1, 2, 4] },
-      { id: 64, name: "Científico 64", citations: 8, collaborations: [1, 2, 5] },
-      { id: 65, name: "Científico 65", citations: 12, collaborations: [20, 14] },
-      { id: 66, name: "Científico 66", citations: 10, collaborations: [1, 2, 4] },
-      { id: 67, name: "Científico 67", citations: 15, collaborations: [1, , 5] },
-      { id: 68, name: "Científico 68", citations: 5, collaborations: [1, 2, 4] },
-      { id: 69, name: "Científico 69", citations: 8, collaborations: [1, 3, 5] },
-      { id: 70, name: "Científico 70", citations: 12, collaborations: [1, 4] },
-      { id: 71, name: "wataka 71", citations: 10, collaborations: [2, 3, 4] },
-      { id: 72, name: "Científico 72", citations: 1, collaborations: [1, 16, 5] },
-      { id: 73, name: "Científico 73", citations: 5, collaborations: [1, 2, 4] },
-      { id: 74, name: "Científico 74", citations: 8, collaborations: [17, 12, 5] },
-      { id: 75, name: "Científico 75", citations: 12, collaborations: [1, 4] },
-      { id: 76, name: "Científico 76", citations: 10, collaborations: [11, 2, 4] },
-      { id: 77, name: "Científico 77", citations: 15, collaborations: [19, , 5] },
-      { id: 78, name: "Científico 78", citations: 5, collaborations: [18, 12, 4] },
-      { id: 79, name: "Científico 79", citations: 8, collaborations: [1, 3, 15] },
-      { id: 80, name: "Científico 80", citations: 12, collaborations: [1, 4] },
-      // ...agrega los datos de los otros científicos
-    ];
+    // Datos de ejemplo
+    const data = {
+      nodes: [
+        { id: "palabra1", frequency: 5 },
+        { id: "palabra2", frequency: 8 },
+        { id: "palabra3", frequency: 3 },
+        { id: "palabra4", frequency: 5 },
+        { id: "palabra5", frequency: 8 },
+        { id: "palabra6", frequency: 3 },
+        { id: "palabra7", frequency: 5 },
+        { id: "palabra8", frequency: 8 },
+        { id: "palabra9", frequency: 3 },
+        { id: "palabra10", frequency: 5 },
+        { id: "palabra11", frequency: 8 },
+        { id: "palabra12", frequency: 3 },
+        { id: "palabra13", frequency: 5 },
+        { id: "palabra14", frequency: 8 },
+        { id: "palabra15", frequency: 3 },
+        { id: "palabra16", frequency: 5 },
+        { id: "palabra17", frequency: 8 },
+        { id: "palabra18", frequency: 3 },
+        { id: "palabra19", frequency: 5 },
+        { id: "palabra20", frequency: 8 },
+        { id: "palabra21", frequency: 3 },
+        { id: "palabra22", frequency: 5 },
+        { id: "palabra23", frequency: 8 },
+        { id: "palabra24", frequency: 3 },
+        // Agrega más nodos aquí con sus respectivas frecuencias
+      ],
+      links: [
+        { source: "palabra1", target: "palabra2", strength: 0.6 },
+        { source: "palabra1", target: "palabra3", strength: 0.3 },
+        { source: "palabra1", target: "palabra4", strength: 0.6 },
+        { source: "palabra1", target: "palabra5", strength: 0.3 },
+        { source: "palabra1", target: "palabra6", strength: 0.6 },
+        { source: "palabra1", target: "palabra7", strength: 0.3 },
+        { source: "palabra1", target: "palabra8", strength: 0.6 },
+        { source: "palabra1", target: "palabra9", strength: 0.3 },
+        { source: "palabra1", target: "palabra10", strength: 0.6 },
+        { source: "palabra1", target: "palabra11", strength: 0.3 },
+        { source: "palabra1", target: "palabra12", strength: 0.6 },
+        { source: "palabra1", target: "palabra13", strength: 0.3 },
+        { source: "palabra1", target: "palabra14", strength: 0.6 },
+        { source: "palabra1", target: "palabra24", strength: 0.3 },
+        { source: "palabra1", target: "palabra14", strength: 0.6 },
+        { source: "palabra1", target: "palabra15", strength: 0.3 },
+        { source: "palabra1", target: "palabra16", strength: 0.6 },
+        { source: "palabra1", target: "palabra17", strength: 0.3 },
+        { source: "palabra1", target: "palabra18", strength: 0.6 },
+        { source: "palabra1", target: "palabra19", strength: 0.3 },
+        { source: "palabra1", target: "palabra20", strength: 0.6 },
+        { source: "palabra1", target: "palabra21", strength: 0.3 },
+        { source: "palabra1", target: "palabra22", strength: 0.6 },
+        { source: "palabra1", target: "palabra23", strength: 0.3 },
+        // Agrega más enlaces aquí con sus respectivas fuerzas de conexión
+      ]
+    };
 
+    // Configuración del gráfico
+    const width = 800;
+    const height = 600;
+
+    // Crear el elemento svg
     const svg = d3.select("svg");
-    const width = +svg.attr("width");
-    const height = +svg.attr("height");
 
-    // Calcula el total de citas
-    const totalCitations = data.reduce((acc, d) => acc + d.citations, 0);
+    // Crear la simulación de la fuerza
+    const simulation = d3.forceSimulation(data.nodes)
+      .force("charge", d3.forceManyBody().strength(-100))
+      .force("link", d3.forceLink(data.links).id(d => d.id).strength(d => d.strength))
+      .force("center", d3.forceCenter(width / 2, height / 2));
 
-    // Escala para el tamaño de los nodos (depende del número de citas)
-    const radiusScale = d3.scaleLinear()
-      .domain([0, d3.max(data, d => d.citations)])
-      .range([5, 30]);
-
-    // Escala para el color de los nodos
-    const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
-
-    // Genera la simulación de fuerza de D3
-    const simulation = d3.forceSimulation(data)
-      .force("charge", d3.forceManyBody().strength(-50))
-      .force("center", d3.forceCenter(width / 2, height / 2))
-      .force("collision", d3.forceCollide().radius(d => radiusScale(d.citations) + 2))
-      .force("link", d3.forceLink().links(generateLinks(data)).id(d => d.id))
-      .on("tick", update);
-
-    // Crea los enlaces (links) del gráfico
+    // Crear los enlaces
     const links = svg.selectAll(".link")
-      .data(generateLinks(data))
-      .enter().append("line")
-      .attr("class", "link");
+      .data(data.links)
+      .enter()
+      .append("line")
+      .attr("class", "link")
+      .attr("stroke-width", d => d.strength * 2);
 
-    // Crea los nodos del gráfico
+    // Crear los nodos
     const nodes = svg.selectAll(".node")
-      .data(data)
-      .enter().append("circle")
+      .data(data.nodes)
+      .enter()
+      .append("circle")
       .attr("class", "node")
-      .attr("r", d => radiusScale(d.citations))
-      .attr("fill", (d, i) => colorScale(i))
-      .call(d3.drag()
-        .on("start", dragStarted)
-        .on("drag", dragged)
-        .on("end", dragEnded));
+      .attr("r", d => d.frequency * 2)
+      .attr("fill", (d, i) => d3.schemeCategory10[i])
+      .call(drag(simulation)); // Habilitar la funcionalidad de arrastrar
 
-    // Etiquetas para los nodos
+    // Agregar etiquetas a los nodos
     const labels = svg.selectAll(".label")
-      .data(data)
-      .enter().append("text")
+      .data(data.nodes)
+      .enter()
+      .append("text")
       .attr("class", "label")
-      .text(d => d.name)
       .attr("text-anchor", "middle")
       .attr("dy", 4)
-      .attr("fill", "black");
+      .text(d => d.id);
 
-    // Actualiza la posición de los nodos, los enlaces y las etiquetas
-    function update() {
-      links.attr("x1", d => d.source.x)
+    // Función para habilitar el arrastre de los nodos
+    function drag(simulation) {
+      function dragstarted(event, d) {
+        if (!event.active) simulation.alphaTarget(0.3).restart();
+        d.fx = d.x;
+        d.fy = d.y;
+      }
+
+      function dragged(event, d) {
+        d.fx = event.x;
+        d.fy = event.y;
+      }
+
+      function dragended(event, d) {
+        if (!event.active) simulation.alphaTarget(0);
+        d.fx = null;
+        d.fy = null;
+      }
+
+      return d3.drag()
+        .on("start", dragstarted)
+        .on("drag", dragged)
+        .on("end", dragended);
+    }
+
+    // Actualizar la simulación en cada cuadro de animación
+    simulation.on("tick", () => {
+      links
+        .attr("x1", d => d.source.x)
         .attr("y1", d => d.source.y)
         .attr("x2", d => d.target.x)
         .attr("y2", d => d.target.y);
 
-      nodes.attr("cx", d => d.x)
+      nodes
+        .attr("cx", d => d.x)
         .attr("cy", d => d.y);
 
-      labels.attr("x", d => d.x)
+      labels
+        .attr("x", d => d.x)
         .attr("y", d => d.y);
-    }
-
-    // Genera los enlaces (conexiones) entre los científicos
-    function generateLinks(data) {
-      const links = [];
-      data.forEach(d => {
-        d.collaborations.forEach(collaboratorId => {
-          const source = data.find(item => item.id === d.id);
-          const target = data.find(item => item.id === collaboratorId);
-          links.push({ source, target });
-        });
-      });
-      return links;
-    }
-
-    // Funciones para la interacción de arrastrar los nodos
-    function dragStarted(event, d) {
-      if (!event.active) simulation.alphaTarget(0.3).restart();
-      d.fx = d.x;
-      d.fy = d.y;
-    }
-
-    function dragged(event, d) {
-      d.fx = event.x;
-      d.fy = event.y;
-    }
-
-    function dragEnded(event, d) {
-      if (!event.active) simulation.alphaTarget(0);
-      d.fx = null;
-      d.fy = null;
-    }
+    });
   </script>
+
+  <h1>Ejemplos de Palabras Usando Voyant Tools </h1>
+
+<iframe style='width: 800px; height: 600px;' src='https://voyant-tools.org/tool/CollocatesGraph/?query=a&query=the&query=powerpuff&mode=corpus&corpus=9e0ea2351023ab13cbc0979214742c17'></iframe>
+
 </body>
 </html>
-
