@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Tipos de Gráficos en d3.js</title>
+  <style>
+    /* Estilo para los gráficos */
+    .chart {
+      width: 400px;
+      height: 300px;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Tipos de Gráficos en d3.js</h1>
+  
+  <!-- Gráfico de Barras -->
+  <div id="barChart">
+    <h2>Gráfico de Barras</h2>
+    <p>El gráfico de barras es utilizado para representar la distribución de valores en diferentes categorías. Es ideal para comparar magnitudes entre categorías.</p>
+    <svg class="chart"></svg>
+    <footer>
+      <p>Pie de gráfico: Información adicional sobre el gráfico de barras.</p>
+    </footer>
+  </div>
+
+  <!-- Gráfico de Líneas -->
+  <div id="lineChart">
+    <h2>Gráfico de Líneas</h2>
+    <p>El gráfico de líneas muestra la tendencia o cambio en los datos a lo largo del tiempo. Es útil para visualizar la evolución de una variable a lo largo de un período.</p>
+    <svg class="chart"></svg>
+    <footer>
+      <p>Pie de gráfico: Información adicional sobre el gráfico de líneas.</p>
+    </footer>
+  </div>
+
+  <!-- Gráfico de Pastel -->
+  <div id="pieChart">
+    <h2>Gráfico de Pastel</h2>
+    <p>El gráfico de pastel representa la proporción de diferentes categorías en un conjunto de datos. Se utiliza para visualizar la distribución relativa de los datos y destacar las partes en relación con el todo.</p>
+    <svg class="chart"></svg>
+    <footer>
+      <p>Pie de gráfico: Información adicional sobre el gráfico de pastel.</p>
+    </footer>
+  </div>
+
+  <!-- Gráfico de Área -->
+  <div id="areaChart">
+    <h2>Gráfico de Área</h2>
+    <p>El gráfico de área muestra la distribución y cambio en los valores a lo largo del tiempo. Es útil para visualizar patrones de comportamiento y comparar tendencias entre diferentes categorías.</p>
+    <svg class="chart"></svg>
+    <footer>
+      <p>Pie de gráfico: Información adicional sobre el gráfico de área.</p>
+    </footer>
+  </div>
+
+  <script src="https://d3js.org/d3.v6.min.js"></script>
+  <script>
+    // Datos simulados para cada gráfico
+    const barChartData = [10, 20, 30, 40, 50];
+    const lineChartData = [30, 40, 20, 10, 50];
+    const pieChartData = [25, 15, 10, 20, 30];
+    const areaChartData = [40, 10, 25, 30, 20];
+
+    // Configuración de los colores
+    const colors = ['#ff8c00', '#ff6384', '#36a2eb', '#cc65fe', '#ffce56'];
+
+    // Gráfico de Barras
+    const barChart = d3.select("#barChart")
+      .select("svg")
+      .attr("width", 400)
+      .attr("height", 300);
+
+    const bars = barChart.selectAll("rect")
+      .data(barChartData)
+      .enter()
+      .append("rect")
+      .attr("x", (d, i) => i * 60)
+      .attr("y", d => 300 - d * 5)
+      .attr("width", 40)
+      .attr("height", d => d * 5)
+      .attr("fill", (d, i) => colors[i]);
+
+    // Agregar números exactos en la parte superior de cada barra
+    barChart.selectAll("text.value")
+      .data(barChartData)
+      .enter()
+      .append("text")
+      .attr("class", "value")
+      .attr("x", (d, i) => i * 60 + 20)
+      .attr("y", d => 300 - d * 5 - 5) // Ajustar la posición vertical
+      .text(d => d)
+      .attr("fill", "black")
+      .attr("text-anchor", "middle");
+
+    // Ejes x e y
+    const xScale = d3.scaleBand()
+      .domain(barChartData.map((d, i) => i))
+      .range([0, 400])
+      .padding(0.1);
+
+    const yScale = d3.scaleLinear()
+      .domain([0, d3.max(barChartData)])
+      .range([300, 0]);
+
+    const xAxis = d3.axisBottom(xScale);
+    const yAxis = d3.axisLeft(yScale);
+
+    barChart.append("g")
+      .attr("transform", "translate(0, 300)")
+      .call(xAxis)
+      .append("text")
+      .attr("x", 400)
+      .attr("y", 30)
+      .attr("fill", "black")
+      .attr("text-anchor", "end")
+      .text("Categorías");
+
+    barChart.append("g")
+      .call(yAxis)
+      .append("text")
+      .attr("x", -50)
+      .attr("y", -30)
+      .attr("fill", "black")
+      .attr("text-anchor", "end")
+      .attr("transform", "rotate(-90)")
+      .text("Valores");
+
+    // Gráfico de Líneas
+    const lineChart = d3.select("#lineChart")
+      .select("svg")
+      .attr("width", 400)
+      .attr("height", 300);
+
+    const line = d3.line()
+      .x((d, i) => i * 80 + 40)
+      .y(d => 300 - d * 2);
+
+    lineChart.append("path")
+      .datum(lineChartData)
+      .attr("fill", "none")
+      .attr("stroke", colors[0])
+      .attr("stroke-width", 2)
+      .attr("d", line);
+
+    // Agregar números exactos
+    lineChart.selectAll("text.value")
+      .data(lineChartData)
+      .enter()
+      .append("text")
+      .attr("class", "value")
+      .attr("x", (d, i) => i * 80 + 40)
+      .attr("y", d => 300 - d * 2 - 10)
+      .text(d => d)
+      .attr("fill", "black")
+      .attr("text-anchor", "middle");
+
+    // Ejes x e y
+    const xScaleLine = d3.scaleLinear()
+      .domain([0, lineChartData.length - 1])
+      .range([0, 400]);
+
+    const yScaleLine = d3.scaleLinear()
+      .domain([0, d3.max(lineChartData)])
+      .range([300, 0]);
+
+    const xAxisLine = d3.axisBottom(xScaleLine);
+    const yAxisLine = d3.axisLeft(yScaleLine);
+
+    lineChart.append("g")
+      .attr("transform", "translate(0, 300)")
+      .call(xAxisLine)
+      .append("text")
+      .attr("x", 400)
+      .attr("y", 30)
+      .attr("fill", "black")
+      .attr("text-anchor", "end")
+      .text("Tiempo");
+
+    lineChart.append("g")
+      .call(yAxisLine)
+      .append("text")
+      .attr("x", -50)
+      .attr("y", -30)
+      .attr("fill", "black")
+      .attr("text-anchor", "end")
+      .attr("transform", "rotate(-90)")
+      .text("Valores");
+
+    // Gráfico de Pastel
+    const pieChart = d3.select("#pieChart")
+      .select("svg")
+      .attr("width", 400)
+      .attr("height", 300);
+
+    const pie = d3.pie();
+    const pieData = pie(pieChartData);
+
+    const arc = d3.arc()
+      .innerRadius(0)
+      .outerRadius(150);
+
+    const pieG = pieChart.append("g")
+      .attr("transform", "translate(200, 150)");
+
+    const total = d3.sum(pieChartData);
+    const formatPercent = d3.format(".1%");
+
+    pieG.selectAll("path")
+      .data(pieData)
+      .enter()
+      .append("path")
+      .attr("d", arc)
+      .attr("fill", (d, i) => colors[i]);
+
+    // Agregar números exactos y porcentajes al interior de los pedazos
+    pieG.selectAll("text")
+      .data(pieData)
+      .enter()
+      .append("text")
+      .attr("transform", d => `translate(${arc.centroid(d)})`)
+      .attr("dy", "0.35em")
+      .text(d => `${d.data} (${formatPercent(d.data / total)})`)
+      .attr("fill", "black")
+      .attr("text-anchor", "middle");
+
+    // Gráfico de Área
+    const areaChart = d3.select("#areaChart")
+      .select("svg")
+      .attr("width", 400)
+      .attr("height", 300);
+
+    const area = d3.area()
+      .x((d, i) => i * 80 + 40)
+      .y0(300)
+      .y1(d => 300 - d * 2);
+
+    areaChart.append("path")
+      .datum(areaChartData)
+      .attr("fill", colors[0])
+      .attr("d", area);
+
+    // Agregar números exactos
+    areaChart.selectAll("text.value")
+      .data(areaChartData)
+      .enter()
+      .append("text")
+      .attr("class", "value")
+      .attr("x", (d, i) => i * 80 + 40)
+      .attr("y", d => 300 - d * 2 - 10)
+      .text(d => d)
+      .attr("fill", "black")
+      .attr("text-anchor", "middle");
+
+    // Ejes x e y
+    const xScaleArea = d3.scaleLinear()
+      .domain([0, areaChartData.length - 1])
+      .range([0, 400]);
+
+    const yScaleArea = d3.scaleLinear()
+      .domain([0, d3.max(areaChartData)])
+      .range([300, 0]);
+
+    const xAxisArea = d3.axisBottom(xScaleArea);
+    const yAxisArea = d3.axisLeft(yScaleArea);
+
+    areaChart.append("g")
+      .attr("transform", "translate(0, 300)")
+      .call(xAxisArea)
+      .append("text")
+      .attr("x", 400)
+      .attr("y", 30)
+      .attr("fill", "black")
+      .attr("text-anchor", "end")
+      .text("Tiempo");
+
+    areaChart.append("g")
+      .call(yAxisArea)
+      .append("text")
+      .attr("x", -50)
+      .attr("y", -30)
+      .attr("fill", "black")
+      .attr("text-anchor", "end")
+      .attr("transform", "rotate(-90)")
+      .text("Valores");
+
+  </script>
+</body>
+</html>
