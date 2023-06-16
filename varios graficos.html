@@ -9,6 +9,15 @@
       height: 300px;
       margin-bottom: 20px;
     }
+
+    .tooltip {
+      position: absolute;
+      background-color: white;
+      border: 1px solid #ccc;
+      padding: 5px;
+      font-size: 12px;
+      pointer-events: none;
+    }
   </style>
 </head>
 <body>
@@ -57,13 +66,24 @@
   <script src="https://d3js.org/d3.v6.min.js"></script>
   <script>
     // Datos simulados para cada gráfico
-    const barChartData = [10, 20, 30, 40, 50];
+    const barChartData = [
+      { category: "A", values: [10, 15, 20, 25, 30], color: "#ff8c00" },
+      { category: "B", values: [5, 10, 15, 20, 25], color: "#ff6384" },
+      { category: "C", values: [15, 20, 25, 30, 35], color: "#36a2eb" },
+      { category: "D", values: [20, 25, 30, 35, 40], color: "#cc65fe" },
+      { category: "E", values: [25, 30, 35, 40, 45], color: "#ffce56" }
+    ];
+
     const lineChartData = [30, 40, 20, 10, 50];
     const pieChartData = [25, 15, 10, 20, 30];
     const areaChartData = [40, 10, 25, 30, 20];
 
     // Configuración de los colores
     const colors = ['#ff8c00', '#ff6384', '#36a2eb', '#cc65fe', '#ffce56'];
+
+    // Función para formatear los números con unidades simuladas
+    const formatNumber = d3.format(".2s");
+    const formatPercentage = d3.format(".2%");
 
     // Gráfico de Barras
     const barChart = d3.select("#barChart")
@@ -76,55 +96,80 @@
       .enter()
       .append("rect")
       .attr("x", (d, i) => i * 60)
-      .attr("y", d => 300 - d * 5)
+      .attr("y", d => 300 - d3.mean(d.values) * 5)
       .attr("width", 40)
-      .attr("height", d => d * 5)
-      .attr("fill", (d, i) => colors[i]);
+      .attr("height", d => d3.mean(d.values) * 5)
+      .attr("fill", d => d.color)
+      .on("mouseover", handleBarMouseOver)
+      .on("mouseout", handleBarMouseOut);
 
-    // Agregar números exactos en la parte superior de cada barra
-    barChart.selectAll("text.value")
-      .data(barChartData)
-      .enter()
-      .append("text")
-      .attr("class", "value")
-      .attr("x", (d, i) => i * 60 + 20)
-      .attr("y", d => 300 - d * 5 - 5) // Ajustar la posición vertical
-      .text(d => d)
-      .attr("fill", "black")
-      .attr("text-anchor", "middle");
+    // Agregar promedio y desviación estándar en un recuadro al pasar el cursor sobre las barras
+    function handleBarMouseOver(event, d) {
+      const mean = d3.mean(d.values);
+      const deviation = d3.deviation(d.values);
+      const tooltip = barChart.append("g")
+        .attr("class", "tooltip")
+        .style("display", "none");
+
+      tooltip.append("rect")
+        .attr("width", 80)
+        .attr("height", 40)
+        .attr("fill", "#fff")
+        .attr("stroke", "#ccc");
+
+      tooltip.append("text")
+        .attr("x", 40)
+        .attr("y", 20)
+        .attr("text-anchor", "middle")
+        .attr("dominant-baseline", "middle")
+        .attr("font-size", "10px")
+        .text(`Promedio: ${formatNumber(mean)}`);
+
+      tooltip.append("text")
+        .attr("x", 40)
+        .attr("y", 35)
+        .attr("text-anchor", "middle")
+        .attr("dominant-baseline", "middle")
+        .attr("font-size", "10px")
+        .text(`Desviación: ${formatNumber(deviation)}`);
+
+      tooltip.attr("transform", `translate(${event.offsetX + 10}, ${event.offsetY - 50})`)
+        .style("display", "block");
+    }
+
+    function handleBarMouseOut() {
+      barChart.select(".tooltip").remove();
+    }
 
     // Ejes x e y
-    const xScale = d3.scaleBand()
-      .domain(barChartData.map((d, i) => i))
+    const xScaleBar = d3.scaleBand()
+      .domain(barChartData.map(d => d.category))
       .range([0, 400])
       .padding(0.1);
 
-    const yScale = d3.scaleLinear()
-      .domain([0, d3.max(barChartData)])
+    const yScaleBar = d3.scaleLinear()
+      .domain([0, d3.max(barChartData, d => d3.mean(d.values))])
       .range([300, 0]);
 
-    const xAxis = d3.axisBottom(xScale);
-    const yAxis = d3.axisLeft(yScale);
+    const xAxisBar = d3.axisBottom(xScaleBar);
+    const yAxisBar = d3.axisLeft(yScaleBar).tickFormat(formatNumber);
 
     barChart.append("g")
       .attr("transform", "translate(0, 300)")
-      .call(xAxis)
-      .append("text")
-      .attr("x", 400)
-      .attr("y", 30)
-      .attr("fill", "black")
-      .attr("text-anchor", "end")
-      .text("Categorías");
+      .call(xAxisBar)
+      .selectAll("text")
+      .style("text-anchor", "end")
+      .attr("transform", "rotate(-45)");
 
     barChart.append("g")
-      .call(yAxis)
+      .call(yAxisBar)
       .append("text")
       .attr("x", -50)
       .attr("y", -30)
       .attr("fill", "black")
       .attr("text-anchor", "end")
       .attr("transform", "rotate(-90)")
-      .text("Valores");
+      .text("Valores (unidad)");
 
     // Gráfico de Líneas
     const lineChart = d3.select("#lineChart")
@@ -143,17 +188,17 @@
       .attr("stroke-width", 2)
       .attr("d", line);
 
-    // Agregar números exactos
-    lineChart.selectAll("text.value")
+    // Agregar datos numéricos en el gráfico de líneas
+    lineChart.selectAll("text.label")
       .data(lineChartData)
       .enter()
       .append("text")
-      .attr("class", "value")
+      .attr("class", "label")
       .attr("x", (d, i) => i * 80 + 40)
-      .attr("y", d => 300 - d * 2 - 10)
-      .text(d => d)
-      .attr("fill", "black")
-      .attr("text-anchor", "middle");
+      .attr("y", d => 300 - d * 2 - 5)
+      .attr("text-anchor", "middle")
+      .attr("font-size", "10px")
+      .text(d => formatNumber(d));
 
     // Ejes x e y
     const xScaleLine = d3.scaleLinear()
@@ -164,8 +209,11 @@
       .domain([0, d3.max(lineChartData)])
       .range([300, 0]);
 
-    const xAxisLine = d3.axisBottom(xScaleLine);
-    const yAxisLine = d3.axisLeft(yScaleLine);
+    const xAxisLine = d3.axisBottom(xScaleLine)
+      .tickFormat((d, i) => `Tiempo ${i + 1}`);
+
+    const yAxisLine = d3.axisLeft(yScaleLine)
+      .tickFormat(formatNumber);
 
     lineChart.append("g")
       .attr("transform", "translate(0, 300)")
@@ -175,7 +223,7 @@
       .attr("y", 30)
       .attr("fill", "black")
       .attr("text-anchor", "end")
-      .text("Tiempo");
+      .text("Tiempo (unidad)");
 
     lineChart.append("g")
       .call(yAxisLine)
@@ -185,7 +233,7 @@
       .attr("fill", "black")
       .attr("text-anchor", "end")
       .attr("transform", "rotate(-90)")
-      .text("Valores");
+      .text("Valores (unidad)");
 
     // Gráfico de Pastel
     const pieChart = d3.select("#pieChart")
@@ -193,7 +241,9 @@
       .attr("width", 400)
       .attr("height", 300);
 
-    const pie = d3.pie();
+    const pie = d3.pie()
+      .value(d => d);
+
     const pieData = pie(pieChartData);
 
     const arc = d3.arc()
@@ -203,9 +253,6 @@
     const pieG = pieChart.append("g")
       .attr("transform", "translate(200, 150)");
 
-    const total = d3.sum(pieChartData);
-    const formatPercent = d3.format(".1%");
-
     pieG.selectAll("path")
       .data(pieData)
       .enter()
@@ -213,16 +260,18 @@
       .attr("d", arc)
       .attr("fill", (d, i) => colors[i]);
 
-    // Agregar números exactos y porcentajes al interior de los pedazos
-    pieG.selectAll("text")
+    // Agregar datos numéricos en el gráfico de pastel
+    pieG.selectAll("text.label")
       .data(pieData)
       .enter()
       .append("text")
+      .attr("class", "label")
       .attr("transform", d => `translate(${arc.centroid(d)})`)
+      .attr("text-anchor", "middle")
       .attr("dy", "0.35em")
-      .text(d => `${d.data} (${formatPercent(d.data / total)})`)
+      .text(d => `${formatPercentage(d.data / d3.sum(pieChartData))} (${formatNumber(d.data)})`)
       .attr("fill", "black")
-      .attr("text-anchor", "middle");
+      .attr("font-size", "12px");
 
     // Gráfico de Área
     const areaChart = d3.select("#areaChart")
@@ -240,17 +289,17 @@
       .attr("fill", colors[0])
       .attr("d", area);
 
-    // Agregar números exactos
-    areaChart.selectAll("text.value")
+    // Agregar datos numéricos en el gráfico de área
+    areaChart.selectAll("text.label")
       .data(areaChartData)
       .enter()
       .append("text")
-      .attr("class", "value")
+      .attr("class", "label")
       .attr("x", (d, i) => i * 80 + 40)
-      .attr("y", d => 300 - d * 2 - 10)
-      .text(d => d)
-      .attr("fill", "black")
-      .attr("text-anchor", "middle");
+      .attr("y", d => 300 - d * 2 - 5)
+      .attr("text-anchor", "middle")
+      .attr("font-size", "10px")
+      .text(d => formatNumber(d));
 
     // Ejes x e y
     const xScaleArea = d3.scaleLinear()
@@ -261,8 +310,11 @@
       .domain([0, d3.max(areaChartData)])
       .range([300, 0]);
 
-    const xAxisArea = d3.axisBottom(xScaleArea);
-    const yAxisArea = d3.axisLeft(yScaleArea);
+    const xAxisArea = d3.axisBottom(xScaleArea)
+      .tickFormat((d, i) => `Tiempo ${i + 1}`);
+
+    const yAxisArea = d3.axisLeft(yScaleArea)
+      .tickFormat(formatNumber);
 
     areaChart.append("g")
       .attr("transform", "translate(0, 300)")
@@ -272,7 +324,7 @@
       .attr("y", 30)
       .attr("fill", "black")
       .attr("text-anchor", "end")
-      .text("Tiempo");
+      .text("Tiempo (unidad)");
 
     areaChart.append("g")
       .call(yAxisArea)
@@ -282,8 +334,10 @@
       .attr("fill", "black")
       .attr("text-anchor", "end")
       .attr("transform", "rotate(-90)")
-      .text("Valores");
+      .text("Valores (unidad)");
 
   </script>
 </body>
 </html>
+
+
