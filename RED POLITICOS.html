@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gráfico de Redes de Citas</title>
+    <style>
+        .link {
+            stroke: black;
+            stroke-width: 2px;
+        }
+
+        .node circle {
+            fill: #1f77b4;
+            stroke: #fff;
+            stroke-width: 1.5px;
+        }
+
+        .node image {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        .node text {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            text-anchor: middle;
+            fill: #333;
+        }
+    </style>
+</head>
+<body>
+    <svg width="960" height="600"></svg>
+
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script>
+        // Datos de ejemplo
+        var data = {
+            "nodes": [
+                {"id": "Científico 1", "image": "http://www.emol.com/especiales/2017/actualidad/nacional/elecciones/img/candidatos_congreso/150x150/602059.jpg", "size": 3},
+                {"id": "Científico 2", "image": "http://www.emol.com/especiales/2017/actualidad/nacional/elecciones/img/candidatos_congreso/150x150/600758.jpg", "size": 2},
+                {"id": "Científico 3", "image": "http://www.emol.com/especiales/2017/actualidad/nacional/elecciones/img/candidatos_congreso/150x150/602656.jpg", "size": 3},
+                {"id": "Científico 4", "image": "http://www.emol.com/especiales/2017/actualidad/nacional/elecciones/img/candidatos_congreso/150x150/602656.jpg", "size": 3},
+                {"id": "Científico 5", "image": "http://www.emol.com/especiales/2017/actualidad/nacional/elecciones/img/candidatos_congreso/150x150/600154.jpg", "size": 3},
+                {"id": "Científico 6", "image": "http://www.emol.com/especiales/2017/actualidad/nacional/elecciones/img/candidatos_congreso/150x150/600358.jpg", "size": 3},
+                {"id": "Científico 7", "image": "http://www.emol.com/especiales/2017/actualidad/nacional/elecciones/img/candidatos_congreso/150x150/601463.jpg", "size": 3},
+                {"id": "Científico 8", "image": "http://www.emol.com/especiales/2017/actualidad/nacional/elecciones/img/candidatos_congreso/150x150/601356.jpg", "size": 3},
+                {"id": "Científico 9", "image": "http://www.emol.com/especiales/2017/actualidad/nacional/elecciones/img/candidatos_congreso/150x150/601059.jpg", "size": 3},
+                {"id": "Científico 10", "image": "http://www.emol.com/especiales/2017/actualidad/nacional/elecciones/img/candidatos_congreso/150x150/601058.jpg", "size": 3},
+                {"id": "Científico 11", "image": "http://www.emol.com/especiales/2017/actualidad/nacional/elecciones/img/candidatos_congreso/150x150/601257.jpg", "size": 3},
+                {"id": "Científico 12", "image": "http://www.emol.com/especiales/2017/actualidad/nacional/elecciones/img/candidatos_congreso/150x150/601057.jpg", "size": 3},
+                {"id": "Científico 13", "image": "http://www.emol.com/especiales/2017/actualidad/nacional/elecciones/img/candidatos_congreso/150x150/600866.jpg", "size": 3},
+                {"id": "Científico 14", "image": "http://www.emol.com/especiales/2017/actualidad/nacional/elecciones/img/candidatos_congreso/150x150/600957.jpg", "size": 3},
+                {"id": "Científico 15", "image": "http://www.emol.com/especiales/2017/actualidad/nacional/elecciones/img/candidatos_congreso/150x150/600759.jpg", "size": 3},
+                {"id": "Científico 16", "image": "http://www.emol.com/especiales/2017/actualidad/nacional/elecciones/img/candidatos_congreso/150x150/600859.jpg", "size": 3},
+                {"id": "Científico 17", "image": "http://www.emol.com/especiales/2017/actualidad/nacional/elecciones/img/candidatos_congreso/150x150/602850.jpg", "size": 3},
+                {"id": "Científico 18", "image": "http://www.emol.com/especiales/2017/actualidad/nacional/elecciones/img/candidatos_congreso/150x150/601157.jpg", "size": 3},
+                {"id": "Científico 19", "image": "http://www.emol.com/especiales/2017/actualidad/nacional/elecciones/img/candidatos_congreso/150x150/601262.jpg", "size": 3},
+                {"id": "Científico 20", "image": "http://www.emol.com/especiales/2017/actualidad/nacional/elecciones/img/candidatos_congreso/150x150/600656.jpg", "size": 3},
+                {"id": "Científico 21", "image": "http://www.emol.com/especiales/2017/actualidad/nacional/elecciones/img/candidatos_congreso/150x150/601760.jpg", "size": 3},
+                // Agrega más nodos aquí...
+            ],
+            "links": [
+                {"source": "Científico 1", "target": "Científico 12"},
+                {"source": "Científico 1", "target": "Científico 3"},
+                {"source": "Científico 1", "target": "Científico 18"},
+                {"source": "Científico 1", "target": "Científico 16"},
+                {"source": "Científico 1", "target": "Científico 11"},
+                {"source": "Científico 2", "target": "Científico 13"},
+                {"source": "Científico 2", "target": "Científico 12"},
+                {"source": "Científico 2", "target": "Científico 10"},
+                {"source": "Científico 2", "target": "Científico 15"},
+                {"source": "Científico 2", "target": "Científico 4"},
+                {"source": "Científico 3", "target": "Científico 8"},
+                {"source": "Científico 3", "target": "Científico 6"},
+                {"source": "Científico 3", "target": "Científico 9"},
+                {"source": "Científico 3", "target": "Científico 5"},
+                {"source": "Científico 4", "target": "Científico 4"},
+                {"source": "Científico 4", "target": "Científico 17"},
+                {"source": "Científico 5", "target": "Científico 10"},
+                {"source": "Científico 5", "target": "Científico 13"},
+                {"source": "Científico 6", "target": "Científico 16"},
+                {"source": "Científico 6", "target": "Científico 14"},
+                {"source": "Científico 7", "target": "Científico 12"},
+                {"source": "Científico 8", "target": "Científico 10"},
+                {"source": "Científico 9", "target": "Científico 9"},
+                {"source": "Científico 10", "target": "Científico 16"},
+                {"source": "Científico 1", "target": "Científico 14"},
+                {"source": "Científico 12", "target": "Científico 12"},
+                {"source": "Científico 13", "target": "Científico 9"},
+                {"source": "Científico 14", "target": "Científico 16"},
+                {"source": "Científico 15", "target": "Científico 14"},
+                {"source": "Científico 16", "target": "Científico 12"},                
+                {"source": "Científico 17", "target": "Científico 9"},
+                {"source": "Científico 18", "target": "Científico 21"},
+                {"source": "Científico 19", "target": "Científico 14"},
+                {"source": "Científico 20", "target": "Científico 12"},
+
+
+
+
+
+
+
+                // Agrega más enlaces aquí...
+            ]
+        };
+
+        // Crea el layout de fuerza de D3.js con parámetros ajustados
+        var simulation = d3.forceSimulation()
+            .force("link", d3.forceLink().id(function(d) { return d.id; }).distance(200)) // Ajusta la distancia de enlace
+            .force("charge", d3.forceManyBody().strength(-100)) // Ajusta la fuerza de repulsión
+            .force("center", d3.forceCenter(480, 300));
+
+        // Crea el SVG para dibujar el gráfico
+        var svg = d3.select("svg"),
+            width = +svg.attr("width"),
+            height = +svg.attr("height");
+
+        // Crea los enlaces del gráfico
+        var link = svg.append("g")
+            .attr("class", "links")
+            .selectAll("line")
+            .data(data.links)
+            .enter().append("line")
+            .attr("class", "link");
+
+        // Crea los nodos del gráfico
+        var node = svg.append("g")
+            .attr("class", "nodes")
+            .selectAll(".node")
+            .data(data.nodes)
+            .enter().append("g")
+            .attr("class", "node")
+            .call(d3.drag()
+                .on("start", dragstarted)
+                .on("drag", dragged)
+                .on("end", dragended));
+
+        // Agrega una máscara circular para recortar la imagen
+        var defs = svg.append("defs");
+        defs.append("clipPath")
+            .attr("id", "clip-circle")
+            .append("circle")
+            .attr("cx", 0)
+            .attr("cy", 0)
+            .attr("r", 20);
+
+        // Agrega imágenes a los nodos
+        node.append("circle")
+            .attr("r", function(d) { return d.size * 10; });
+
+        node.append("image")
+            .attr("xlink:href", function(d) { return d.image; })
+            .attr("x", -20)
+            .attr("y", -20)
+            .attr("width", function(d) { return d.size * 40; })
+            .attr("height", function(d) { return d.size * 40; })
+            .attr("clip-path", "url(#clip-circle)");
+
+        // Agrega nombres a los nodos
+        node.append("text")
+            .attr("dy", function(d) { return d.size * 10 + 5; })
+            .text(function(d) { return d.id; });
+
+        // Actualiza la posición de los elementos en cada paso de simulación
+        simulation
+            .nodes(data.nodes)
+            .on("tick", ticked);
+
+        simulation.force("link")
+            .links(data.links)
+            .distance(100); // Ajusta la distancia de enlace
+
+        function ticked() {
+            link
+                .attr("x1", function(d) { return d.source.x; })
+                .attr("y1", function(d) { return d.source.y; })
+                .attr("x2", function(d) { return d.target.x; })
+                .attr("y2", function(d) { return d.target.y; });
+
+            node
+                .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+        }
+
+        function dragstarted(d) {
+            if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+            d.fx = d.x;
+            d.fy = d.y;
+        }
+
+        function dragged(d) {
+            d.fx = d3.event.x;
+            d.fy = d3.event.y;
+        }
+
+        function dragended(d) {
+            if (!d3.event.active) simulation.alphaTarget(0);
+            d.fx = null;
+            d.fy = null;
+        }
+    </script>
+</body>
+</html>
