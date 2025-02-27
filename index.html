@@ -1,246 +1,201 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Origen, Vida y Redes</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
-  <script src="https://d3js.org/d3.v7.min.js"></script>
-  <style>
-    body {
-      background-color: #000000;
-      color: #00FF00;
-      font-family: 'Orbitron', sans-serif;
-      margin: 0;
-      padding: 20px;
-      line-height: 1.6;
-    }
-
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-    }
-
-    .header {
-      text-align: center;
-      padding: 60px 20px;
-      text-shadow: 0 0 10px #00FF00, 0 0 20px #00FFFF;
-      animation: glow 2s infinite alternate;
-    }
-
-    @keyframes glow {
-      from {
-        text-shadow: 0 0 5px #00FF00;
-      }
-
-      to {
-        text-shadow: 0 0 15px #00FFFF;
-      }
-    }
-
-    .section {
-      margin: 40px 0;
-      padding: 20px;
-      border: 2px solid #00FFFF;
-      box-shadow: 0 0 15px #00FFFF;
-      background: rgba(0, 255, 255, 0.05);
-      border-radius: 10px;
-    }
-
-    h1 {
-      font-size: 3em;
-      color: #00FFFF;
-    }
-
-    h2 {
-      color: #00FF00;
-      text-shadow: 0 0 8px #00FF00;
-      border-bottom: 1px solid #00FFFF;
-      padding-bottom: 10px;
-    }
-
-    h3 {
-      color: #00FFFF;
-      margin-top: 20px;
-    }
-
-    p {
-      color: #00FF00;
-      font-size: 1.1em;
-    }
-
-    .highlight {
-      color: #00FFFF;
-      font-weight: bold;
-    }
-
-    a {
-      color: #00FF00;
-      text-decoration: none;
-      font-size: 18px;
-      display: block;
-      margin: 10px 0;
-      transition: 0.3s;
-    }
-
-    a:hover {
-      color: #FFFFFF;
-      text-shadow: 0 0 8px #00FFFF;
-    }
-
-    #visualization,
-    #network-graph {
-      width: 100%;
-      height: 600px;
-      margin: 20px 0;
-    }
-
-    .node {
-      cursor: pointer;
-    }
-
-    .node circle {
-      stroke: #00FFFF;
-      stroke-width: 2px;
-      fill: #00FF00;
-      transition: 0.3s;
-    }
-
-    .node:hover circle {
-      fill: #FFFFFF;
-      stroke: #00FFFF;
-    }
-
-    .node text {
-      fill: #00FFFF;
-      font-family: 'Orbitron', sans-serif;
-      text-shadow: 0 0 5px #00FF00;
-    }
-
-    .link {
-      stroke: #00FF00;
-      stroke-opacity: 0.6;
-    }
-
-    iframe {
-      width: 800px;
-      height: 600px;
-      border: none;
-      box-shadow: 0 0 15px #00FFFF;
-    }
-
-    .footer {
-      text-align: center;
-      padding: 20px;
-      color: #00FFFF;
-      border-top: 1px solid #00FF00;
-      margin-top: 40px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Origen, Vida y Redes</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body {
+            background-color: #000000;
+            color: #00FF00;
+            font-family: 'Orbitron', sans-serif;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            padding: 60px 20px;
+            text-shadow: 0 0 10px #00FF00, 0 0 20px #00FFFF;
+            animation: glow 2s infinite alternate;
+        }
+        @keyframes glow {
+            from { text-shadow: 0 0 5px #00FF00; }
+            to { text-shadow: 0 0 15px #00FFFF; }
+        }
+        .section {
+            margin: 40px 0;
+            padding: 20px;
+            border: 2px solid #00FFFF;
+            box-shadow: 0 0 15px #00FFFF;
+            background: rgba(0, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+        h1 {
+            font-size: 3em;
+            color: #00FFFF;
+        }
+        h2 {
+            color: #00FF00;
+            text-shadow: 0 0 8px #00FF00;
+            border-bottom: 1px solid #00FFFF;
+            padding-bottom: 10px;
+        }
+        h3 {
+            color: #00FFFF;
+            margin-top: 20px;
+        }
+        p {
+            color: #00FF00;
+            font-size: 1.1em;
+        }
+        .highlight {
+            color: #00FFFF;
+            font-weight: bold;
+        }
+        a {
+            color: #00FF00;
+            text-decoration: none;
+            font-size: 18px;
+            display: block;
+            margin: 10px 0;
+            transition: 0.3s;
+        }
+        a:hover {
+            color: #FFFFFF;
+            text-shadow: 0 0 8px #00FFFF;
+        }
+        #visualization, #network-graph {
+            width: 100%;
+            height: 600px;
+            margin: 20px 0;
+        }
+        .node {
+            cursor: pointer;
+        }
+        .node circle {
+            stroke: #00FFFF;
+            stroke-width: 2px;
+            fill: #00FF00;
+            transition: 0.3s;
+        }
+        .node:hover circle {
+            fill: #FFFFFF;
+            stroke: #00FFFF;
+        }
+        .node text {
+            fill: #00FFFF;
+            font-family: 'Orbitron', sans-serif;
+            text-shadow: 0 0 5px #00FF00;
+        }
+        .link {
+            stroke: #00FF00;
+            stroke-opacity: 0.6;
+        }
+        iframe {
+            width: 800px;
+            height: 600px;
+            border: none;
+            box-shadow: 0 0 15px #00FFFF;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #00FFFF;
+            border-top: 1px solid #00FF00;
+            margin-top: 40px;
+        }
+    </style>
 </head>
-
 <body>
-  <div class="container">
-    <!-- Header -->
-    <div class="header">
-      <h1>Origen, Vida y Redes</h1>
-      <p>Un viaje interdisciplinario entre biología, mente, lenguaje y visualización</p>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Origen, Vida y Redes</h1>
+            <p>Un viaje interdisciplinario entre biología, mente, lenguaje y visualización</p>
+        </div>
+
+        <!-- Sobre mí -->
+        <div class="section" id="sobre-mi">
+            <h2>Sobre mí: Trazado de vida y preguntas</h2>
+            <p>Mi nombre es un eco de preguntas que han resonado en mí desde siempre. Mi principal interés ha sido la biología, desde el cuestionamiento del origen de la existencia biológica y humana. Me fascinan los orígenes, la <span class="highlight">vida</span> y la <span class="highlight">muerte</span> como el inicio y el fin de todo lo existente. Este camino me llevó de la biología a la filosofía, las ciencias cognitivas, la economía y la política, forjado por años de reflexión y una experiencia transformadora bajo los efectos del <span class="highlight">LSD</span>. Aquí narro ese trazado, entre lo personal y lo investigativo.</p>
+        </div>
+
+        <!-- Intereses y Preguntas -->
+        <div class="section" id="intereses">
+            <h2>Intereses y Preguntas</h2>
+            <p>Mi curiosidad parte de la biología y se expande hacia dominios que desafían nuestra comprensión de la realidad:</p>
+            
+            <h3 id="biologia">Biología</h3>
+            <p>Me interesa el origen desde la <span class="highlight">histología</span> y los <span class="highlight">mecanismos celulares</span>. ¿Por qué en la biología celular aceptamos el <span class="highlight">determinismo</span> mientras que en la conducta emergen <span class="highlight">libertad</span> e <span class="highlight">indeterminación</span>?</p>
+
+            <h3 id="ciencias-cognitivas">Ciencias Cognitivas</h3>
+            <p>Conocí a <span class="highlight">Francisco Varela</span> y su <span class="highlight">embodied cognition</span>, conectando con la <span class="highlight">fenomenología</span> de <span class="highlight">Merleau-Ponty</span> y <span class="highlight">Husserl</span>.</p>
+
+            <h3 id="filosofia">Filosofía de la Mente y el Lenguaje</h3>
+            <p>Fascinado por <span class="highlight">Wittgenstein</span> y el rol del <span class="highlight">lenguaje</span> en la <span class="highlight">mente</span>, exploré a <span class="highlight">Chalmers</span> y <span class="highlight">Clark</span>.</p>
+
+            <h3 id="economia-politica">Economía y Política</h3>
+            <p>Analicé el choque entre <span class="highlight">determinismo estructural</span> y <span class="highlight">libertad</span>, desde <span class="highlight">Marx</span> hasta <span class="highlight">Hayek</span>.</p>
+        </div>
+
+        <!-- Gráfico de Redes de Palabras -->
+        <div class="section" id="redes-palabras">
+            <h2>Gráfico de Redes de Palabras</h2>
+            <p>Exploramos la conexión entre palabras mediante gráficos interactivos que reflejan estructuras del pensamiento y el lenguaje.</p>
+            <div id="network-graph"></div>
+        </div>
+
+        <!-- Elementos Comunes a las Disciplinas -->
+        <div class="section" id="elementos-comunes">
+            <h2>Elementos Comunes a las Disciplinas</h2>
+            <p>Busco acelerar la comprensión del conocimiento con herramientas visuales:</p>
+            <h3>Visualización de Conceptos</h3>
+            <div id="visualization"></div>
+            <h3>Fundamentaciones</h3>
+            <ul>
+                <li><span class="highlight">Biología</span>: Determinismo vs. indeterminación.</li>
+                <li><span class="highlight">Ciencias Cognitivas</span>: Cognición encarnada.</li>
+                <li><span class="highlight">Política</span>: Poder y libertad.</li>
+            </ul>
+        </div>
+
+        <!-- Ejemplos con Voyant Tools -->
+        <div class="section" id="voyant-tools">
+            <h2>Ejemplos de Palabras con Voyant Tools</h2>
+            <iframe src="https://voyant-tools.org/tool/CollocatesGraph/?query=a&query=the&query=powerpuff&mode=corpus&corpus=9e0ea2351023ab13cbc0979214742c17"></iframe>
+        </div>
+
+        <!-- Enlaces Relevantes -->
+        <div class="section" id="enlaces">
+            <h2>Enlaces Relevantes</h2>
+            <a href="varios-graficos.html">VARIOS GRAFICOS</a>
+            <a href="grafico-de-lineas-y-treemap.html">GRAFICO DE LINEAS Y TREEMAP</a>
+            <a href="red-politicos.html">RED POLITICOS FA</a>
+            <a href="https://leolib87.github.io/herbario/">HERBARIO</a>
+            <a href="cuerpo-humano-completo-plantilla-Lt.html">CUERPO HUMANO DESPLEGABLE</a>
+            <a href="histologia.html">HISTOLOGIA</a>
+            <a href="red-2.html">RED TESIS DE MAGISTER EN ENSEÑANZA DE LAS CIENCIAS</a>
+            <a href="red3.html">RED TESIS DE MAGISTER EN ENSEÑANZA DE LAS CIENCIAS EJEMPLOS</a>
+            <a href="leolib-news-black.html">LEOLIB NEWS BLACK</a>
+            <a href="varela-cartografia.html">VARELA CARTOGRAFIA</a>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>La vida es terriblemente bella cuando los jugadores juegan. | Febrero 2025</p>
+        </div>
     </div>
 
-    <!-- Sobre mí -->
-    <div class="section" id="sobre-mi">
-      <h2>Sobre mí: Trazado de vida y preguntas</h2>
-      <p>Mi nombre es un eco de preguntas que han resonado en mí desde siempre. Mi principal interés ha sido la
-        biología, desde el cuestionamiento del origen de la existencia biológica y humana. Me fascinan los orígenes, la
-        <span class="highlight">vida</span> y la <span class="highlight">muerte</span> como el inicio y el fin de todo
-        lo existente. Este camino me llevó de la biología a la filosofía, las ciencias cognitivas, la economía y la
-        política, forjado por años de reflexión y una experiencia transformadora bajo los efectos del
-        <span class="highlight">LSD</span>. Aquí narro ese trazado, entre lo personal y lo investigativo.</p>
-    </div>
-
-    <!-- Intereses y Preguntas -->
-    <div class="section" id="intereses">
-      <h2>Intereses y Preguntas</h2>
-      <p>Mi curiosidad parte de la biología y se expande hacia dominios que desafían nuestra comprensión de la realidad:
-      </p>
-
-      <h3 id="biologia">Biología</h3>
-      <p>Me interesa el origen desde la <span class="highlight">histología</span> y los
-        <span class="highlight">mecanismos celulares</span>. ¿Por qué en la biología celular aceptamos el
-        <span class="highlight">determinismo</span> mientras que en la conducta emergen
-        <span class="highlight">libertad</span> e <span class="highlight">indeterminación</span>?</p>
-
-      <h3 id="ciencias-cognitivas">Ciencias Cognitivas</h3>
-      <p>Conocí a <span class="highlight">Francisco Varela</span> y su
-        <span class="highlight">embodied cognition</span>, conectando con la
-        <span class="highlight">fenomenología</span> de <span class="highlight">Merleau-Ponty</span> y
-        <span class="highlight">Husserl</span>.</p>
-
-      <h3 id="filosofia">Filosofía de la Mente y el Lenguaje</h3>
-      <p>Fascinado por <span class="highlight">Wittgenstein</span> y el rol del <span class="highlight">lenguaje</span>
-        en la <span class="highlight">mente</span>, exploré a <span class="highlight">Chalmers</span> y
-        <span class="highlight">Clark</span>.</p>
-
-      <h3 id="economia-politica">Economía y Política</h3>
-      <p>Analicé el choque entre <span class="highlight">determinismo estructural</span> y
-        <span class="highlight">libertad</span>, desde <span class="highlight">Marx</span> hasta
-        <span class="highlight">Hayek</span>.</p>
-    </div>
-
-    <!-- Gráfico de Redes de Palabras -->
-    <div class="section" id="redes-palabras">
-      <h2>Gráfico de Redes de Palabras</h2>
-      <p>Exploramos la conexión entre palabras mediante gráficos interactivos que reflejan estructuras del pensamiento y
-        el lenguaje.</p>
-      <div id="network-graph"></div>
-    </div>
-
-    <!-- Elementos Comunes a las Disciplinas -->
-    <div class="section" id="elementos-comunes">
-      <h2>Elementos Comunes a las Disciplinas</h2>
-      <p>Busco acelerar la comprensión del conocimiento con herramientas visuales:</p>
-      <h3>Visualización de Conceptos</h3>
-      <div id="visualization"></div>
-      <h3>Fundamentaciones</h3>
-      <ul>
-        <li><span class="highlight">Biología</span>: Determinismo vs. indeterminación.</li>
-        <li><span class="highlight">Ciencias Cognitivas</span>: Cognición encarnada.</li>
-        <li><span class="highlight">Política</span>: Poder y libertad.</li>
-      </ul>
-    </div>
-
-    <!-- Ejemplos con Voyant Tools -->
-    <div class="section" id="voyant-tools">
-      <h2>Ejemplos de Palabras con Voyant Tools</h2>
-      <iframe
-        src="https://voyant-tools.org/tool/CollocatesGraph/?query=a&query=the&query=powerpuff&mode=corpus&corpus=9e0ea2351023ab13cbc0979214742c17"></iframe>
-    </div>
-
-    <!-- Enlaces Relevantes -->
-    <div class="section" id="enlaces">
-      <h2>Enlaces Relevantes</h2>
-      <a href="varios-graficos.html">Varios Gráficos</a>
-      <a href="grafico-de-lineas-y-treemap.html">Gráfico de Líneas y Treemap</a>
-      <a href="red-politicos.html">Red de Políticos FA</a>
-      <a href="https://leolib87.github.io/herbario/">Herbario</a>
-      <a href="cuerpo-humano-completo-plantilla-lt.html">Cuerpo Humano Desplegable</a>
-      <a href="histologia.html">Histología</a>
-      <a href="red-2.html">Red Tesis de Magíster en Enseñanza de las Ciencias</a>
-      <a href="red3.html">Red Tesis de Magíster Ejemplos</a>
-      <a href="leolib-news-black.html">Leolib News</a>
-      <a href="varela-cartografia.html">Cartografía Varela</a>
-    </div>
-
-    <!-- Footer -->
-    <div class="footer">
-      <p>La vida es terriblemente bella cuando los jugadores juegan. | Febrero 2025</p>
-    </div>
-  </div>
-
-  <!-- Scripts D3.js -->
-  <script>
-    // Visualización 1: Conceptos interdisciplinarios
+    <!-- Scripts D3.js -->
+    <script>
+        // Visualización 1: Conceptos interdisciplinarios
         const vizWidth = 800, vizHeight = 600;
         const vizSvg = d3.select("#visualization")
             .append("svg")
@@ -356,7 +311,6 @@
             event.subject.fx = null;
             event.subject.fy = null;
         }
-  </script>
+    </script>
 </body>
-
 </html>
