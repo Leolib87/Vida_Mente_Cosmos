@@ -3,150 +3,162 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Exploración Cognitiva</title>
+  <title>Gráfico de Redes de Palabras</title>
   <style>
     body {
       background-color: #000;
-      color: #00ff00;
-      font-family: 'Courier New', Courier, monospace;
+      color: #0f0;
+      font-family: 'Courier New', monospace;
       text-align: center;
+      padding: 20px;
     }
-
+    
     h1 {
-      color: #00ff00;
-      text-shadow: 0 0 10px #00ff00;
+      color: #0f0;
+      text-shadow: 0 0 10px #0f0;
+      border-bottom: 2px solid #0f0;
+      padding-bottom: 10px;
     }
-
-    p {
-      color: #00ff99;
+    
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+      border: 2px solid #0f0;
+      box-shadow: 0 0 20px #0f0;
+      border-radius: 10px;
     }
-
+    
     a {
-      color: #00ff00;
+      color: #0f0;
       text-decoration: none;
       font-size: 18px;
       display: block;
       margin: 10px 0;
       transition: 0.3s;
     }
-
+    
     a:hover {
-      color: #ffffff;
-      text-shadow: 0 0 8px #ffffff;
+      color: #fff;
+      text-shadow: 0 0 8px #0f0;
     }
-
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 20px;
-      border: 2px solid #00ff00;
-      box-shadow: 0 0 20px #00ff00;
-    }
-
+    
     .section {
-      background: rgba(0, 255, 0, 0.1);
-      padding: 15px;
-      margin-top: 15px;
+      margin-top: 30px;
+      padding: 20px;
+      border: 1px solid #0f0;
       border-radius: 10px;
+      box-shadow: 0 0 10px #0f0;
+    }
+    
+    svg {
+      background-color: transparent;
+    }
+    
+    .node {
+      stroke: #0f0;
+      stroke-width: 2px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    
+    .node:hover {
+      stroke: #fff;
+    }
+    
+    .link {
+      stroke: #0f0;
+      stroke-opacity: 0.6;
+    }
+    
+    iframe {
+      border: none;
+      box-shadow: 0 0 15px #0f0;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Exploración Cognitiva y Visualización de Datos</h1>
-    <p>Bienvenido a un espacio de interacción entre ciencias cognitivas, filosofía de la mente, literatura y visualización de datos.</p>
-    
+    <h1>Gráfico de Redes de Palabras</h1>
     <div class="section">
-      <h2>Red de Conexiones Semánticas</h2>
+      <p>Exploramos la conexión entre palabras mediante gráficos interactivos.</p>
       <svg width="800" height="600"></svg>
     </div>
 
     <div class="section">
-      <h2>Exploración con Voyant Tools</h2>
+      <h2>Explorando Ciencias Cognitivas, Filosofía de la Mente, Literatura y Visualización de Datos</h2>
+      <p>Esta plataforma integra el análisis de textos con herramientas visuales para comprender mejor la estructura del lenguaje y el pensamiento.</p>
+    </div>
+
+    <div class="section">
+      <h2>Ejemplos de Palabras Usando Voyant Tools</h2>
       <iframe style='width: 800px; height: 600px;' src='https://voyant-tools.org/tool/CollocatesGraph/?query=a&query=the&query=powerpuff&mode=corpus&corpus=9e0ea2351023ab13cbc0979214742c17'></iframe>
     </div>
-    
+
     <div class="section">
-      <h2>Recursos Relacionados</h2>
-      <a href="varios graficos.html">Varios Gráficos</a>
-      <a href="GRAFICO DE LINEAS Y TREEMAP.html">Gráfico de Líneas y Treemap</a>
-      <a href="RED POLITICOS.html">Red de Políticos FA</a>
-      <a href="https://leolib87.github.io/herbario/">Herbario</a>
-      <a href="HISTOLOGIA.html">Histología</a>
+      <h2>Enlaces Relevantes</h2>
+      <a href="varios graficos.html">VARIOS GRAFICOS</a>
+      <a href="GRAFICO DE LINEAS Y TREEMAP.html">GRAFICO DE LINEAS Y TREEMAP</a>
+      <a href="RED POLITICOS.html">RED DE POLITICOS FA</a>
+      <a href="https://leolib87.github.io/herbario/">HERBARIO</a>
+      <a href="cuerpo humano completo plantilla Lt.html">CUERPO HUMANO DESPLEGABLE</a>
+      <a href="HISTOLOGIA.html">HISTOLOGIA</a>
+      <a href="red 2.html">RED TESIS DE MAGISTER EN ENSEÑANZA DE LAS CIENCIAS</a>
+      <a href="red3.html">RED TESIS DE MAGISTER EN ENSEÑANZA DE LAS CIENCIAS EJEMPLOS</a>
+      <a href="LEOLIB NEWS BLACK.HTML">LEOLIB NEWS</a>
+      <a href="VARELA_CARTOGRAFIA.HTML">CARTOGRAFIA VARELA</a>
     </div>
   </div>
 
   <script src="https://d3js.org/d3.v6.min.js"></script>
   <script>
-    const data = {
-      nodes: [
-        { id: "Conciencia", frequency: 5 },
-        { id: "Percepción", frequency: 8 },
-        { id: "Neurociencia", frequency: 3 },
-        { id: "Filosofía", frequency: 5 },
-      ],
-      links: [
-        { source: "Conciencia", target: "Percepción", strength: 0.6 },
-        { source: "Conciencia", target: "Neurociencia", strength: 0.3 },
-        { source: "Conciencia", target: "Filosofía", strength: 0.6 },
-      ]
-    };
-
     const width = 800, height = 600;
     const svg = d3.select("svg");
-
-    const simulation = d3.forceSimulation(data.nodes)
+    
+    const nodes = [
+      { id: "palabra1" },
+      { id: "palabra2" },
+      { id: "palabra3" }
+    ];
+    
+    const links = [
+      { source: "palabra1", target: "palabra2" },
+      { source: "palabra1", target: "palabra3" }
+    ];
+    
+    const simulation = d3.forceSimulation(nodes)
       .force("charge", d3.forceManyBody().strength(-200))
-      .force("link", d3.forceLink(data.links).id(d => d.id).strength(d => d.strength))
+      .force("link", d3.forceLink(links).id(d => d.id))
       .force("center", d3.forceCenter(width / 2, height / 2));
-
-    const links = svg.selectAll(".link")
-      .data(data.links)
-      .enter()
-      .append("line")
-      .attr("class", "link")
-      .attr("stroke", "#00ff00")
-      .attr("stroke-width", d => d.strength * 3);
-
-    const nodes = svg.selectAll(".node")
-      .data(data.nodes)
-      .enter()
-      .append("circle")
+    
+    const link = svg.selectAll(".link")
+      .data(links)
+      .enter().append("line")
+      .attr("class", "link");
+    
+    const node = svg.selectAll(".node")
+      .data(nodes)
+      .enter().append("circle")
       .attr("class", "node")
-      .attr("r", d => d.frequency * 2)
-      .attr("fill", "#00ff00")
-      .call(drag(simulation));
-
-    function drag(simulation) {
-      function dragstarted(event, d) {
-        if (!event.active) simulation.alphaTarget(0.3).restart();
-        d.fx = d.x;
-        d.fy = d.y;
-      }
-      function dragged(event, d) {
-        d.fx = event.x;
-        d.fy = event.y;
-      }
-      function dragended(event, d) {
-        if (!event.active) simulation.alphaTarget(0);
-        d.fx = null;
-        d.fy = null;
-      }
-      return d3.drag()
-        .on("start", dragstarted)
-        .on("drag", dragged)
-        .on("end", dragended);
-    }
-
+      .attr("r", 10)
+      .call(d3.drag()
+        .on("start", (event, d) => {
+          d.fx = event.x;
+          d.fy = event.y;
+        })
+        .on("drag", (event, d) => {
+          d.fx = event.x;
+          d.fy = event.y;
+        })
+        .on("end", (event, d) => {
+          d.fx = null;
+          d.fy = null;
+        }));
+    
     simulation.on("tick", () => {
-      links
-        .attr("x1", d => d.source.x)
-        .attr("y1", d => d.source.y)
-        .attr("x2", d => d.target.x)
-        .attr("y2", d => d.target.y);
-      nodes
-        .attr("cx", d => d.x)
-        .attr("cy", d => d.y);
+      link.attr("x1", d => d.source.x).attr("y1", d => d.source.y)
+          .attr("x2", d => d.target.x).attr("y2", d => d.target.y);
+      node.attr("cx", d => d.x).attr("cy", d => d.y);
     });
   </script>
 </body>
