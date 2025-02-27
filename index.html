@@ -175,16 +175,16 @@
         <!-- Enlaces Relevantes -->
         <div class="section" id="enlaces">
             <h2>Enlaces Relevantes</h2>
-            <a href="varios-graficos.html">VARIOS GRAFICOS</a>
-            <a href="grafico-de-lineas-y-treemap.html">GRAFICO DE LINEAS Y TREEMAP</a>
-            <a href="red-politicos.html">RED POLITICOS FA</a>
-            <a href="https://leolib87.github.io/herbario/">HERBARIO</a>
-            <a href="cuerpo-humano-completo-plantilla-Lt.html">CUERPO HUMANO DESPLEGABLE</a>
-            <a href="histologia.html">HISTOLOGIA</a>
-            <a href="red-2.html">RED TESIS DE MAGISTER EN ENSEÑANZA DE LAS CIENCIAS</a>
-            <a href="red3.html">RED TESIS DE MAGISTER EN ENSEÑANZA DE LAS CIENCIAS EJEMPLOS</a>
-            <a href="leolib-news-black.html">LEOLIB NEWS BLACK</a>
-            <a href="varela-cartografia.html">VARELA CARTOGRAFIA</a>
+            <a href="varios graficos.html">Varios Gráficos</a>
+            <a href="GRAFICO DE LINEAS Y TREEMAP.html">Gráfico de Líneas y Treemap</a>
+            <a href="RED POLITICOS.html">Red de Políticos FA</a>
+            <a href="https://leolib87.github.io/herbario/">Herbario</a>
+            <a href="cuerpo humano completo plantilla Lt.html">Cuerpo Humano Desplegable</a>
+            <a href="HISTOLOGIA.html">Histología</a>
+            <a href="red 2.html">Red Tesis de Magíster en Enseñanza de las Ciencias</a>
+            <a href="red3.html">Red Tesis de Magíster Ejemplos</a>
+            <a href="LEOLIB NEWS BLACK.HTML">Leolib News</a>
+            <a href="VARELA_CARTOGRAFIA.HTML">Cartografía Varela</a>
         </div>
 
         <!-- Footer -->
@@ -296,7 +296,7 @@
 
         // Funciones de arrastre
         function dragstarted(event) {
-            if (!event.active) vizSimulation.alphaTarget(0.3).restart();
+            if (!event.active) simulation.alphaTarget(0.3).restart();
             event.subject.fx = event.subject.x;
             event.subject.fy = event.subject.y;
         }
@@ -307,7 +307,7 @@
         }
 
         function dragended(event) {
-            if (!event.active) vizSimulation.alphaTarget(0);
+            if (!event.active) simulation.alphaTarget(0);
             event.subject.fx = null;
             event.subject.fy = null;
         }
