@@ -3,26 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gráfico de Redes de Palabras</title>
+  <title>Exploración Cognitiva</title>
   <style>
     body {
-      background-color: #0d0d0d;
-      color: #0ff;
-      font-family: Arial, sans-serif;
+      background-color: #000;
+      color: #00ff00;
+      font-family: 'Courier New', Courier, monospace;
       text-align: center;
     }
 
     h1 {
-      color: #ff00ff;
-      text-shadow: 0 0 10px #ff00ff;
+      color: #00ff00;
+      text-shadow: 0 0 10px #00ff00;
     }
 
     p {
-      color: #0ff;
+      color: #00ff99;
     }
 
     a {
-      color: #ffcc00;
+      color: #00ff00;
       text-decoration: none;
       font-size: 18px;
       display: block;
@@ -31,72 +31,64 @@
     }
 
     a:hover {
-      color: #ff00ff;
-      text-shadow: 0 0 8px #ff00ff;
+      color: #ffffff;
+      text-shadow: 0 0 8px #ffffff;
     }
 
-    svg {
-      background-color: transparent;
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+      border: 2px solid #00ff00;
+      box-shadow: 0 0 20px #00ff00;
     }
 
-    .node {
-      stroke: #0ff;
-      stroke-width: 2px;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    .node:hover {
-      stroke: #ff00ff;
-    }
-
-    .link {
-      stroke: #ffcc00;
-      stroke-opacity: 0.6;
-    }
-
-    iframe {
-      border: none;
-      box-shadow: 0 0 15px #ff00ff;
+    .section {
+      background: rgba(0, 255, 0, 0.1);
+      padding: 15px;
+      margin-top: 15px;
+      border-radius: 10px;
     }
   </style>
 </head>
 <body>
-  <h1>Gráfico de Redes de Palabras</h1>
-  <p>Este es un ejemplo de un gráfico de redes de palabras con un diseño futurista.</p>
-  <svg width="800" height="600"></svg>
+  <div class="container">
+    <h1>Exploración Cognitiva y Visualización de Datos</h1>
+    <p>Bienvenido a un espacio de interacción entre ciencias cognitivas, filosofía de la mente, literatura y visualización de datos.</p>
+    
+    <div class="section">
+      <h2>Red de Conexiones Semánticas</h2>
+      <svg width="800" height="600"></svg>
+    </div>
 
-  <h1>Explorando Ciencias Cognitivas, Filosofía de la Mente, Literatura y Visualización de Datos</h1>
-  <p>Esta página no solo muestra gráficos de palabras, sino que también busca conectar ideas sobre cómo pensamos, cómo interpretamos la información y cómo visualizamos el conocimiento.</p>
+    <div class="section">
+      <h2>Exploración con Voyant Tools</h2>
+      <iframe style='width: 800px; height: 600px;' src='https://voyant-tools.org/tool/CollocatesGraph/?query=a&query=the&query=powerpuff&mode=corpus&corpus=9e0ea2351023ab13cbc0979214742c17'></iframe>
+    </div>
+    
+    <div class="section">
+      <h2>Recursos Relacionados</h2>
+      <a href="varios graficos.html">Varios Gráficos</a>
+      <a href="GRAFICO DE LINEAS Y TREEMAP.html">Gráfico de Líneas y Treemap</a>
+      <a href="RED POLITICOS.html">Red de Políticos FA</a>
+      <a href="https://leolib87.github.io/herbario/">Herbario</a>
+      <a href="HISTOLOGIA.html">Histología</a>
+    </div>
+  </div>
 
-  <h1>Ejemplos de Palabras Usando Voyant Tools</h1>
-  <iframe style='width: 800px; height: 600px;' src='https://voyant-tools.org/tool/CollocatesGraph/?query=a&query=the&query=powerpuff&mode=corpus&corpus=9e0ea2351023ab13cbc0979214742c17'></iframe>
-
-  <br>
-  <a href="varios graficos.html">VARIOS GRAFICOS</a>
-  <a href="GRAFICO DE LINEAS Y TREEMAP.html">GRAFICO DE LINEAS Y TREEMAP</a>
-  <a href="RED POLITICOS.html">RED DE POLITICOS FA</a>
-  <a href="https://leolib87.github.io/herbario/">HERBARIO</a>
-  <a href="cuerpo humano completo plantilla Lt.html">CUERPO HUMANO DESPLEGABLE</a>
-  <a href="HISTOLOGIA.html">HISTOLOGIA</a>
-  <a href="red 2.html">RED TESIS DE MAGISTER EN ENSEÑANZA DE LAS CIENCIAS</a>
-  <a href="red3.html">RED TESIS DE MAGISTER EN ENSEÑANZA DE LAS CIENCIAS EJEMPLOS</a>
-  <a href="LEOLIB NEWS BLACK.HTML">LEOLIB NEWS</a>
-  <a href="VARELA_CARTOGRAFIA.HTML">CARTOGRAFIA VARELA</a>
-  
   <script src="https://d3js.org/d3.v6.min.js"></script>
   <script>
     const data = {
       nodes: [
-        { id: "palabra1", frequency: 5 },
-        { id: "palabra2", frequency: 8 },
-        { id: "palabra3", frequency: 3 },
-        { id: "palabra4", frequency: 5 },
+        { id: "Conciencia", frequency: 5 },
+        { id: "Percepción", frequency: 8 },
+        { id: "Neurociencia", frequency: 3 },
+        { id: "Filosofía", frequency: 5 },
       ],
       links: [
-        { source: "palabra1", target: "palabra2", strength: 0.6 },
-        { source: "palabra1", target: "palabra3", strength: 0.3 },
-        { source: "palabra1", target: "palabra4", strength: 0.6 },
+        { source: "Conciencia", target: "Percepción", strength: 0.6 },
+        { source: "Conciencia", target: "Neurociencia", strength: 0.3 },
+        { source: "Conciencia", target: "Filosofía", strength: 0.6 },
       ]
     };
 
@@ -113,6 +105,7 @@
       .enter()
       .append("line")
       .attr("class", "link")
+      .attr("stroke", "#00ff00")
       .attr("stroke-width", d => d.strength * 3);
 
     const nodes = svg.selectAll(".node")
@@ -121,7 +114,7 @@
       .append("circle")
       .attr("class", "node")
       .attr("r", d => d.frequency * 2)
-      .attr("fill", "#0ff")
+      .attr("fill", "#00ff00")
       .call(drag(simulation));
 
     function drag(simulation) {
@@ -158,4 +151,3 @@
   </script>
 </body>
 </html>
-
