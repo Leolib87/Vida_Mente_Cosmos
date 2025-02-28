@@ -16,12 +16,27 @@
             line-height: 1.6;
             overflow-x: hidden;
         }
-        .container {
-            max-width: 1000px;
+        .main-container {
+            display: grid;
+            grid-template-columns: 3fr 1fr; /* Contenido principal 75%, sidebar 25% */
+            max-width: 1400px;
             margin: 0 auto;
             padding: 20px;
+            gap: 20px;
+        }
+        .content {
+            grid-column: 1 / 2;
+        }
+        .sidebar {
+            grid-column: 2 / 3;
+            position: sticky;
+            top: 20px;
+            align-self: start;
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
         }
         .header {
+            grid-column: 1 / 3; /* Ocupa ambas columnas */
             position: relative;
             height: 100vh;
             background: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80') no-repeat center/cover;
@@ -68,6 +83,11 @@
             background: rgba(0, 255, 255, 0.05);
             border-radius: 10px;
         }
+        .sidebar .section {
+            margin: 0;
+            padding: 20px;
+            background: rgba(0, 255, 255, 0.1);
+        }
         h2 {
             color: #00FF00;
             text-shadow: 0 0 8px #00FF00;
@@ -89,7 +109,7 @@
         a {
             color: #00FF00;
             text-decoration: none;
-            font-size: 18px;
+            font-size: 16px;
             display: block;
             margin: 10px 0;
             transition: 0.3s;
@@ -124,12 +144,13 @@
             stroke-opacity: 0.6;
         }
         iframe {
-            width: 800px;
+            width: 100%;
             height: 600px;
             border: none;
             box-shadow: 0 0 15px #00FFFF;
         }
         .footer {
+            grid-column: 1 / 3; /* Ocupa ambas columnas */
             text-align: center;
             padding: 30px;
             color: #00FFFF;
@@ -139,109 +160,111 @@
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="main-container">
         <!-- Header con imagen -->
         <div class="header">
             <h1>Origen, Mente y Cosmos</h1>
             <p>Un viaje transdisciplinario a través de la vida, la conciencia y las redes del saber</p>
         </div>
 
-        <!-- Trazado de vida y preguntas -->
-        <div class="section" id="trazado-vida">
-            <h2>Trazado de Vida y Preguntas</h2>
-            <h3>El Origen de la Curiosidad</h3>
-            <p>Mi viaje comenzó con la <span class="highlight">biología</span>, fascinado por el origen de la existencia biológica y humana. La <span class="highlight">vida</span> y la <span class="highlight">muerte</span> no son solo eventos, sino los límites que dan sentido a todo. No pienso que la materia colapse con una vida individual, sino que el significado de la existencia depende del tejido colectivo de las vidas humanas.</p>
-            <h3>El Giro Transformador</h3>
-            <p>Tras años de preguntas difusas, una experiencia con <span class="highlight">LSD</span> cristalizó mi visión. Ese momento, junto a mi trabajo investigativo y vivencias personales, tejió este camino que exploro aquí.</p>
+        <!-- Contenido principal -->
+        <div class="content">
+            <!-- Trazado de vida y preguntas -->
+            <div class="section" id="trazado-vida">
+                <h2>Trazado de Vida y Preguntas</h2>
+                <h3>El Origen de la Curiosidad</h3>
+                <p>Mi viaje comenzó con la <span class="highlight">biología</span>, fascinado por el origen de la existencia biológica y humana. La <span class="highlight">vida</span> y la <span class="highlight">muerte</span> no son solo eventos, sino los límites que dan sentido a todo.</p>
+                <h3>El Giro Transformador</h3>
+                <p>Tras años de preguntas difusas, una experiencia con <span class="highlight">LSD</span> cristalizó mi visión, tejiendo este camino entre lo personal y lo investigativo.</p>
+            </div>
+
+            <!-- Biología -->
+            <div class="section" id="biologia">
+                <h2>Biología: De las Células al Determinismo</h2>
+                <h3>Histología y Mecanismos Celulares</h3>
+                <p>Mi interés radica en la estructura (<span class="highlight">histología</span>) y los <span class="highlight">mecanismos celulares</span>. ¿Por qué a nivel molecular asumimos conductas unívocas?</p>
+                <h3>Determinismo vs. Libertad</h3>
+                <p>La <span class="highlight">biología celular</span> me llevó a cuestionar el <span class="highlight">determinismo</span> frente a la <span class="highlight">libertad</span> emergente en organismos completos.</p>
+                <h3>Maturana y Varela</h3>
+                <p><span class="highlight">Humberto Maturana</span> y <span class="highlight">Francisco Varela</span> introdujeron el <span class="highlight">determinismo estructural</span>, un puente hacia lo filosófico.</p>
+            </div>
+
+            <!-- Ciencias Cognitivas -->
+            <div class="section" id="ciencias-cognitivas">
+                <h2>Ciencias Cognitivas: La Mente Encarnada</h2>
+                <h3>Embodied Cognition</h3>
+                <p><span class="highlight">Francisco Varela</span> y su <span class="highlight">embodied cognition</span> unieron las ciencias cognitivas con la <span class="highlight">fenomenología</span>.</p>
+                <h3>Legado de Varela</h3>
+                <p><span class="highlight">Evan Thompson</span> y <span class="highlight">Tom Froese</span> exploran la mente como un proceso vivo.</p>
+            </div>
+
+            <!-- Filosofía de la Mente y el Lenguaje -->
+            <div class="section" id="filosofia-mente">
+                <h2>Filosofía de la Mente y el Lenguaje</h2>
+                <h3>Wittgenstein y el Lenguaje</h3>
+                <p><span class="highlight">Ludwig Wittgenstein</span> redefine la <span class="highlight">mente</span> a través del <span class="highlight">lenguaje</span>.</p>
+                <h3>Conciencia y Libertad</h3>
+                <p><span class="highlight">David Chalmers</span> y <span class="highlight">Andy Clark</span> abordan la conciencia y el <span class="highlight">determinismo</span>.</p>
+            </div>
+
+            <!-- Economía y Política -->
+            <div class="section" id="economia-politica">
+                <h2>Economía y Política: Libertad vs. Control</h2>
+                <h3>Colectivismo y Liberalismo</h3>
+                <p><span class="highlight">Karl Marx</span> vs. <span class="highlight">Hayek</span>: <span class="highlight">control</span> frente a <span class="highlight">libertad</span>.</p>
+                <h3>Chile y el Colapso</h3>
+                <p>En Chile, estas tensiones se hicieron visibles, con autores como <span class="highlight">Carlos Peña</span>.</p>
+            </div>
+
+            <!-- Epistemología -->
+            <div class="section" id="epistemologia">
+                <h2>Epistemología: El Conocimiento en Juego</h2>
+                <p><span class="highlight">Maturana</span> ve el conocimiento como un proceso biológico y relacional.</p>
+            </div>
+
+            <!-- Redes de Palabras -->
+            <div class="section" id="redes-palabras">
+                <h2>Redes de Palabras: Lenguaje y Visualización</h2>
+                <p>Exploro cómo el <span class="highlight">lenguaje</span> estructura el pensamiento mediante gráficos.</p>
+                <div id="network-graph"></div>
+            </div>
+
+            <!-- Elementos Comunes -->
+            <div class="section" id="elementos-comunes">
+                <h2>Elementos Comunes: Un Mapa del Saber</h2>
+                <h3>Visualización de Conceptos</h3>
+                <p>Un mapa dinámico de mis ideas:</p>
+                <div id="visualization"></div>
+                <h3>Fundamentaciones Filosóficas</h3>
+                <ul>
+                    <li><span class="highlight">Biología</span>: Determinismo vs. indeterminación.</li>
+                    <li><span class="highlight">Ciencias Cognitivas</span>: Cognición encarnada.</li>
+                    <li><span class="highlight">Política</span>: Poder y libertad.</li>
+                </ul>
+            </div>
+
+            <!-- Voyant Tools -->
+            <div class="section" id="voyant-tools">
+                <h2>Voyant Tools: Análisis de Textos</h2>
+                <iframe src="https://voyant-tools.org/tool/CollocatesGraph/?query=a&query=the&query=powerpuff&mode=corpus&corpus=9e0ea2351023ab13cbc0979214742c17"></iframe>
+            </div>
         </div>
 
-        <!-- Biología -->
-        <div class="section" id="biologia">
-            <h2>Biología: De las Células al Determinismo</h2>
-            <h3>Histología y Mecanismos Celulares</h3>
-            <p>Mi interés radica en la estructura (<span class="highlight">histología</span>) y los <span class="highlight">mecanismos celulares</span>. ¿Por qué a nivel molecular asumimos conductas unívocas frente a estímulos, mientras que un organismo completo muestra <span class="highlight">indeterminación</span>?</p>
-            <h3>Determinismo vs. Libertad</h3>
-            <p>La <span class="highlight">biología celular</span> me llevó a cuestionar el <span class="highlight">determinismo</span>. Mientras las células responden de forma predecible, los organismos exhiben <span class="highlight">creatividad</span> y <span class="highlight">libertad</span>. ¿Qué separa estos niveles?</p>
-            <h3>Maturana y Varela</h3>
-            <p>El trabajo de <span class="highlight">Humberto Maturana</span> y <span class="highlight">Francisco Varela</span> en <i>De Máquinas y Seres Vivos</i> y <i>El Árbol del Conocimiento</i> introdujo el <span class="highlight">determinismo estructural</span>, un puente entre lo biológico y lo filosófico.</p>
-        </div>
-
-        <!-- Ciencias Cognitivas -->
-        <div class="section" id="ciencias-cognitivas">
-            <h2>Ciencias Cognitivas: La Mente Encarnada</h2>
-            <h3>Embodied Cognition</h3>
-            <p>Conocí a <span class="highlight">Francisco Varela</span> y su <span class="highlight">embodied cognition</span> en <i>The Embodied Mind</i>, uniendo las ciencias cognitivas con la <span class="highlight">fenomenología</span> de <span class="highlight">Husserl</span> y <span class="highlight">Merleau-Ponty</span>.</p>
-            <h3>Legado de Varela</h3>
-            <p>Investigadores como <span class="highlight">Evan Thompson</span>, <span class="highlight">Tom Froese</span> y <span class="highlight">Exequiel Di Paolo</span> expandieron estas ideas, explorando la mente como un proceso vivo y situado.</p>
-        </div>
-
-        <!-- Filosofía de la Mente y el Lenguaje -->
-        <div class="section" id="filosofia-mente">
-            <h2>Filosofía de la Mente y el Lenguaje</h2>
-            <h3>Wittgenstein y el Lenguaje</h3>
-            <p>Mi Máster me llevó a <span class="highlight">Ludwig Wittgenstein</span>, desde el <i>Tractatus</i> hasta las <i>Investigaciones Filosóficas</i>, donde el <span class="highlight">lenguaje</span> define la <span class="highlight">mente</span>.</p>
-            <h3>Conciencia y Libertad</h3>
-            <p><span class="highlight">David Chalmers</span> y <span class="highlight">Andy Clark</span> me hicieron repensar la conciencia y su relación con el <span class="highlight">determinismo</span> y la <span class="highlight">libertad</span>.</p>
-        </div>
-
-        <!-- Economía y Política -->
-        <div class="section" id="economia-politica">
-            <h2>Economía y Política: Libertad vs. Control</h2>
-            <h3>Colectivismo y Liberalismo</h3>
-            <p>Analicé a <span class="highlight">Karl Marx</span> (teoría del valor trabajo) y a <span class="highlight">Hayek</span> o <span class="highlight">Von Mises</span> (teoría subjetiva del valor), reflejando la tensión entre <span class="highlight">control</span> y <span class="highlight">libertad</span>.</p>
-            <h3>Chile y el Colapso</h3>
-            <p>En el contexto de Chile, estas ideas cobraron vida, inspirándome a estudiar a <span class="highlight">Carlos Peña</span> y <span class="highlight">Axel Kaiser</span>.</p>
-        </div>
-
-        <!-- Epistemología -->
-        <div class="section" id="epistemologia">
-            <h2>Epistemología: El Conocimiento en Juego</h2>
-            <p>La visión de <span class="highlight">Maturana</span> sobre el conocimiento como un proceso biológico y relacional despertó mi interés en la <span class="highlight">epistemología</span>. ¿Cómo sabemos lo que sabemos?</p>
-        </div>
-
-        <!-- Redes de Palabras -->
-        <div class="section" id="redes-palabras">
-            <h2>Redes de Palabras: Lenguaje y Visualización</h2>
-            <h3>Conexiones del Pensamiento</h3>
-            <p>Exploro cómo el <span class="highlight">lenguaje</span> estructura el pensamiento mediante gráficos interactivos.</p>
-            <div id="network-graph"></div>
-        </div>
-
-        <!-- Elementos Comunes -->
-        <div class="section" id="elementos-comunes">
-            <h2>Elementos Comunes: Un Mapa del Saber</h2>
-            <h3>Visualización de Conceptos</h3>
-            <p>Un mapa dinámico de mis ideas, conectando disciplinas y tensiones:</p>
-            <div id="visualization"></div>
-            <h3>Fundamentaciones Filosóficas</h3>
-            <ul>
-                <li><span class="highlight">Biología</span>: Determinismo vs. indeterminación.</li>
-                <li><span class="highlight">Neurociencia</span>: Mente y cerebro.</li>
-                <li><span class="highlight">Ciencias Cognitivas</span>: Cognición encarnada.</li>
-                <li><span class="highlight">Política</span>: Poder y libertad.</li>
-                <li><span class="highlight">Educación</span>: Ética del saber.</li>
-            </ul>
-        </div>
-
-        <!-- Voyant Tools -->
-        <div class="section" id="voyant-tools">
-            <h2>Voyant Tools: Análisis de Textos</h2>
-            <iframe src="https://voyant-tools.org/tool/CollocatesGraph/?query=a&query=the&query=powerpuff&mode=corpus&corpus=9e0ea2351023ab13cbc0979214742c17"></iframe>
-        </div>
-
-        <!-- Enlaces Relevantes -->
-        <div class="section" id="enlaces">
-            <h2>Enlaces Relevantes</h2>
-            <a href="varios graficos.html">Varios Gráficos</a>
-            <a href="GRAFICO DE LINEAS Y TREEMAP.html">Gráfico de Líneas y Treemap</a>
-            <a href="RED POLITICOS.html">Red de Políticos FA</a>
-            <a href="https://leolib87.github.io/herbario/">Herbario</a>
-            <a href="cuerpo humano completo plantilla Lt.html">Cuerpo Humano Desplegable</a>
-            <a href="HISTOLOGIA.html">Histología</a>
-            <a href="red 2.html">Red Tesis de Magíster en Enseñanza de las Ciencias</a>
-            <a href="red3.html">Red Tesis de Magíster Ejemplos</a>
-            <a href="LEOLIB NEWS BLACK.HTML">Leolib News</a>
-            <a href="VARELA_CARTOGRAFIA.HTML">Cartografía Varela</a>
+        <!-- Sidebar con enlaces relevantes -->
+        <div class="sidebar">
+            <div class="section" id="enlaces">
+                <h2>Enlaces Relevantes</h2>
+                <a href="varios graficos.html">Varios Gráficos</a>
+                <a href="GRAFICO DE LINEAS Y TREEMAP.html">Gráfico de Líneas y Treemap</a>
+                <a href="RED POLITICOS.html">Red de Políticos FA</a>
+                <a href="https://leolib87.github.io/herbario/">Herbario</a>
+                <a href="cuerpo humano completo plantilla Lt.html">Cuerpo Humano Desplegable</a>
+                <a href="HISTOLOGIA.html">Histología</a>
+                <a href="red 2.html">Red Tesis de Magíster en Enseñanza de las Ciencias</a>
+                <a href="red3.html">Red Tesis de Magíster Ejemplos</a>
+                <a href="LEOLIB NEWS BLACK.HTML">Leolib News</a>
+                <a href="VARELA_CARTOGRAFIA.HTML">Cartografía Varela</a>
+            </div>
         </div>
 
         <!-- Footer -->
@@ -253,7 +276,7 @@
     <!-- Scripts D3.js -->
     <script>
         // Visualización 1: Conceptos Interdisciplinarios
-        const vizWidth = 1000, vizHeight = 700;
+        const vizWidth = 900, vizHeight = 700;
         const vizSvg = d3.select("#visualization").append("svg").attr("width", vizWidth).attr("height", vizHeight);
 
         const vizNodes = [
