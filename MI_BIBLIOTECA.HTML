@@ -191,6 +191,69 @@
             border-top: 2px solid #00FF00;
             margin-top: 40px;
         }
+        .chart-container {
+            margin: 20px 0;
+            padding: 20px;
+            border: 2px solid #00FFFF;
+            border-radius: 5px;
+            background: rgba(0, 255, 255, 0.05);
+        }
+        .chart-container h3 {
+            color: #00FF00;
+            text-shadow: 0 0 8px #00FF00;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        #bar-chart, #pie-chart, #treemap {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .bar {
+            fill: #00FF00;
+            transition: fill 0.3s ease;
+        }
+        .bar:hover {
+            fill: #FFFF00;
+        }
+        .bar-text {
+            fill: #00FFFF;
+            font-size: 10px;
+            text-shadow: 0 0 5px #000000;
+            text-anchor: "middle";
+        }
+        .arc path {
+            stroke: #00FF00; /* Verde neón para bordes */
+            stroke-width: 4px; /* Borde grueso */
+            fill: #000000; /* Interior negro */
+            transition: opacity 0.3s ease;
+        }
+        .arc path:hover {
+            opacity: 0.8;
+        }
+        .arc text {
+            fill: #00FFFF;
+            font-size: 10px;
+            text-shadow: 0 0 5px #000000;
+            pointer-events: none;
+        }
+        .treemap-rect {
+            stroke: #00FF00; /* Verde neón para bordes */
+            stroke-width: 4px; /* Borde grueso */
+            fill: #000000; /* Interior negro */
+            fill-opacity: 0.8;
+            transition: fill-opacity 0.3s ease;
+        }
+        .treemap-rect:hover {
+            fill-opacity: 1;
+        }
+        #treemap-info {
+            color: #00FF00;
+            text-shadow: 0 0 8px #00FF00;
+            font-size: 14px;
+            margin-top: 10px;
+            text-align: center;
+        }
         /* Media Queries para diseño responsivo */
         @media (max-width: 768px) {
             .main-container {
@@ -220,6 +283,9 @@
             }
             #network {
                 height: 400px; /* Reducir altura en tablets */
+            }
+            .chart-container {
+                padding: 15px;
             }
         }
         @media (max-width: 480px) {
@@ -262,6 +328,15 @@
             .node.selected text {
                 font-size: 10px; /* Ajuste para móviles */
             }
+            .chart-container {
+                padding: 10px;
+            }
+            .bar-text, .arc text {
+                font-size: 8px; /* Texto más pequeño en móviles */
+            }
+            #treemap-info {
+                font-size: 12px;
+            }
         }
     </style>
 </head>
@@ -302,9 +377,22 @@
             </table>
         </div>
 
-        <!-- Pie de página -->
+        <!-- Pie de página con gráficos -->
         <div class="footer">
             <p>Explorando el Conocimiento | Febrero 2025</p>
+            <div class="chart-container">
+                <h3>Distribución por Género (Barras)</h3>
+                <div id="bar-chart"></div>
+            </div>
+            <div class="chart-container">
+                <h3>Distribución por Género (Torta)</h3>
+                <div id="pie-chart"></div>
+            </div>
+            <div class="chart-container">
+                <h3>Libros por Autor (Treemap)</h3>
+                <div id="treemap"></div>
+                <div id="treemap-info"></div>
+            </div>
         </div>
     </div>
 
@@ -402,7 +490,7 @@
             { title: "Introducción a la Cibernética", author: "W. Ross Ashby", comments: "Libro clásico sobre cibernética y sistemas.", genre: "Ciencia", theme: "ESPECIAL" },
             { title: "William Blake's Divine Comedy Illustrations", author: "William Blake (Dover)", comments: "Edición de Dover con ilustraciones de William Blake para la Divina Comedia.", genre: "Arte", theme: "General" },
             { title: "El nido ajeno / Cartas de mujeres", author: "Jacinto Benavente", comments: "Obra teatral y epistolar", genre: "Teatro", theme: "Sociedad y relaciones" },
-            { title: "Obras literarias completas", author: "Santiago Ramón y Cajal", comments: "Recopilación de escritos literarios", genre: "Literatura", theme: "Ciencia y literatura" },
+            { title: "Obras literarias completas", author: "Santiago Ramón y Cajal", comments: "Recopilación de escritos literarios", genre: "Literature", theme: "Ciencia y literatura" },
             { title: "Obras completas V", author: "Sir Arthur Conan Doyle", comments: "Novelas y relatos históricos", genre: "Narrativa", theme: "Historia y aventura" },
             { title: "Tragedias completas", author: "Lucio Anneo Séneca", comments: "Compilación de tragedias", genre: "Teatro", theme: "Tragedia clásica" },
             { title: "Tragedias completas", author: "Sófocles", comments: "Compilación de tragedias", genre: "Teatro", theme: "Tragedia clásica" },
@@ -506,31 +594,27 @@
                 .on("drag", dragged)
                 .on("end", dragEnded))
             .on("click", (event, d) => {
-                // Desmarcar todos los nodos
                 d3.selectAll(".node").classed("selected", false);
-                // Marcar el nodo clicado
                 d3.select(event.currentTarget).classed("selected", true);
-                // Si es género, actualizar el filtro
                 if (d.type === "genre") {
                     const genreFilter = document.getElementById('genreFilter');
                     genreFilter.value = d.name;
                     const changeEvent = new Event('change');
                     genreFilter.dispatchEvent(changeEvent);
                 }
-                // Aplicar repulsión a nodos del mismo género (excepto el seleccionado)
                 const selectedGenre = d.genre || (d.type === "genre" ? d.name : null);
                 if (selectedGenre) {
                     nodes.forEach(n => {
                         if (n !== d && (n.genre === selectedGenre || (n.type === "genre" && n.name === selectedGenre))) {
                             const dx = n.x - d.x;
                             const dy = n.y - d.y;
-                            const distance = Math.sqrt(dx * dx + dy * dy) || 1; // Evitar división por cero
-                            const force = 1000 / distance; // Fuerza inversamente proporcional a la distancia
+                            const distance = Math.sqrt(dx * dx + dy * dy) || 1;
+                            const force = 1000 / distance;
                             n.vx += (dx / distance) * force;
                             n.vy += (dy / distance) * force;
                         }
                     });
-                    simulation.alpha(0.3).restart(); // Reiniciar simulación para aplicar repulsión
+                    simulation.alpha(0.3).restart();
                 }
             });
 
@@ -539,7 +623,7 @@
             .attr("fill", d => d.type === "genre" ? "#FF00FF" : "#00FF00");
 
         node.append("text")
-            .attr("dy", -25) // Desplazamiento ajustado para evitar solapamiento
+            .attr("dy", -25)
             .attr("text-anchor", "middle")
             .text(d => d.type === "genre" ? d.name : d.title);
 
@@ -551,29 +635,17 @@
             node.attr("transform", d => `translate(${Math.max(10, Math.min(width - 10, d.x))},${Math.max(10, Math.min(height - 10, d.y))})`);
         });
 
-        /**
-         * Inicia el arrastre de un nodo
-         * @param {Object} event - Evento de arrastre
-         */
         function dragStarted(event) {
             if (!event.active) simulation.alphaTarget(0.3).restart();
             event.subject.fx = event.subject.x;
             event.subject.fy = event.subject.y;
         }
 
-        /**
-         * Actualiza la posición del nodo durante el arrastre
-         * @param {Object} event - Evento de arrastre
-         */
         function dragged(event) {
             event.subject.fx = Math.max(10, Math.min(width - 10, event.x));
             event.subject.fy = Math.max(10, Math.min(height - 10, event.y));
         }
 
-        /**
-         * Finaliza el arrastre de un nodo
-         * @param {Object} event - Evento de arrastre
-         */
         function dragEnded(event) {
             if (!event.active) simulation.alphaTarget(0);
             event.subject.fx = null;
@@ -601,9 +673,6 @@
             themeFilter.appendChild(option);
         });
 
-        /**
-         * Renderiza la tabla de libros según los filtros seleccionados
-         */
         function renderTable() {
             const selectedGenre = genreFilter.value;
             const selectedTheme = themeFilter.value;
@@ -613,7 +682,7 @@
             );
 
             const tbody = document.querySelector('#bookTable tbody');
-            tbody.innerHTML = ''; // Limpiar tabla
+            tbody.innerHTML = '';
 
             filteredBooks.forEach(book => {
                 const row = document.createElement('tr');
@@ -628,16 +697,10 @@
             });
         }
 
-        // Listeners para filtros
         genreFilter.addEventListener('change', renderTable);
         themeFilter.addEventListener('change', renderTable);
-
-        // Renderizar tabla inicial
         renderTable();
 
-        /**
-         * Ajusta el tamaño de la red al redimensionar la ventana
-         */
         function resize() {
             const newWidth = document.getElementById('network').clientWidth;
             const newHeight = window.innerWidth <= 768 ? (window.innerWidth <= 480 ? 300 : 400) : 500;
@@ -648,6 +711,194 @@
             simulation.alpha(1).restart();
         }
         window.addEventListener("resize", resize);
+
+        // Preparar datos para los gráficos
+        const genreCounts = d3.rollup(books, v => v.length, d => d.genre);
+        const genreData = Array.from(genreCounts, ([genre, count]) => ({ genre, count }));
+        const totalBooks = books.length;
+        const authorCounts = d3.rollup(books, v => v.length, d => d.author);
+        const authorData = Array.from(authorCounts, ([author, count]) => ({ name: author, value: count }));
+
+        function updateGenreFilter(genre) {
+            const genreFilter = document.getElementById('genreFilter');
+            genreFilter.value = genre;
+            const changeEvent = new Event('change');
+            genreFilter.dispatchEvent(changeEvent);
+        }
+
+        // Gráfico de barras por género (sin modificaciones)
+        const barSvg = d3.select("#bar-chart")
+            .append("svg")
+            .attr("width", "100%")
+            .attr("height", 400);
+
+        const barMargin = { top: 20, right: 20, bottom: 100, left: 40 };
+        const barWidth = barSvg.node().clientWidth - barMargin.left - barMargin.right;
+        const barHeight = 400 - barMargin.top - barMargin.bottom;
+
+        const barX = d3.scaleBand()
+            .domain(genreData.map(d => d.genre))
+            .range([0, barWidth])
+            .padding(0.1);
+
+        const barY = d3.scaleLinear()
+            .domain([0, d3.max(genreData, d => d.count)])
+            .range([barHeight, 0]);
+
+        const barG = barSvg.append("g")
+            .attr("transform", `translate(${barMargin.left},${barMargin.top})`);
+
+        barG.append("g")
+            .attr("class", "x-axis")
+            .attr("transform", `translate(0,${barHeight})`)
+            .call(d3.axisBottom(barX))
+            .selectAll("text")
+            .attr("fill", "#00FFFF")
+            .attr("text-shadow", "0 0 5px #00FF00")
+            .attr("transform", "rotate(-45)")
+            .style("text-anchor", "end");
+
+        barG.append("g")
+            .attr("class", "y-axis")
+            .call(d3.axisLeft(barY))
+            .selectAll("text")
+            .attr("fill", "#00FFFF");
+
+        barG.selectAll(".bar")
+            .data(genreData)
+            .join("rect")
+            .attr("class", "bar")
+            .attr("x", d => barX(d.genre))
+            .attr("y", d => barY(d.count))
+            .attr("width", barX.bandwidth())
+            .attr("height", d => barHeight - barY(d.count))
+            .on("click", (event, d) => updateGenreFilter(d.genre));
+
+        barG.selectAll(".bar-text")
+            .data(genreData)
+            .join("text")
+            .attr("class", "bar-text")
+            .attr("x", d => barX(d.genre) + barX.bandwidth() / 2)
+            .attr("y", d => barY(d.count) - 5)
+            .text(d => `${d.count} (${((d.count / totalBooks) * 100).toFixed(1)}%)`);
+
+        // Gráfico de torta por género (ajustado para bajar un poco más)
+        const pieSvg = d3.select("#pie-chart")
+            .append("svg")
+            .attr("width", "100%")
+            .attr("height", 400);
+
+        const pieWidth = pieSvg.node().clientWidth - barMargin.left - barMargin.right;
+        const pieHeight = 400 - barMargin.top - barMargin.bottom;
+        const pieRadius = Math.min(pieWidth, pieHeight) / 2 - 20;
+
+        const pieG = pieSvg.append("g")
+            .attr("transform", `translate(${pieWidth / 2 + barMargin.left},${pieHeight / 2 + 40})`); // Ajuste para bajar el gráfico 40px
+
+        const pie = d3.pie()
+            .value(d => d.count)
+            .sort((a, b) => d3.ascending(a.genre, b.genre)); // Ordenar alfabéticamente para consistencia
+
+        const arc = d3.arc()
+            .innerRadius(pieRadius * 0.5) // Donut
+            .outerRadius(pieRadius);
+
+        const outerArc = d3.arc()
+            .innerRadius(pieRadius * 0.9)
+            .outerRadius(pieRadius * 0.9);
+
+        const arcsData = pie(genreData);
+        const arcs = pieG.selectAll(".arc")
+            .data(arcsData)
+            .join("g")
+            .attr("class", "arc");
+
+        // Calcular posiciones ajustadas para etiquetas y evitar solapamiento
+        const labelPositions = [];
+        arcsData.forEach((d, i) => {
+            const pos = outerArc.centroid(d);
+            const midAngle = d.startAngle + (d.endAngle - d.startAngle) / 2;
+            const side = midAngle < Math.PI ? 1 : -1;
+            pos[0] = pieRadius * (midAngle < Math.PI ? 1.2 : -1.2);
+            pos[1] += (midAngle > Math.PI/2 && midAngle < 3*Math.PI/2) ? 10 : -10;
+
+            // Ajustar posiciones para evitar solapamiento
+            let adjustedY = pos[1];
+            for (let j = 0; j < labelPositions.length; j++) {
+                const prevPos = labelPositions[j];
+                if (Math.abs(prevPos.y - adjustedY) < 20 && prevPos.side === side) {
+                    adjustedY += (adjustedY > prevPos.y ? 20 : -20);
+                }
+            }
+            labelPositions.push({ y: adjustedY, side });
+            d.adjustedPos = [pos[0], adjustedY];
+        });
+
+        arcs.append("path")
+            .attr("d", arc)
+            .on("click", (event, d) => updateGenreFilter(d.data.genre));
+
+        arcs.append("text")
+            .attr("transform", d => `translate(${d.adjustedPos})`)
+            .attr("dy", ".35em")
+            .style("text-anchor", d => {
+                const midAngle = d.startAngle + (d.endAngle - d.startAngle) / 2;
+                return midAngle < Math.PI ? "start" : "end";
+            })
+            .text(d => `${d.data.genre} (${((d.data.count / totalBooks) * 100).toFixed(1)}%)`)
+            .each(function(d) {
+                const bbox = this.getBBox();
+                const midAngle = d.startAngle + (d.endAngle - d.startAngle) / 2;
+                const offsetX = midAngle < Math.PI ? bbox.width + 10 : -bbox.width - 10;
+                d3.select(this).attr("dx", offsetX > 0 ? 5 : -5);
+            });
+
+        arcs.append("polyline")
+            .attr("points", d => {
+                const pos = outerArc.centroid(d);
+                const midAngle = d.startAngle + (d.endAngle - d.startAngle) / 2;
+                const offset = pieRadius * (midAngle < Math.PI ? 1.2 : -1.2);
+                return [arc.centroid(d), outerArc.centroid(d), [offset, d.adjustedPos[1]]];
+            })
+            .attr("stroke", "#00FFFF")
+            .attr("fill", "none");
+
+        // Gráfico de treemap por autores (sin modificaciones)
+        const treemapSvg = d3.select("#treemap")
+            .append("svg")
+            .attr("width", "100%")
+            .attr("height", 400);
+
+        const treemapWidth = treemapSvg.node().clientWidth - barMargin.left - barMargin.right;
+        const treemapHeight = 400 - barMargin.top - barMargin.bottom;
+
+        const treemap = d3.treemap()
+            .size([treemapWidth, treemapHeight])
+            .padding(4)
+            .round(true);
+
+        const root = d3.hierarchy({ children: authorData })
+            .sum(d => d.value);
+
+        treemap(root);
+
+        const treemapG = treemapSvg.append("g")
+            .attr("transform", `translate(${barMargin.left},${barMargin.top})`);
+
+        treemapG.selectAll(".treemap-rect")
+            .data(root.leaves())
+            .join("rect")
+            .attr("class", "treemap-rect")
+            .attr("x", d => d.x0)
+            .attr("y", d => d.y0)
+            .attr("width", d => d.x1 - d.x0)
+            .attr("height", d => d.y1 - d.y0)
+            .on("click", (event, d) => {
+                const authorBooks = books.filter(b => b.author === d.data.name);
+                if (authorBooks.length > 0) updateGenreFilter(authorBooks[0].genre);
+                d3.select("#treemap-info")
+                    .text(`Autor: ${d.data.name} | Libros: ${d.data.value}`);
+            });
     </script>
 </body>
 </html>
