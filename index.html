@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Origen, Vida y Redes</title>
+    <title>Origen, Mente y Cosmos</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <style>
@@ -12,34 +12,61 @@
             color: #00FF00;
             font-family: 'Orbitron', sans-serif;
             margin: 0;
-            padding: 20px;
+            padding: 0;
             line-height: 1.6;
+            overflow-x: hidden;
         }
         .container {
-            max-width: 900px;
+            max-width: 1000px;
             margin: 0 auto;
+            padding: 20px;
         }
         .header {
+            position: relative;
+            height: 100vh;
+            background: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80') no-repeat center/cover;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             text-align: center;
-            padding: 60px 20px;
-            text-shadow: 0 0 10px #00FF00, 0 0 20px #00FFFF;
+            color: #00FFFF;
+            text-shadow: 0 0 15px #00FF00;
+            animation: fadeIn 2s ease-in;
+        }
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1;
+        }
+        .header h1, .header p {
+            position: relative;
+            z-index: 2;
+        }
+        .header h1 {
+            font-size: 4em;
             animation: glow 2s infinite alternate;
         }
         @keyframes glow {
             from { text-shadow: 0 0 5px #00FF00; }
-            to { text-shadow: 0 0 15px #00FFFF; }
+            to { text-shadow: 0 0 20px #00FFFF; }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
         .section {
-            margin: 40px 0;
-            padding: 20px;
+            margin: 50px 0;
+            padding: 30px;
             border: 2px solid #00FFFF;
-            box-shadow: 0 0 15px #00FFFF;
+            box-shadow: 0 0 20px #00FFFF;
             background: rgba(0, 255, 255, 0.05);
             border-radius: 10px;
-        }
-        h1 {
-            font-size: 3em;
-            color: #00FFFF;
         }
         h2 {
             color: #00FF00;
@@ -49,7 +76,7 @@
         }
         h3 {
             color: #00FFFF;
-            margin-top: 20px;
+            margin-top: 25px;
         }
         p {
             color: #00FF00;
@@ -69,15 +96,12 @@
         }
         a:hover {
             color: #FFFFFF;
-            text-shadow: 0 0 8px #00FFFF;
+            text-shadow: 0 0 10px #00FFFF;
         }
         #visualization, #network-graph {
             width: 100%;
-            height: 600px;
-            margin: 20px 0;
-        }
-        .node {
-            cursor: pointer;
+            height: 700px;
+            margin: 30px 0;
         }
         .node circle {
             stroke: #00FFFF;
@@ -88,6 +112,7 @@
         .node:hover circle {
             fill: #FFFFFF;
             stroke: #00FFFF;
+            r: 12;
         }
         .node text {
             fill: #00FFFF;
@@ -106,69 +131,101 @@
         }
         .footer {
             text-align: center;
-            padding: 20px;
+            padding: 30px;
             color: #00FFFF;
-            border-top: 1px solid #00FF00;
-            margin-top: 40px;
+            border-top: 2px solid #00FF00;
+            margin-top: 50px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Header -->
+        <!-- Header con imagen -->
         <div class="header">
-            <h1>Origen, Vida y Redes</h1>
-            <p>Un viaje interdisciplinario entre biología, mente, lenguaje y visualización</p>
+            <h1>Origen, Mente y Cosmos</h1>
+            <p>Un viaje transdisciplinario a través de la vida, la conciencia y las redes del saber</p>
         </div>
 
-        <!-- Sobre mí -->
-        <div class="section" id="sobre-mi">
-            <h2>Sobre mí: Trazado de vida y preguntas</h2>
-            <p>Mi nombre es un eco de preguntas que han resonado en mí desde siempre. Mi principal interés ha sido la biología, desde el cuestionamiento del origen de la existencia biológica y humana. Me fascinan los orígenes, la <span class="highlight">vida</span> y la <span class="highlight">muerte</span> como el inicio y el fin de todo lo existente. Este camino me llevó de la biología a la filosofía, las ciencias cognitivas, la economía y la política, forjado por años de reflexión y una experiencia transformadora bajo los efectos del <span class="highlight">LSD</span>. Aquí narro ese trazado, entre lo personal y lo investigativo.</p>
+        <!-- Trazado de vida y preguntas -->
+        <div class="section" id="trazado-vida">
+            <h2>Trazado de Vida y Preguntas</h2>
+            <h3>El Origen de la Curiosidad</h3>
+            <p>Mi viaje comenzó con la <span class="highlight">biología</span>, fascinado por el origen de la existencia biológica y humana. La <span class="highlight">vida</span> y la <span class="highlight">muerte</span> no son solo eventos, sino los límites que dan sentido a todo. No pienso que la materia colapse con una vida individual, sino que el significado de la existencia depende del tejido colectivo de las vidas humanas.</p>
+            <h3>El Giro Transformador</h3>
+            <p>Tras años de preguntas difusas, una experiencia con <span class="highlight">LSD</span> cristalizó mi visión. Ese momento, junto a mi trabajo investigativo y vivencias personales, tejió este camino que exploro aquí.</p>
         </div>
 
-        <!-- Intereses y Preguntas -->
-        <div class="section" id="intereses">
-            <h2>Intereses y Preguntas</h2>
-            <p>Mi curiosidad parte de la biología y se expande hacia dominios que desafían nuestra comprensión de la realidad:</p>
-            
-            <h3 id="biologia">Biología</h3>
-            <p>Me interesa el origen desde la <span class="highlight">histología</span> y los <span class="highlight">mecanismos celulares</span>. ¿Por qué en la biología celular aceptamos el <span class="highlight">determinismo</span> mientras que en la conducta emergen <span class="highlight">libertad</span> e <span class="highlight">indeterminación</span>?</p>
-
-            <h3 id="ciencias-cognitivas">Ciencias Cognitivas</h3>
-            <p>Conocí a <span class="highlight">Francisco Varela</span> y su <span class="highlight">embodied cognition</span>, conectando con la <span class="highlight">fenomenología</span> de <span class="highlight">Merleau-Ponty</span> y <span class="highlight">Husserl</span>.</p>
-
-            <h3 id="filosofia">Filosofía de la Mente y el Lenguaje</h3>
-            <p>Fascinado por <span class="highlight">Wittgenstein</span> y el rol del <span class="highlight">lenguaje</span> en la <span class="highlight">mente</span>, exploré a <span class="highlight">Chalmers</span> y <span class="highlight">Clark</span>.</p>
-
-            <h3 id="economia-politica">Economía y Política</h3>
-            <p>Analicé el choque entre <span class="highlight">determinismo estructural</span> y <span class="highlight">libertad</span>, desde <span class="highlight">Marx</span> hasta <span class="highlight">Hayek</span>.</p>
+        <!-- Biología -->
+        <div class="section" id="biologia">
+            <h2>Biología: De las Células al Determinismo</h2>
+            <h3>Histología y Mecanismos Celulares</h3>
+            <p>Mi interés radica en la estructura (<span class="highlight">histología</span>) y los <span class="highlight">mecanismos celulares</span>. ¿Por qué a nivel molecular asumimos conductas unívocas frente a estímulos, mientras que un organismo completo muestra <span class="highlight">indeterminación</span>?</p>
+            <h3>Determinismo vs. Libertad</h3>
+            <p>La <span class="highlight">biología celular</span> me llevó a cuestionar el <span class="highlight">determinismo</span>. Mientras las células responden de forma predecible, los organismos exhiben <span class="highlight">creatividad</span> y <span class="highlight">libertad</span>. ¿Qué separa estos niveles?</p>
+            <h3>Maturana y Varela</h3>
+            <p>El trabajo de <span class="highlight">Humberto Maturana</span> y <span class="highlight">Francisco Varela</span> en <i>De Máquinas y Seres Vivos</i> y <i>El Árbol del Conocimiento</i> introdujo el <span class="highlight">determinismo estructural</span>, un puente entre lo biológico y lo filosófico.</p>
         </div>
 
-        <!-- Gráfico de Redes de Palabras -->
+        <!-- Ciencias Cognitivas -->
+        <div class="section" id="ciencias-cognitivas">
+            <h2>Ciencias Cognitivas: La Mente Encarnada</h2>
+            <h3>Embodied Cognition</h3>
+            <p>Conocí a <span class="highlight">Francisco Varela</span> y su <span class="highlight">embodied cognition</span> en <i>The Embodied Mind</i>, uniendo las ciencias cognitivas con la <span class="highlight">fenomenología</span> de <span class="highlight">Husserl</span> y <span class="highlight">Merleau-Ponty</span>.</p>
+            <h3>Legado de Varela</h3>
+            <p>Investigadores como <span class="highlight">Evan Thompson</span>, <span class="highlight">Tom Froese</span> y <span class="highlight">Exequiel Di Paolo</span> expandieron estas ideas, explorando la mente como un proceso vivo y situado.</p>
+        </div>
+
+        <!-- Filosofía de la Mente y el Lenguaje -->
+        <div class="section" id="filosofia-mente">
+            <h2>Filosofía de la Mente y el Lenguaje</h2>
+            <h3>Wittgenstein y el Lenguaje</h3>
+            <p>Mi Máster me llevó a <span class="highlight">Ludwig Wittgenstein</span>, desde el <i>Tractatus</i> hasta las <i>Investigaciones Filosóficas</i>, donde el <span class="highlight">lenguaje</span> define la <span class="highlight">mente</span>.</p>
+            <h3>Conciencia y Libertad</h3>
+            <p><span class="highlight">David Chalmers</span> y <span class="highlight">Andy Clark</span> me hicieron repensar la conciencia y su relación con el <span class="highlight">determinismo</span> y la <span class="highlight">libertad</span>.</p>
+        </div>
+
+        <!-- Economía y Política -->
+        <div class="section" id="economia-politica">
+            <h2>Economía y Política: Libertad vs. Control</h2>
+            <h3>Colectivismo y Liberalismo</h3>
+            <p>Analicé a <span class="highlight">Karl Marx</span> (teoría del valor trabajo) y a <span class="highlight">Hayek</span> o <span class="highlight">Von Mises</span> (teoría subjetiva del valor), reflejando la tensión entre <span class="highlight">control</span> y <span class="highlight">libertad</span>.</p>
+            <h3>Chile y el Colapso</h3>
+            <p>En el contexto de Chile, estas ideas cobraron vida, inspirándome a estudiar a <span class="highlight">Carlos Peña</span> y <span class="highlight">Axel Kaiser</span>.</p>
+        </div>
+
+        <!-- Epistemología -->
+        <div class="section" id="epistemologia">
+            <h2>Epistemología: El Conocimiento en Juego</h2>
+            <p>La visión de <span class="highlight">Maturana</span> sobre el conocimiento como un proceso biológico y relacional despertó mi interés en la <span class="highlight">epistemología</span>. ¿Cómo sabemos lo que sabemos?</p>
+        </div>
+
+        <!-- Redes de Palabras -->
         <div class="section" id="redes-palabras">
-            <h2>Gráfico de Redes de Palabras</h2>
-            <p>Exploramos la conexión entre palabras mediante gráficos interactivos que reflejan estructuras del pensamiento y el lenguaje.</p>
+            <h2>Redes de Palabras: Lenguaje y Visualización</h2>
+            <h3>Conexiones del Pensamiento</h3>
+            <p>Exploro cómo el <span class="highlight">lenguaje</span> estructura el pensamiento mediante gráficos interactivos.</p>
             <div id="network-graph"></div>
         </div>
 
-        <!-- Elementos Comunes a las Disciplinas -->
+        <!-- Elementos Comunes -->
         <div class="section" id="elementos-comunes">
-            <h2>Elementos Comunes a las Disciplinas</h2>
-            <p>Busco acelerar la comprensión del conocimiento con herramientas visuales:</p>
+            <h2>Elementos Comunes: Un Mapa del Saber</h2>
             <h3>Visualización de Conceptos</h3>
+            <p>Un mapa dinámico de mis ideas, conectando disciplinas y tensiones:</p>
             <div id="visualization"></div>
-            <h3>Fundamentaciones</h3>
+            <h3>Fundamentaciones Filosóficas</h3>
             <ul>
                 <li><span class="highlight">Biología</span>: Determinismo vs. indeterminación.</li>
+                <li><span class="highlight">Neurociencia</span>: Mente y cerebro.</li>
                 <li><span class="highlight">Ciencias Cognitivas</span>: Cognición encarnada.</li>
                 <li><span class="highlight">Política</span>: Poder y libertad.</li>
+                <li><span class="highlight">Educación</span>: Ética del saber.</li>
             </ul>
         </div>
 
-        <!-- Ejemplos con Voyant Tools -->
+        <!-- Voyant Tools -->
         <div class="section" id="voyant-tools">
-            <h2>Ejemplos de Palabras con Voyant Tools</h2>
+            <h2>Voyant Tools: Análisis de Textos</h2>
             <iframe src="https://voyant-tools.org/tool/CollocatesGraph/?query=a&query=the&query=powerpuff&mode=corpus&corpus=9e0ea2351023ab13cbc0979214742c17"></iframe>
         </div>
 
@@ -195,51 +252,53 @@
 
     <!-- Scripts D3.js -->
     <script>
-        // Visualización 1: Conceptos interdisciplinarios
-        const vizWidth = 800, vizHeight = 600;
-        const vizSvg = d3.select("#visualization")
-            .append("svg")
-            .attr("width", vizWidth)
-            .attr("height", vizHeight);
+        // Visualización 1: Conceptos Interdisciplinarios
+        const vizWidth = 1000, vizHeight = 700;
+        const vizSvg = d3.select("#visualization").append("svg").attr("width", vizWidth).attr("height", vizHeight);
 
         const vizNodes = [
-            { id: "Origen", link: "#sobre-mi" },
+            { id: "Origen", link: "#trazado-vida" },
             { id: "Biología", link: "#biologia" },
+            { id: "Histología", link: "#biologia" },
             { id: "Determinismo", link: "#biologia" },
-            { id: "Libertad", link: "#filosofia" },
+            { id: "Libertad", link: "#filosofia-mente" },
             { id: "Ciencias Cognitivas", link: "#ciencias-cognitivas" },
-            { id: "Mente", link: "#filosofia" },
-            { id: "Filosofía", link: "#filosofia" },
+            { id: "Mente", link: "#filosofia-mente" },
+            { id: "Filosofía", link: "#filosofia-mente" },
+            { id: "Lenguaje", link: "#filosofia-mente" },
+            { id: "Epistemología", link: "#epistemologia" },
             { id: "Economía", link: "#economia-politica" },
-            { id: "Política", link: "#economia-politica" }
+            { id: "Política", link: "#economia-politica" },
+            { id: "Subjetividad", link: "#economia-politica" },
+            { id: "Varela", link: "#ciencias-cognitivas" },
+            { id: "Maturana", link: "#biologia" }
         ];
 
         const vizLinks = [
             { source: "Origen", target: "Biología" },
+            { source: "Biología", target: "Histología" },
             { source: "Biología", target: "Determinismo" },
+            { source: "Biología", target: "Maturana" },
             { source: "Determinismo", target: "Libertad" },
             { source: "Libertad", target: "Filosofía" },
             { source: "Filosofía", target: "Ciencias Cognitivas" },
             { source: "Ciencias Cognitivas", target: "Mente" },
+            { source: "Ciencias Cognitivas", target: "Varela" },
+            { source: "Mente", target: "Lenguaje" },
+            { source: "Filosofía", target: "Epistemología" },
             { source: "Libertad", target: "Economía" },
-            { source: "Economía", target: "Política" }
+            { source: "Economía", target: "Política" },
+            { source: "Política", target: "Subjetividad" }
         ];
 
         const vizSimulation = d3.forceSimulation(vizNodes)
-            .force("link", d3.forceLink(vizLinks).id(d => d.id).distance(100))
-            .force("charge", d3.forceManyBody().strength(-200))
+            .force("link", d3.forceLink(vizLinks).id(d => d.id).distance(120))
+            .force("charge", d3.forceManyBody().strength(-250))
             .force("center", d3.forceCenter(vizWidth / 2, vizHeight / 2));
 
-        const vizLink = vizSvg.append("g").selectAll(".link")
-            .data(vizLinks).enter().append("line").attr("class", "link");
-
-        const vizNode = vizSvg.append("g").selectAll(".node")
-            .data(vizNodes).enter().append("g").attr("class", "node")
-            .call(d3.drag()
-                .on("start", dragstarted)
-                .on("drag", dragged)
-                .on("end", dragended));
-
+        const vizLink = vizSvg.append("g").selectAll(".link").data(vizLinks).enter().append("line").attr("class", "link");
+        const vizNode = vizSvg.append("g").selectAll(".node").data(vizNodes).enter().append("g").attr("class", "node")
+            .call(d3.drag().on("start", dragstarted).on("drag", dragged).on("end", dragended));
         vizNode.append("circle").attr("r", 10);
         vizNode.append("text").attr("dy", -15).attr("text-anchor", "middle").text(d => d.id);
         vizNode.on("click", (event, d) => window.location.href = d.link);
@@ -251,39 +310,33 @@
         });
 
         // Visualización 2: Redes de Palabras
-        const netSvg = d3.select("#network-graph")
-            .append("svg")
-            .attr("width", vizWidth)
-            .attr("height", vizHeight);
+        const netSvg = d3.select("#network-graph").append("svg").attr("width", vizWidth).attr("height", vizHeight);
 
         const netNodes = [
             { id: "Palabras", link: "#redes-palabras" },
-            { id: "Lenguaje", link: "#filosofia" },
+            { id: "Lenguaje", link: "#filosofia-mente" },
             { id: "Visualización", link: "#elementos-comunes" },
-            { id: "Voyant", link: "#voyant-tools" }
+            { id: "Voyant", link: "#voyant-tools" },
+            { id: "Histología", link: "#biologia" },
+            { id: "Herbario", link: "https://leolib87.github.io/herbario/" }
         ];
 
         const netLinks = [
             { source: "Palabras", target: "Lenguaje" },
             { source: "Palabras", target: "Visualización" },
-            { source: "Visualización", target: "Voyant" }
+            { source: "Visualización", target: "Voyant" },
+            { source: "Visualización", target: "Histología" },
+            { source: "Histología", target: "Herbario" }
         ];
 
         const netSimulation = d3.forceSimulation(netNodes)
-            .force("link", d3.forceLink(netLinks).id(d => d.id).distance(100))
-            .force("charge", d3.forceManyBody().strength(-200))
+            .force("link", d3.forceLink(netLinks).id(d => d.id).distance(120))
+            .force("charge", d3.forceManyBody().strength(-250))
             .force("center", d3.forceCenter(vizWidth / 2, vizHeight / 2));
 
-        const netLink = netSvg.append("g").selectAll(".link")
-            .data(netLinks).enter().append("line").attr("class", "link");
-
-        const netNode = netSvg.append("g").selectAll(".node")
-            .data(netNodes).enter().append("g").attr("class", "node")
-            .call(d3.drag()
-                .on("start", dragstarted)
-                .on("drag", dragged)
-                .on("end", dragended));
-
+        const netLink = netSvg.append("g").selectAll(".link").data(netLinks).enter().append("line").attr("class", "link");
+        const netNode = netSvg.append("g").selectAll(".node").data(netNodes).enter().append("g").attr("class", "node")
+            .call(d3.drag().on("start", dragstarted).on("drag", dragged).on("end", dragended));
         netNode.append("circle").attr("r", 10);
         netNode.append("text").attr("dy", -15).attr("text-anchor", "middle").text(d => d.id);
         netNode.on("click", (event, d) => window.location.href = d.link);
@@ -296,18 +349,16 @@
 
         // Funciones de arrastre
         function dragstarted(event) {
-            if (!event.active) simulation.alphaTarget(0.3).restart();
+            if (!event.active) vizSimulation.alphaTarget(0.3).restart();
             event.subject.fx = event.subject.x;
             event.subject.fy = event.subject.y;
         }
-
         function dragged(event) {
             event.subject.fx = event.x;
             event.subject.fy = event.y;
         }
-
         function dragended(event) {
-            if (!event.active) simulation.alphaTarget(0);
+            if (!event.active) vizSimulation.alphaTarget(0);
             event.subject.fx = null;
             event.subject.fy = null;
         }
