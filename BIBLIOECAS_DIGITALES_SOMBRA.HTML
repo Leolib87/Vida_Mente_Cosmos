@@ -401,8 +401,9 @@
     </div>
 
     <script>
-        // Datos de los recursos digitales (basado en el documento proporcionado)
+        // Datos de los recursos digitales (con Observatorio de Bibliotecas Sombra como primero)
         const resources = [
+            { title: "Observatorio de Bibliotecas Sombra", link: "https://open-slum.org/", comments: "Recursos y análisis de bibliotecas alternativas", category: "Archivo", type: "eBooks/Papers" },
             { title: "Planet eBook", link: "https://www.planetebook.com/", comments: "Clásicos gratuitos en PDF", category: "Literatura", type: "eBooks" },
             { title: "Free-eBooks.net", link: "https://www.free-ebooks.net/", comments: "eBooks gratuitos y de pago", category: "Literatura", type: "eBooks" },
             { title: "ManyBooks", link: "https://manybooks.net/", comments: "Miles de eBooks gratuitos", category: "Literatura", type: "eBooks" },
@@ -443,8 +444,7 @@
             { title: "LeerLibrosOnline", link: "https://www.leerlibrosonline.org/", comments: "Lectura online y descarga", category: "Literatura", type: "eBooks" },
             { title: "ePubLibre", link: "https://www.epublibre.org/", comments: "eBooks en formato ePub", category: "Literatura", type: "eBooks" },
             { title: "Standard Ebooks", link: "https://standardebooks.org/", comments: "eBooks bien formateados", category: "Literatura", type: "eBooks" }
-            { title: "Open-Slum", link: "https://open-slum.org/", comments: "Observatorio de Bibliotecas SOmbra", category: "Archivo", type: "eBooks" }
-            ];
+        ];
 
         // Preparar datos para la red: nodos de recursos y categorías
         const categories = [...new Set(resources.map(resource => resource.category))].sort();
