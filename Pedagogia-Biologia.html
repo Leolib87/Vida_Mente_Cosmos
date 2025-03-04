@@ -6,14 +6,19 @@
     <title>Pedagogías en Ciencias Naturales y Biología - Análisis 2025</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --neon-green: #00FF00;
+            --neon-cyan: #00FFFF;
+            --black-bg: #000000;
+        }
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
         body {
-            background-color: #000000;
-            color: #00FF00;
+            background-color: var(--black-bg);
+            color: var(--neon-green);
             font-family: 'Orbitron', sans-serif;
             line-height: 1.6;
             overflow-x: hidden;
@@ -25,8 +30,8 @@
             background: rgba(0, 0, 0, 0.9);
             z-index: 1000;
             padding: 15px 0;
-            border-bottom: 2px solid #00FFFF;
-            box-shadow: 0 0 15px #00FFFF;
+            border-bottom: 2px solid var(--neon-cyan);
+            box-shadow: 0 0 15px var(--neon-cyan);
         }
         nav ul {
             display: flex;
@@ -39,14 +44,14 @@
             margin: 0 20px;
         }
         nav ul li a {
-            color: #00FF00;
+            color: var(--neon-green);
             text-decoration: none;
             font-size: 1.1em;
-            transition: all 0.3s ease;
+            transition: color 0.3s ease, text-shadow 0.3s ease;
         }
         nav ul li a:hover {
             color: #FFFFFF;
-            text-shadow: 0 0 10px #00FFFF;
+            text-shadow: 0 0 10px var(--neon-cyan);
         }
         .mega-menu {
             position: absolute;
@@ -54,8 +59,8 @@
             left: 50%;
             transform: translateX(-50%);
             background: rgba(0, 0, 0, 0.95);
-            border: 2px solid #00FFFF;
-            box-shadow: 0 0 20px #00FFFF;
+            border: 2px solid var(--neon-cyan);
+            box-shadow: 0 0 20px var(--neon-cyan);
             width: 800px;
             max-width: 90vw;
             padding: 20px;
@@ -71,10 +76,10 @@
             opacity: 1;
         }
         .mega-menu h3 {
-            color: #00FFFF;
+            color: var(--neon-cyan);
             font-size: 1.2em;
             margin-bottom: 10px;
-            text-shadow: 0 0 5px #00FFFF;
+            text-shadow: 0 0 5px var(--neon-cyan);
         }
         .mega-menu ul {
             display: block;
@@ -85,7 +90,8 @@
         }
         .mega-menu a {
             font-size: 0.9em;
-            color: #00FF00;
+            color: var(--neon-green);
+            transition: color 0.3s ease;
         }
         .mega-menu a:hover {
             color: #FFFFFF;
@@ -100,9 +106,9 @@
             margin-bottom: 40px;
         }
         .intro h1 {
-            color: #00FFFF;
+            color: var(--neon-cyan);
             font-size: 2.5em;
-            text-shadow: 0 0 10px #00FF00;
+            text-shadow: 0 0 10px var(--neon-green);
             margin-bottom: 20px;
         }
         .intro p {
@@ -111,7 +117,7 @@
             margin: 0 auto 15px;
         }
         .highlight {
-            color: #00FFFF;
+            color: var(--neon-cyan);
             font-weight: bold;
         }
         .filter-container {
@@ -122,12 +128,16 @@
             font-size: 1em;
             font-family: 'Orbitron', sans-serif;
             background: rgba(0, 0, 0, 0.8);
-            color: #00FF00;
-            border: 2px solid #00FFFF;
-            box-shadow: 0 0 10px #00FFFF;
+            color: var(--neon-green);
+            border: 2px solid var(--neon-cyan);
+            box-shadow: 0 0 10px var(--neon-cyan);
             border-radius: 5px;
             outline: none;
             width: 300px;
+            transition: box-shadow 0.3s ease;
+        }
+        .filter-container input:focus {
+            box-shadow: 0 0 15px var(--neon-cyan);
         }
         .table-container {
             overflow-x: auto;
@@ -137,18 +147,18 @@
             width: 100%;
             border-collapse: collapse;
             background: rgba(0, 255, 255, 0.05);
-            border: 2px solid #00FFFF;
-            box-shadow: 0 0 20px #00FFFF;
+            border: 2px solid var(--neon-cyan);
+            box-shadow: 0 0 20px var(--neon-cyan);
         }
         th, td {
             padding: 10px;
             text-align: left;
-            border-bottom: 1px solid #00FFFF;
+            border-bottom: 1px solid var(--neon-cyan);
         }
         th {
             background: rgba(0, 0, 0, 0.9);
-            color: #00FFFF;
-            text-shadow: 0 0 5px #00FFFF;
+            color: var(--neon-cyan);
+            text-shadow: 0 0 5px var(--neon-cyan);
             position: sticky;
             top: 0;
         }
@@ -161,34 +171,39 @@
         iframe {
             width: 100%;
             height: 600px;
-            border: 2px solid #00FFFF;
-            box-shadow: 0 0 20px #00FFFF;
+            border: 2px solid var(--neon-cyan);
+            box-shadow: 0 0 20px var(--neon-cyan);
             border-radius: 5px;
         }
         .svg-list {
             margin-top: 40px;
-            text-align: center;
         }
         .svg-list h2 {
-            color: #00FFFF;
+            color: var(--neon-cyan);
             font-size: 1.5em;
-            text-shadow: 0 0 8px #00FF00;
-            margin-bottom: 20px;
-            border-bottom: 1px solid #00FFFF;
+            text-shadow: 0 0 8px var(--neon-green);
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--neon-cyan);
             padding-bottom: 10px;
         }
-        /* Tamaño estándar para imágenes SVG - ajusta width y height si necesitas otro tamaño */
+        .svg-list ul {
+            list-style: none;
+            padding: 0;
+        }
+        .svg-list li {
+            margin: 20px 0;
+        }
+        /* Tamaño estándar para imágenes SVG - ajusta width y height si necesitas */
         .svg-item {
             width: 200px;
             height: 200px;
-            border: 2px dashed #00FFFF;
-            box-shadow: 0 0 10px #00FFFF;
-            margin: 10px auto;
-            transition: transform 0.3s ease;
+            border: 2px dashed var(--neon-cyan);
+            box-shadow: 0 0 10px var(--neon-cyan);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         .svg-item:hover {
             transform: scale(1.05);
-            box-shadow: 0 0 15px #00FFFF;
+            box-shadow: 0 0 15px var(--neon-cyan);
         }
         @media (max-width: 900px) {
             nav ul {
@@ -209,7 +224,7 @@
                 grid-template-columns: 1fr;
                 padding: 15px;
                 box-shadow: none;
-                border: 1px solid #00FFFF;
+                border: 1px solid var(--neon-cyan);
             }
             nav ul li:hover .mega-menu {
                 display: block;
@@ -240,7 +255,7 @@
                 font-size: 0.9em;
             }
             th, td {
-                font-size: 0.9em;
+                font-size: 0.85em;
                 padding: 8px;
             }
             iframe {
@@ -249,6 +264,9 @@
             .svg-item {
                 width: 120px;
                 height: 120px;
+            }
+            .svg-list h2 {
+                font-size: 1.2em;
             }
         }
     </style>
@@ -592,35 +610,55 @@
             <p style="font-size: 0.9em; margin-top: 10px;">*Sube tu XLS a Google Drive y reemplaza 'INSERTE_ID_DEL_ARCHIVO_AQUI' con el ID del archivo.</p>
         </div>
 
-        <!-- Listado de Imágenes SVG Simplificado -->
+        <!-- Listado de Imágenes SVG - Solo pega el enlace en src -->
         <div class="svg-list">
-            <!-- Instrucción: Pega el enlace de tu imagen SVG en el atributo src. Ejemplo: <img class="svg-item" src="https://tuenlace.com/imagen.svg"> -->
-            <h2>Universidad</h2>
-            <img class="svg-item" src="https://raw.githubusercontent.com/Leolib87/Educacion_Biologia-/350e09edf41c9c1a5af744bb94ab305c93825cf3/arancel_anual_promedio_2025.svg?token=A6W5DDJT7SLBZ2UC4QTX2LLHY52FY">
-
-            <h2>Nombre Carrera</h2>
-            <img class="svg-item" src="">
-
-            <h2>Región</h2>
-            <img class="svg-item" src="">
-
-            <h2>Sede</h2>
-            <img class="svg-item" src="">
-
-            <h2>Arancel Anual 2025</h2>
-            <img class="svg-item" src="">
-
-            <h2>Matrícula Total 2024</h2>
-            <img class="svg-item" src="">
-
-            <h2>Matrícula 1er Año 2024</h2>
-            <img class="svg-item" src="">
-
-            <h2>Prom. PAES 1er Año 2024</h2>
-            <img class="svg-item" src="">
-
-            <h2>Vacantes 1er Semestre</h2>
-            <img class="svg-item" src="">
+            <ul>
+                <!-- Universidad -->
+                <li>
+                    <h2>Universidad</h2>
+                    <img class="svg-item" src="">
+                </li>
+                <!-- Nombre Carrera -->
+                <li>
+                    <h2>Nombre Carrera</h2>
+                    <img class="svg-item" src="">
+                </li>
+                <!-- Región -->
+                <li>
+                    <h2>Región</h2>
+                    <img class="svg-item" src="">
+                </li>
+                <!-- Sede -->
+                <li>
+                    <h2>Sede</h2>
+                    <img class="svg-item" src="">
+                </li>
+                <!-- Arancel Anual 2025 -->
+                <li>
+                    <h2>Arancel Anual 2025</h2>
+                    <img class="svg-item" src="">
+                </li>
+                <!-- Matrícula Total 2024 -->
+                <li>
+                    <h2>Matrícula Total 2024</h2>
+                    <img class="svg-item" src="">
+                </li>
+                <!-- Matrícula 1er Año 2024 -->
+                <li>
+                    <h2>Matrícula 1er Año 2024</h2>
+                    <img class="svg-item" src="">
+                </li>
+                <!-- Prom. PAES 1er Año 2024 -->
+                <li>
+                    <h2>Prom. PAES 1er Año 2024</h2>
+                    <img class="svg-item" src="">
+                </li>
+                <!-- Vacantes 1er Semestre -->
+                <li>
+                    <h2>Vacantes 1er Semestre</h2>
+                    <img class="svg-item" src="">
+                </li>
+            </ul>
         </div>
     </div>
 
