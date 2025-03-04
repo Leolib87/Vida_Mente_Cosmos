@@ -167,6 +167,7 @@
         }
         .svg-list {
             margin-top: 40px;
+            text-align: center;
         }
         .svg-list h2 {
             color: #00FFFF;
@@ -176,18 +177,13 @@
             border-bottom: 1px solid #00FFFF;
             padding-bottom: 10px;
         }
-        .svg-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            justify-content: center;
-        }
-        /* Define el tamaño de las imágenes aquí - ajusta width y height según necesites */
+        /* Tamaño estándar para imágenes SVG - ajusta width y height si necesitas otro tamaño */
         .svg-item {
-            width: 200px; /* Tamaño estándar para gráficos visibles */
+            width: 200px;
             height: 200px;
             border: 2px dashed #00FFFF;
             box-shadow: 0 0 10px #00FFFF;
+            margin: 10px auto;
             transition: transform 0.3s ease;
         }
         .svg-item:hover {
@@ -232,8 +228,8 @@
                 height: 400px;
             }
             .svg-item {
-                width: 1500px;
-                height: 1500px;
+                width: 150px;
+                height: 150px;
             }
         }
         @media (max-width: 600px) {
@@ -596,53 +592,35 @@
             <p style="font-size: 0.9em; margin-top: 10px;">*Sube tu XLS a Google Drive y reemplaza 'INSERTE_ID_DEL_ARCHIVO_AQUI' con el ID del archivo.</p>
         </div>
 
-        <!-- Listado de Imágenes -->
+        <!-- Listado de Imágenes SVG Simplificado -->
         <div class="svg-list">
-            <!-- Instrucción: Pega el enlace de tu imagen en el atributo src de cada <img>. Ejemplo: <img src="https://tuenlace.com/imagen.svg"> -->
+            <!-- Instrucción: Pega el enlace de tu imagen SVG en el atributo src. Ejemplo: <img class="svg-item" src="https://tuenlace.com/imagen.svg"> -->
             <h2>Universidad</h2>
-            <div class="svg-container">
-                <img class="svg-item" src="https://raw.githubusercontent.com/Leolib87/Educacion_Biologia-/350e09edf41c9c1a5af744bb94ab305c93825cf3/arancel_anual_promedio_2025.svg?token=A6W5DDJT7SLBZ2UC4QTX2LLHY52FY">
-            </div>
+            <img class="svg-item" src="https://raw.githubusercontent.com/Leolib87/Educacion_Biologia-/350e09edf41c9c1a5af744bb94ab305c93825cf3/arancel_anual_promedio_2025.svg?token=A6W5DDJT7SLBZ2UC4QTX2LLHY52FY">
 
             <h2>Nombre Carrera</h2>
-            <div class="svg-container">
-                <img class="svg-item" src="">
-            </div>
+            <img class="svg-item" src="">
 
             <h2>Región</h2>
-            <div class="svg-container">
-                <img class="svg-item" src="">
-            </div>
+            <img class="svg-item" src="">
 
             <h2>Sede</h2>
-            <div class="svg-container">
-                <img class="svg-item" src="">
-            </div>
+            <img class="svg-item" src="">
 
             <h2>Arancel Anual 2025</h2>
-            <div class="svg-container">
-                <img class="svg-item" src="">
-            </div>
+            <img class="svg-item" src="">
 
             <h2>Matrícula Total 2024</h2>
-            <div class="svg-container">
-                <img class="svg-item" src="">
-            </div>
+            <img class="svg-item" src="">
 
             <h2>Matrícula 1er Año 2024</h2>
-            <div class="svg-container">
-                <img class="svg-item" src="">
-            </div>
+            <img class="svg-item" src="">
 
             <h2>Prom. PAES 1er Año 2024</h2>
-            <div class="svg-container">
-                <img class="svg-item" src="">
-            </div>
+            <img class="svg-item" src="">
 
             <h2>Vacantes 1er Semestre</h2>
-            <div class="svg-container">
-                <img class="svg-item" src="">
-            </div>
+            <img class="svg-item" src="">
         </div>
     </div>
 
