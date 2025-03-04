@@ -1,36 +1,326 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <title>Gráfico de Redes de Citas</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Red del Frente Amplio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        .link {
-            stroke: black;
-            stroke-width: 2px;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-
+        body {
+            background-color: #000000;
+            color: #00FF00;
+            font-family: 'Orbitron', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        /* Navegación con Mega Menú */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            padding: 15px 0;
+            border-bottom: 2px solid #00FFFF;
+            box-shadow: 0 0 15px #00FFFF;
+        }
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            flex-wrap: wrap;
+        }
+        nav ul li {
+            position: relative;
+            margin: 0 20px;
+        }
+        nav ul li a {
+            color: #00FF00;
+            text-decoration: none;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+        }
+        nav ul li a:hover {
+            color: #FFFFFF;
+            text-shadow: 0 0 10px #00FFFF;
+        }
+        .mega-menu {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.95);
+            border: 2px solid #00FFFF;
+            box-shadow: 0 0 20px #00FFFF;
+            width: 800px;
+            max-width: 90vw;
+            padding: 20px;
+            display: none;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        nav ul li:hover .mega-menu {
+            display: grid;
+            opacity: 1;
+        }
+        .mega-menu h3 {
+            color: #00FFFF;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            text-shadow: 0 0 5px #00FFFF;
+        }
+        .mega-menu ul {
+            display: block;
+            padding: 0;
+        }
+        .mega-menu ul li {
+            margin: 5px 0;
+        }
+        .mega-menu a {
+            font-size: 0.9em;
+            color: #00FF00;
+        }
+        .mega-menu a:hover {
+            color: #FFFFFF;
+        }
+        /* Contenedor principal */
+        .main-container {
+            max-width: 1400px;
+            margin: 80px auto 0;
+            padding: 20px;
+            text-align: center;
+        }
+        .intro {
+            margin-bottom: 40px;
+        }
+        .intro h1 {
+            color: #00FFFF;
+            font-size: 2.5em;
+            text-shadow: 0 0 10px #00FF00;
+            margin-bottom: 20px;
+        }
+        .intro p {
+            font-size: 1.1em;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .highlight {
+            color: #00FFFF;
+            font-weight: bold;
+        }
+        /* Red D3.js */
+        #network {
+            width: 100%;
+            height: 700px;
+            margin: 0 auto;
+        }
+        .link {
+            stroke: #00FF00;
+            stroke-width: 2px;
+            stroke-opacity: 0.6;
+        }
         .node circle {
-            fill: #1f77b4;
-            stroke: #fff;
+            fill: #00FF00;
+            stroke: #00FFFF;
             stroke-width: 1.5px;
         }
-
         .node image {
             width: 40px;
             height: 40px;
-            border-radius: 50%;
         }
-
         .node text {
-            font-family: Arial, sans-serif;
+            font-family: 'Orbitron', sans-serif;
             font-size: 12px;
             text-anchor: middle;
-            fill: #333;
+            fill: #00FFFF;
+            text-shadow: 0 0 5px #00FF00;
+        }
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+                padding: 10px 0;
+            }
+            nav ul li {
+                margin: 10px 0;
+                width: 100%;
+                text-align: center;
+            }
+            .mega-menu {
+                position: static;
+                transform: none;
+                width: 100%;
+                max-width: 100%;
+                grid-template-columns: 1fr;
+                padding: 15px;
+                box-shadow: none;
+                border: 1px solid #00FFFF;
+            }
+            nav ul li:hover .mega-menu {
+                display: block;
+            }
+            .intro h1 {
+                font-size: 2em;
+            }
+            .intro p {
+                font-size: 1em;
+                padding: 0 15px;
+            }
+            #network {
+                height: 500px;
+            }
+        }
+        @media (max-width: 600px) {
+            .intro h1 {
+                font-size: 1.5em;
+            }
+            .intro p {
+                font-size: 0.9em;
+            }
+            #network {
+                height: 400px;
+            }
+        }
+        @media (max-width: 400px) {
+            #network {
+                height: 300px;
+            }
         }
     </style>
 </head>
 <body>
-    <svg width="960" height="600"></svg>
+    <!-- Navegación con Mega Menú -->
+    <nav>
+        <ul>
+            <li><a href="#inicio">Inicio</a></li>
+            <li>
+                <a href="#">Exploración Conceptual</a>
+                <div class="mega-menu">
+                    <div>
+                        <h3>Ideas y Preguntas Existenciales</h3>
+                        <ul>
+                            <li><a href="#trazado-vida">Origen y Fin de la Vida</a></li>
+                            <li><a href="#biologia">Determinismo vs. Libertad</a></li>
+                            <li><a href="#filosofia-mente">Conducta y Creatividad</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3>Fundamentos Teóricos</h3>
+                        <ul>
+                            <li><a href="#biologia">Filosofía de la Biología</a></li>
+                            <li><a href="#ciencias-cognitivas">Filosofía de las Ciencias Cognitivas</a></li>
+                            <li><a href="#filosofia-mente">Mente y Lenguaje</a></li>
+                            <li><a href="Explorando la Visualización Filosófica.HTML">Visualización Filosófica</a></li>
+                            <li><a href="MAPEO_FILO_MENTE_CHILE.HTML">Mapeo Filosofía de la Mente Chile</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+            <li>
+                <a href="#">Perspectivas Disciplinarias</a>
+                <div class="mega-menu">
+                    <div>
+                        <h3>Biología y Ciencias Naturales</h3>
+                        <ul>
+                            <li><a href="#biologia">Histología y Biología Celular</a></li>
+                            <li><a href="HISTOLOGIA.html">Histología</a></li>
+                            <li><a href="https://leolib87.github.io/herbario/">Herbario</a></li>
+                            <li><a href="cuerpo humano completo plantilla Lt.html">Cuerpo Humano Desplegable</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3>Economía y Política</h3>
+                        <ul>
+                            <li><a href="#economia-politica">Teorías Colectivistas y Liberales</a></li>
+                            <li><a href="#economia-politica">Análisis de Corrientes Ideológicas</a></li>
+                            <li><a href="RED POLITICOS.html">Red de Políticos FA</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3>Educación y Filosofía</h3>
+                        <ul>
+                            <li><a href="red 2.html">Filosofía de la Educación</a></li>
+                            <li><a href="#trazado-vida">Autoconocimiento y Sentido Humano</a></li>
+                            <li><a href="red3.html">Red Tesis de Magíster Ejemplos</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+            <li>
+                <a href="#">Metodología y Datos</a>
+                <div class="mega-menu">
+                    <div>
+                        <h3>Recolección y Procesamiento</h3>
+                        <ul>
+                            <li><a href="#redes-palabras">Visualización y Análisis de Datos</a></li>
+                            <li><a href="#voyant-tools">Herramientas Digitales (Gephi, D3.js)</a></li>
+                            <li><a href="varios graficos.html">Varios Gráficos</a></li>
+                            <li><a href="GRAFICO DE LINEAS Y TREEMAP.html">Gráfico de Líneas y Treemap</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+            <li>
+                <a href="#">Proyectos & Mapas</a>
+                <div class="mega-menu">
+                    <div>
+                        <h3>Mapas de Conocimiento</h3>
+                        <ul>
+                            <li><a href="#elementos-comunes">Filosofía de la Mente</a></li>
+                            <li><a href="#economia-politica">Política Chilena</a></li>
+                            <li><a href="VARELA_CARTOGRAFIA.HTML">Cartografía Varela</a></li>
+                            <li><a href="AUTOPOIESIS.HTML">Simulación Autopoiesis Maturana y Varela 1974</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+            <li>
+                <a href="#">Recursos</a>
+                <div class="mega-menu">
+                    <div>
+                        <h3>Lecturas y Bibliografía</h3>
+                        <ul>
+                            <li><a href="MI_BIBLIOTECA.HTML">Mi Biblioteca de Humanidades</a></li>
+                            <li><a href="BIBLIOTECA_CIENCIAS.HTML">Mi Biblioteca de Ciencias</a></li>
+                            <li><a href="BIBLIOECAS_DIGITALES_SOMBRA.HTML">Bibliotecas Sombra</a></li>
+                            <li><a href="CITAS.HTML">Fragmentos de Mentes</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3>Enlaces de Interés</h3>
+                        <ul>
+                            <li><a href="LEOLIB NEWS BLACK.HTML">Leolib News</a></li>
+                            <li><a href="https://leolib87.github.io/herbario/">Herbario</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+            <li><a href="#contacto">Acerca de / Contacto</a></li>
+        </ul>
+    </nav>
 
+    <!-- Contenedor principal -->
+    <div class="main-container" id="inicio">
+        <!-- Introducción -->
+        <div class="intro">
+            <h1>Frente Amplio: Coalición y Crítica</h1>
+            <p>El <span class="highlight">Frente Amplio (FA)</span> fue una coalición política chilena de izquierda fundada el <span class="highlight">21 de enero de 2017</span> y disuelta el <span class="highlight">1 de julio de 2024</span>, cuando se fusionó en un partido único. Inspirada en el modelo uruguayo, agrupó movimientos como <span class="highlight">Revolución Democrática</span> y <span class="highlight">Convergencia Social</span>, promoviendo <span class="highlight">progresismo</span>, <span class="highlight">socialdemocracia</span>, y <span class="highlight">feminismo</span>, con énfasis en la democracia participativa. Surgió como alternativa al bipartidismo chileno, alcanzando relevancia con la elección de <span class="highlight">Gabriel Boric</span> en 2021. Sin embargo, ha sido criticada por sectores que la ven como un exponente del <span class="highlight">wokismo</span>, priorizando políticas identitarias sobre enfoques universales, lo que generó tensiones internas y deserciones de partidos como el <span class="highlight">Partido Humanista</span> y el <span class="highlight">Partido Ecologista Verde</span>.</p>
+        </div>
+
+        <!-- Red D3.js -->
+        <div id="network"></div>
+    </div>
+
+    <!-- Script D3.js -->
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script>
         // Datos de ejemplo
@@ -56,8 +346,7 @@
                 {"id": "Científico 18", "image": "http://www.emol.com/especiales/2017/actualidad/nacional/elecciones/img/candidatos_congreso/150x150/601157.jpg", "size": 3},
                 {"id": "Científico 19", "image": "http://www.emol.com/especiales/2017/actualidad/nacional/elecciones/img/candidatos_congreso/150x150/601262.jpg", "size": 3},
                 {"id": "Científico 20", "image": "http://www.emol.com/especiales/2017/actualidad/nacional/elecciones/img/candidatos_congreso/150x150/600656.jpg", "size": 3},
-                {"id": "Científico 21", "image": "http://www.emol.com/especiales/2017/actualidad/nacional/elecciones/img/candidatos_congreso/150x150/601760.jpg", "size": 3},
-                // Agrega más nodos aquí...
+                {"id": "Científico 21", "image": "http://www.emol.com/especiales/2017/actualidad/nacional/elecciones/img/candidatos_congreso/150x150/601760.jpg", "size": 3}
             ],
             "links": [
                 {"source": "Científico 1", "target": "Científico 12"},
@@ -89,34 +378,28 @@
                 {"source": "Científico 13", "target": "Científico 9"},
                 {"source": "Científico 14", "target": "Científico 16"},
                 {"source": "Científico 15", "target": "Científico 14"},
-                {"source": "Científico 16", "target": "Científico 12"},                
+                {"source": "Científico 16", "target": "Científico 12"},
                 {"source": "Científico 17", "target": "Científico 9"},
                 {"source": "Científico 18", "target": "Científico 21"},
                 {"source": "Científico 19", "target": "Científico 14"},
-                {"source": "Científico 20", "target": "Científico 12"},
-
-
-
-
-
-
-
-                // Agrega más enlaces aquí...
+                {"source": "Científico 20", "target": "Científico 12"}
             ]
         };
 
-        // Crea el layout de fuerza de D3.js con parámetros ajustados
+        // Configuración del SVG
+        var svg = d3.select("#network").append("svg")
+            .attr("width", "100%")
+            .attr("height", "100%")
+            .attr("viewBox", "0 0 960 700")
+            .attr("preserveAspectRatio", "xMidYMid meet");
+
+        // Simulación de fuerza
         var simulation = d3.forceSimulation()
-            .force("link", d3.forceLink().id(function(d) { return d.id; }).distance(200)) // Ajusta la distancia de enlace
-            .force("charge", d3.forceManyBody().strength(-100)) // Ajusta la fuerza de repulsión
-            .force("center", d3.forceCenter(480, 300));
+            .force("link", d3.forceLink().id(function(d) { return d.id; }).distance(200))
+            .force("charge", d3.forceManyBody().strength(-100))
+            .force("center", d3.forceCenter(480, 350));
 
-        // Crea el SVG para dibujar el gráfico
-        var svg = d3.select("svg"),
-            width = +svg.attr("width"),
-            height = +svg.attr("height");
-
-        // Crea los enlaces del gráfico
+        // Enlaces
         var link = svg.append("g")
             .attr("class", "links")
             .selectAll("line")
@@ -124,7 +407,7 @@
             .enter().append("line")
             .attr("class", "link");
 
-        // Crea los nodos del gráfico
+        // Nodos
         var node = svg.append("g")
             .attr("class", "nodes")
             .selectAll(".node")
@@ -136,16 +419,7 @@
                 .on("drag", dragged)
                 .on("end", dragended));
 
-        // Agrega una máscara circular para recortar la imagen
-        var defs = svg.append("defs");
-        defs.append("clipPath")
-            .attr("id", "clip-circle")
-            .append("circle")
-            .attr("cx", 0)
-            .attr("cy", 0)
-            .attr("r", 20);
-
-        // Agrega imágenes a los nodos
+        // Círculos y imágenes
         node.append("circle")
             .attr("r", function(d) { return d.size * 10; });
 
@@ -154,22 +428,20 @@
             .attr("x", -20)
             .attr("y", -20)
             .attr("width", function(d) { return d.size * 40; })
-            .attr("height", function(d) { return d.size * 40; })
-            .attr("clip-path", "url(#clip-circle)");
+            .attr("height", function(d) { return d.size * 40; });
 
-        // Agrega nombres a los nodos
+        // Texto de los nodos
         node.append("text")
             .attr("dy", function(d) { return d.size * 10 + 5; })
             .text(function(d) { return d.id; });
 
-        // Actualiza la posición de los elementos en cada paso de simulación
+        // Simulación
         simulation
             .nodes(data.nodes)
             .on("tick", ticked);
 
         simulation.force("link")
-            .links(data.links)
-            .distance(100); // Ajusta la distancia de enlace
+            .links(data.links);
 
         function ticked() {
             link
