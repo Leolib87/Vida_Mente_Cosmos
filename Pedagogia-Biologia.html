@@ -175,35 +175,36 @@
             box-shadow: 0 0 20px var(--neon-cyan);
             border-radius: 5px;
         }
-        .svg-list {
+        .image-gallery {
             margin-top: 40px;
         }
-        .svg-list h2 {
-            color: var(--neon-cyan);
-            font-size: 1.5em;
-            text-shadow: 0 0 8px var(--neon-green);
-            margin-bottom: 15px;
-            border-bottom: 1px solid var(--neon-cyan);
-            padding-bottom: 10px;
-        }
-        .svg-list ul {
+        .image-gallery ul {
             list-style: none;
             padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
         }
-        .svg-list li {
-            margin: 20px 0;
+        .image-gallery li {
+            text-align: center;
         }
-        /* Tamaño estándar para imágenes SVG - ajusta width y height si necesitas */
-        .svg-item {
-            width: 200px;
-            height: 200px;
-            border: 2px dashed var(--neon-cyan);
-            box-shadow: 0 0 10px var(--neon-cyan);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        .image-gallery img {
+            width: 1200px; /* Tamaño estándar - ajusta aquí si necesitas otro ancho */
+            height: auto; /* Altura proporcional */
         }
-        .svg-item:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 15px var(--neon-cyan);
+        .image-gallery p {
+            color: var(--neon-cyan);
+            font-size: 1em;
+            margin-top: 5px;
+            text-shadow: 0 0 5px var(--neon-cyan);
+            border-bottom: 1px dotted var(--neon-green);
+            padding-bottom: 2px;
+            transition: color 0.3s ease, text-shadow 0.3s ease;
+        }
+        .image-gallery li:hover p {
+            color: #FFFFFF;
+            text-shadow: 0 0 10px var(--neon-cyan);
         }
         @media (max-width: 900px) {
             nav ul {
@@ -242,9 +243,8 @@
             iframe {
                 height: 400px;
             }
-            .svg-item {
-                width: 15000px;
-                height: 15000px;
+            .image-gallery img {
+                width: 150px;
             }
         }
         @media (max-width: 600px) {
@@ -261,12 +261,11 @@
             iframe {
                 height: 300px;
             }
-            .svg-item {
+            .image-gallery img {
                 width: 120px;
-                height: 120px;
             }
-            .svg-list h2 {
-                font-size: 1.2em;
+            .image-gallery p {
+                font-size: 0.85em;
             }
         }
     </style>
@@ -610,53 +609,53 @@
             <p style="font-size: 0.9em; margin-top: 10px;">*Sube tu XLS a Google Drive y reemplaza 'INSERTE_ID_DEL_ARCHIVO_AQUI' con el ID del archivo.</p>
         </div>
 
-        <!-- Listado de Imágenes SVG - Solo pega el enlace en src -->
-        <div class="svg-list">
+        <!-- Galería de Imágenes (SVG o PNG) con Títulos Destacados - Solo pega el enlace en src -->
+        <div class="image-gallery">
             <ul>
-                <!-- Universidad -->
+                <!-- Gráfico Universidad -->
                 <li>
-                    <h2>Universidad</h2>
-                    <img class="svg-item" src="https://drive.google.com/file/d/11WqWsfbdeSP73UGz7dEcaYZLxwx0yVhz/view?usp=drive_link">
+                    <img src="https://raw.githubusercontent.com/Leolib87/Educacion_Biologia-/350e09edf41c9c1a5af744bb94ab305c93825cf3/duracion_formal_promedio.svg">
+                    <p>Universidad</p>
                 </li>
-                <!-- Nombre Carrera -->
+                <!-- Gráfico Nombre Carrera -->
                 <li>
-                    <h2>Nombre Carrera</h2>
-                    <img class="svg-item" src="https://raw.githubusercontent.com/Leolib87/mi-sitio-web/bda9bc0fb6216865a87cd07bf60686f450757f6c/matricula_1er_ano_2024_genero.svg">
+                    <img src="https://github.com/Leolib87/Educacion_Biologia-/blob/main/matricula_1er_ano_2024_por_universidad.png?raw=true">
+                    <p>Nombre Carrera</p>
                 </li>
-                <!-- Región -->
+                <!-- Gráfico Región -->
                 <li>
-                    <h2>Región</h2>
-                    <img class="svg-item" src="">
+                    <img src="https://github.com/Leolib87/Educacion_Biologia-/blob/main/matricula_1er_ano_2024_por_universidad_viridis.png?raw=true">
+                    <p>Región</p>
                 </li>
-                <!-- Sede -->
+                <!-- Gráfico Sede -->
                 <li>
-                    <h2>Sede</h2>
-                    <img class="svg-item" src="">
+                    <img src="https://github.com/Leolib87/Educacion_Biologia-/blob/main/matricula_total_2024.png?raw=true">
+                    <p>Sede</p>
                 </li>
-                <!-- Arancel Anual 2025 -->
+                <!-- Gráfico Arancel Anual 2025 -->
                 <li>
-                    <h2>Arancel Anual 2025</h2>
-                    <img class="svg-item" src="">
+                    <img src="https://github.com/Leolib87/Educacion_Biologia-/blob/main/matricula_1er_ano_2024_genero.png?raw=true">
+                    <p>Arancel Anual 2025</p>
                 </li>
-                <!-- Matrícula Total 2024 -->
+                <!-- Gráfico Matrícula Total 2024 -->
                 <li>
-                    <h2>Matrícula Total 2024</h2>
-                    <img class="svg-item" src="">
+                    <img src="https://github.com/Leolib87/Educacion_Biologia-/blob/main/arancel_anual_promedio_2025.png?raw=true">
+                    <p>Matrícula Total 2024</p>
                 </li>
-                <!-- Matrícula 1er Año 2024 -->
+                <!-- Gráfico Matrícula 1er Año 2024 -->
                 <li>
-                    <h2>Matrícula 1er Año 2024</h2>
-                    <img class="svg-item" src="">
+                    <img src="https://raw.githubusercontent.com/Leolib87/Educacion_Biologia-/350e09edf41c9c1a5af744bb94ab305c93825cf3/matricula_total_2024_personalizado.svg">
+                    <p>Matrícula 1er Año 2024</p>
                 </li>
-                <!-- Prom. PAES 1er Año 2024 -->
+                <!-- Gráfico Prom. PAES 1er Año 2024 -->
                 <li>
-                    <h2>Prom. PAES 1er Año 2024</h2>
-                    <img class="svg-item" src="">
+                    <img src="https://github.com/Leolib87/Educacion_Biologia-/blob/main/matriculados_establecimiento_origen.png?raw=true">
+                    <p>Prom. PAES 1er Año 2024</p>
                 </li>
-                <!-- Vacantes 1er Semestre -->
+                <!-- Gráfico Vacantes 1er Semestre -->
                 <li>
-                    <h2>Vacantes 1er Semestre</h2>
-                    <img class="svg-item" src="">
+                    <img src="https://github.com/Leolib87/Educacion_Biologia-/blob/main/ponderaciones_ciencias_por_universidad.png?raw=true">
+                    <p>Vacantes 1er Semestre</p>
                 </li>
             </ul>
         </div>
