@@ -1,0 +1,261 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Red Interactiva de Apps</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+            background-color: #1e1e2f;
+            color: #f5f5f5;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .title {
+            text-align: center;
+            padding: 20px;
+            background-color: #282a36;
+            color: #bd93f9;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .content {
+            display: flex;
+            flex-direction: row;
+            flex-grow: 1;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #44475a;
+            padding: 10px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
+            overflow-y: auto;
+        }
+        .sidebar h2 {
+            font-size: 18px;
+            margin: 10px 0;
+            text-align: center;
+        }
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+        .sidebar li {
+            margin: 10px 0;
+            font-size: 14px;
+        }
+        .sidebar li a {
+            text-decoration: none;
+            color: #f8f8f2;
+            cursor: pointer;
+        }
+        .sidebar li a:hover {
+            color: #50fa7b;
+        }
+        .main {
+            flex-grow: 1;
+            position: relative;
+            overflow: auto;
+            display: flex;
+            justify-content: flex-start;
+            align-items: flex-start;
+        }
+        #chart {
+            width: 85%;
+            height: 900px;
+            margin-top: -60px;
+            margin-left: -50px;
+        }
+        .node text {
+            font-size: 10px;
+            cursor: pointer;
+        }
+        .node circle {
+            stroke: #6272a4;
+            stroke-width: 1.5px;
+        }
+        .link {
+            stroke: #8be9fd;
+            stroke-opacity: 0.7;
+            stroke-width: 1.5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="title">Red Interactiva de Apps por Categoría</div>
+    <div class="content">
+        <div class="sidebar">
+            <ul id="category-list">
+            </ul>
+        </div>
+        <div class="main">
+            <div id="chart"></div>
+        </div>
+    </div>
+    <script>
+        const data = {
+            "Creación, Edición y Ventas": [
+                { "name": "Whisk", "url": "https://labs.google/fx/tools/whisk" },
+                { "name": "ImageFX", "url": "https://labs.google/fx/es/tools/image-fx" },
+                { "name": "VideoFX", "url": "https://labs.google/fx/tools/video-fx?isTvMode=true" },
+                { "name": "MusicFX", "url": "https://labs.google/fx/es/tools/music-fx" },
+                { "name": "GenType", "url": "https://labs.google/gentype" },
+                { "name": "The Infinite Drum Machine", "url": "https://experiments.withgoogle.com/drum-machine" },
+                { "name": "Conversational AI on YouTube", "url": "https://youtu.be/WPHtKet27ic" },
+                { "name": "Illuminate", "url": "https://illuminate.google.com/" },
+                { "name": "Help Me Script", "url": "https://home.google.com/automations/create" }
+            ],
+            "Asistentes Virtuales": [
+                { "name": "NotebookLM", "url": "https://notebooklm.google/" },
+                { "name": "Jules", "url": "https://labs.google.com/jules/waitlist/success" },
+                { "name": "AI Overviews in Search", "url": "https://labs.google.com/search?source=smp.23q2USLabs.29" },
+                { "name": "Gen AI in Chrome", "url": "https://blog.google/products/chrome/google-chrome-generative-ai-features-january-2024/" }
+            ],
+            "Investigación y Ciencia": [
+                { "name": "Gemini in Colab", "url": "https://labs.google/fx/tools/geminiincolab" },
+                { "name": "Project Mariner", "url": "https://deepmind.google/technologies/project-mariner/" },
+                { "name": "Project Astra", "url": "https://deepmind.google/technologies/project-astra/" }
+            ],
+            "Educación y Aprendizaje": [
+                { "name": "Food Mood", "url": "https://artsandculture.google.com/experiment/food-mood/HwHnGalZ3up0EA?hl=en" },
+                { "name": "Learn About", "url": "https://learning.google.com/experiments/learn-about/signup" },
+                { "name": "Say What You See", "url": "https://artsandculture.google.com/experiment/say-what-you-see/jwG3m7wQShZngw?hl=en" },
+                { "name": "Gen Chess", "url": "https://labs.google/genchess" },
+                { "name": "GenDino", "url": "https://labs.google/gendino/" },
+                { "name": "Semantris", "url": "https://experiments.withgoogle.com/semantris" },
+                { "name": "Rock-Paper-Scissors Machine", "url": "https://experiments.withgoogle.com/rock-paper-scissors" }
+            ],
+            "Desarrollo de Software": [
+                { "name": "IDX", "url": "https://idx.dev/" },
+                { "name": "/Code", "url": "https://labs.google.com/code/" }
+            ]
+        };
+
+        const nodes = [];
+        const links = [];
+
+        const vibrantColors = d3.scaleOrdinal(["#ff79c6", "#8be9fd", "#50fa7b", "#bd93f9", "#ffb86c", "#ff5555"]);
+
+        Object.entries(data).forEach(([category, apps], index) => {
+            nodes.push({ id: category, group: "category", size: 30 + apps.length * 2, color: vibrantColors(index) });
+
+            apps.forEach(app => {
+                nodes.push({ id: app.name, group: "app", size: 12, color: vibrantColors(index), url: app.url });
+                links.push({ source: category, target: app.name });
+            });
+        });
+
+        const categoryNodes = nodes.filter(node => node.group === "category");
+        for (let i = 0; i < categoryNodes.length; i++) {
+            for (let j = i + 1; j < categoryNodes.length; j++) {
+                links.push({ source: categoryNodes[i].id, target: categoryNodes[j].id, distance: -100 });
+            }
+        }
+
+        const svg = d3.select("#chart")
+            .append("svg")
+            .attr("width", window.innerWidth - 250)
+            .attr("height", 1000);
+
+        const simulation = d3.forceSimulation(nodes)
+            .force("link", d3.forceLink(links).id(d => d.id).distance(d => d.group === "category" ? 300 : 100))
+            .force("charge", d3.forceManyBody().strength(d => d.group === "app" ? -30 : -500))
+            .force("center", d3.forceCenter((window.innerWidth - 150) / 2, 500))
+            .force("collision", d3.forceCollide().radius(d => d.size + 30))
+            .force("x", d3.forceX().x(d => d.group === "category" ? window.innerWidth / 2 : (d.group === "app" ? window.innerWidth / 4 : window.innerWidth * 3 / 4)))
+            .force("y", d3.forceY().y(d => d.group === "category" ? 250 : 450));
+
+        const link = svg.append("g")
+            .attr("class", "links")
+            .selectAll("line")
+            .data(links)
+            .enter().append("line")
+            .attr("class", "link");
+
+        const node = svg.append("g")
+            .attr("class", "nodes")
+            .selectAll("g")
+            .data(nodes)
+            .enter().append("g")
+            .call(d3.drag()
+                .on("start", dragstarted)
+                .on("drag", dragged)
+                .on("end", dragended));
+
+        node.append("circle")
+            .attr("r", d => d.size)
+            .attr("fill", d => d.color)
+            .attr("class", d => d.group)
+            .on("click", (event, d) => {
+                if (d.url) {
+                    window.open(d.url, "_blank");
+                }
+            });
+
+        node.append("text")
+            .attr("dy", d => d.group === "category" ? "0.35em" : "1.5em")
+            .attr("text-anchor", "middle")
+            .text(d => d.id)
+            .attr("fill", "white");
+
+        simulation.on("tick", () => {
+            link
+                .attr("x1", d => d.source.x)
+                .attr("y1", d => d.source.y)
+                .attr("x2", d => d.target.x)
+                .attr("y2", d => d.target.y);
+
+            node
+                .attr("transform", d => `translate(${d.x},${d.y})`);
+        });
+
+        function dragstarted(event, d) {
+            if (!event.active) simulation.alphaTarget(0.3).restart();
+            d.fx = d.x;
+            d.fy = d.y;
+        }
+
+        function dragged(event, d) {
+            d.fx = event.x;
+            d.fy = event.y;
+        }
+
+        function dragended(event, d) {
+            if (!event.active) simulation.alphaTarget(0);
+            d.fx = null;
+            d.fy = null;
+        }
+
+        const categoryList = document.getElementById('category-list');
+        Object.entries(data).forEach(([category, apps], index) => {
+            const categoryLi = document.createElement('li');
+            const categoryTitle = `<a style="color: ${vibrantColors(index)};" onclick="highlightCategory('${category}')">${category}</a>`;
+            categoryLi.innerHTML = categoryTitle;
+            const appList = document.createElement('ul');
+            appList.style.paddingLeft = "15px";
+            apps.forEach(app => {
+                const appLi = document.createElement('li');
+                appLi.innerHTML = `<a href="${app.url}" target="_blank">${app.name}</a>`;
+                appList.appendChild(appLi);
+            });
+            categoryLi.appendChild(appList);
+            categoryList.appendChild(categoryLi);
+        });
+
+        function highlightCategory(category) {
+            node.selectAll("circle")
+                .style("stroke", "")
+                .style("stroke-width", "");
+
+            node.selectAll(".category")
+                .filter(d => d.id === category)
+                .style("stroke", "#FFD700")
+                .style("stroke-width", "3px");
+        }
+    </script>
+</body>
+</html>
