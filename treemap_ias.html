@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Treemap Interactivo</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #1a1a2e;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+        .title {
+            color: #00f0ff;
+            font-size: 24px;
+            margin: 20px 0;
+            text-shadow: 0 0 10px #00f0ff;
+        }
+        .legend {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 10px 0;
+        }
+        .legend-item {
+            margin: 5px 15px;
+            display: flex;
+            align-items: center;
+        }
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            border-radius: 0;
+        }
+        #chart {
+            width: 100%;
+            height: 80vh;
+        }
+        text {
+            fill: #ffffff;
+            font-size: 12px;
+            font-weight: bold;
+            text-shadow: 0px 0px 5px #000;
+        }
+    </style>
+</head>
+<body>
+    <div class="title">Treemap Interactivo de Apps</div>
+    <div class="legend" id="legend"></div>
+    <div id="chart"></div>
+
+    <script>
+        const data = {
+            name: "Apps",
+            children: [
+                {
+                    name: "Generación y Edición Multimedia",
+                    children: [
+                        { name: "Adobe Firefly", url: "https://firefly.adobe.com/" },
+                        { name: "BlinkShot", url: "https://www.blinkshot.io/" },
+                        { name: "EffectTextureMaker", url: "https://mebiusbox.github.io/contents/EffectTextureMaker/" },
+                        { name: "EverArt", url: "https://www.everart.ai/home" },
+                        { name: "Freepik AI Upscaler", url: "https://www.freepik.com/pikaso/upscaler" },
+                        { name: "Hailuo AI", url: "https://hailuoai.video/" },
+                        { name: "HeyGen", url: "https://app.heygen.com/home" },
+                        { name: "Masterpiece X", url: "https://app.masterpiecex.com/generate" },
+                        { name: "Opus Clip", url: "https://clip.opus.pro/dashboard" },
+                        { name: "Pika", url: "https://pika.art/" },
+                        { name: "Scenario", url: "https://app.scenario.com/" },
+                        { name: "Submagic", url: "https://app.submagic.co/?login=g" },
+                        { name: "Suno", url: "https://suno.com/" },
+                        { name: "Udio AI Music Generator", url: "https://www.udio.com/home" },
+                        { name: "VisualMath AI", url: "https://visualmath-ai.vercel.app/" },
+                        { name: "Clideo", url: "https://clideo.com/es/account/projects" },
+                        { name: "Leonardo.AI", url: "https://app.leonardo.ai/" }
+                    ]
+                },
+                {
+                    name: "Asistentes y Herramientas Virtuales",
+                    children: [
+                        { name: "Abacus.AI Teams", url: "https://apps.abacus.ai/chatllm/" },
+                        { name: "ChainGPT", url: "https://www.chaingpt.org/" },
+                        { name: "Character.AI", url: "https://character.ai/" },
+                        { name: "Dante AI", url: "https://chat.dante-ai.com/sign-up" },
+                        { name: "DeepSeek", url: "https://chat.deepseek.com/" },
+                        { name: "Le Chat - Mistral AI", url: "https://chat.mistral.ai/chat" },
+                        { name: "Llama Tutor", url: "https://llamatutor.together.ai/" },
+                        { name: "NoteGPT", url: "https://notegpt.io/workspace/create" },
+                        { name: "Talk To Ultravox", url: "https://huggingface.co/spaces/freddyaboulton/talk-to-ultravox" },
+                        { name: "TRELLIS", url: "https://huggingface.co/spaces/JeffreyXiang/TRELLIS" }
+                    ]
+                },
+                {
+                    name: "Educación, Ciencia e Investigación",
+                    children: [
+                        { name: "Ai2", url: "https://allenai.org/" },
+                        { name: "Elicit", url: "https://elicit.com/" },
+                        { name: "Essential AI", url: "https://essential.ai/" },
+                        { name: "Gamma", url: "https://gamma.app/" },
+                        { name: "Google AI Studio", url: "https://aistudio.google.com/starter-apps" },
+                        { name: "Illuminate", url: "https://illuminate.google.com/home?pli=1" },
+                        { name: "Litmaps", url: "https://app.litmaps.com/" },
+                        { name: "NotebookLM", url: "https://notebooklm.google.com/" },
+                        { name: "OpenAlex", url: "https://openalex.org/" },
+                        { name: "OpenRead", url: "https://www.openread.academy/" },
+                        { name: "PubMed", url: "https://pubmed.ncbi.nlm.nih.gov/" },
+                        { name: "Research Rabbit", url: "https://researchrabbitapp.com/home" },
+                        { name: "SciSpace", url: "https://typeset.io/es" },
+                        { name: "Scite", url: "https://scite.ai/users/leo-torres-j6kp4/welcome" },
+                        { name: "Rerun", url: "https://rerun.io/" }
+                    ]
+                },
+                {
+                    name: "Codificación y Desarrollo Tecnológico",
+                    children: [
+                        { name: "Botpress", url: "https://app.botpress.cloud/workspaces/wkspace_01JEHQYTZXRFQD16NT5B0C42J4/home" },
+                        { name: "CustomGPT.ai", url: "https://app.customgpt.ai/login" },
+                        { name: "Mendable", url: "https://www.mendable.ai/onboarding/createOrg" },
+                        { name: "Replit", url: "https://replit.com/~" },
+                        { name: "Vercel", url: "https://vercel.com/leandro-torres-projects" },
+                        { name: "Microsoft Copilot", url: "https://copilot.microsoft.com/#code=M.C508_BL2.2.U.c90c51b1-d241-c9a6-f30f-4db102a2515b" },
+                        { name: "MP Repo", url: "https://310.ai/mp/repo" },
+                        { name: "Hedra", url: "https://www.hedra.com/" },
+                        { name: "Grep", url: "https://grep.app/" },
+                        { name: "Toolify", url: "https://www.toolify.ai/" },
+                        { name: "Glide", url: "https://go.glideapps.com/o/n1JM5uck9Uj8xEzf0QjG?signUp=&utm_source=community&utm_medium=referral&utm_campaign=forum-header" }
+                    ]
+                },
+                {
+                    name: "Texto y Escritura Asistida",
+                    children: [
+                        { name: "EssayFlow", url: "https://essayflow.ai/?ref=taaft&utm_source=taaft&utm_medium=referral" },
+                        { name: "Jenni", url: "https://app.jenni.ai/" },
+                        { name: "MagicQuill", url: "https://huggingface.co/spaces/AI4Editing/MagicQuill" },
+                        { name: "Cohesive", url: "https://cohesive.so/" }
+                    ]
+                }
+            ]
+        };
+
+        const color = d3.scaleOrdinal(["#ff007f", "#00e5ff", "#7fff00", "#ffae00", "#b300ff"]);
+
+        function renderChart() {
+            const width = window.innerWidth * 0.9;
+            const height = window.innerHeight * 0.8;
+
+            d3.select("svg").remove();
+
+            const treemap = d3.treemap().size([width, height]).padding(0);
+
+            const root = d3.hierarchy(data).sum(d => (d.children ? 0 : 1));
+            treemap(root);
+
+            const svg = d3
+                .select("#chart")
+                .append("svg")
+                .attr("width", width)
+                .attr("height", height)
+                .style("background", "#0f0f1f");
+
+            const nodes = svg
+                .selectAll("g")
+                .data(root.leaves())
+                .enter()
+                .append("g")
+                .attr("transform", d => `translate(${d.x0},${d.y0})`);
+
+            nodes
+                .append("rect")
+                .attr("width", d => d.x1 - d.x0)
+                .attr("height", d => d.y1 - d.y0)
+                .attr("fill", d => color(d.parent.data.name))
+                .style("stroke", "#1a1a2e")
+                .style("stroke-width", 2)
+                .on("click", (event, d) => {
+                    window.open(d.data.url, "_blank");
+                });
+
+            nodes
+                .append("text")
+                .attr("x", 5)
+                .attr("y", 15)
+                .text(d => d.data.name)
+                .attr("fill", "#ffffff");
+
+            const legend = d3.select("#legend");
+            legend.selectAll(".legend-item").remove();
+            data.children.forEach((category, index) => {
+                const item = legend.append("div").attr("class", "legend-item");
+                item
+                    .append("div")
+                    .attr("class", "legend-color")
+                    .style("background", color(category.name));
+                item.append("span").text(category.name);
+            });
+        }
+
+        window.addEventListener("resize", renderChart);
+        renderChart();
+    </script>
+</body>
+</html>
