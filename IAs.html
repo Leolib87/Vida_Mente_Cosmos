@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Red Interactiva de Apps</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+            background-color: #202020;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+        }
+        .title {
+            text-align: center;
+            padding: 20px;
+            background-color: #333333;
+            color: #00ccff;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .content {
+            display: flex;
+            flex-direction: row;
+            flex-grow: 1;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #2b2b2b;
+            padding: 10px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
+            overflow-y: auto;
+        }
+        .sidebar h2 {
+            font-size: 18px;
+            margin: 10px 0;
+            text-align: center;
+        }
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+        .sidebar li {
+            margin: 10px 0;
+            font-size: 14px;
+        }
+        .sidebar li a {
+            text-decoration: none;
+            color: #ffffff;
+            cursor: pointer;
+        }
+        .sidebar li a:hover {
+            color: #00ccff;
+        }
+        .main {
+            flex-grow: 1;
+            position: relative;
+            overflow: auto;
+            display: flex;
+            justify-content: flex-start;
+            align-items: flex-start;
+        }
+        #chart {
+            width: 85%;
+            height: 900px;
+            margin-top: -60px; /* Adjusted to move the chart up */
+            margin-left: -50px;
+        }
+        .node text {
+            font-size: 10px;
+            cursor: pointer;
+        }
+        .node circle {
+            stroke: #404040;
+            stroke-width: 1.5px;
+        }
+        .link {
+            stroke: #606060;
+            stroke-opacity: 0.7;
+            stroke-width: 1.5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="title">Red Interactiva de Apps por Categoría</div>
+    <div class="content">
+        <div class="sidebar">
+            <ul id="category-list">
+            </ul>
+        </div>
+        <div class="main">
+            <div id="chart"></div>
+        </div>
+    </div>
+    <script>
+        const data = {
+  "Creación, Edición de Contenidos y Ventas": [
+    { "name": "Adobe Firefly", "url": "https://firefly.adobe.com/" },
+    { "name": "Tools AI", "url": "https://toolsai.io/" },
+    { "name": "Clideo", "url": "https://clideo.com/" },
+    { "name": "Leonardo.AI", "url": "https://leonardo.ai/" },
+    { "name": "ElevenLabs", "url": "https://elevenlabs.io/" },
+    { "name": "Opus Clip", "url": "https://www.opus.pro/" },
+    { "name": "Toolify", "url": "https://www.toolify.ai/" },
+    { "name": "EverArt", "url": "https://everart.ai/" },
+    { "name": "EffectTextureMaker", "url": "https://effecttexturemaker.com/" },
+    { "name": "Freepik AI Upscaler", "url": "https://www.freepik.com/ai" },
+    { "name": "BlinkShot", "url": "https://www.blinkshot.io/" },
+    { "name": "Relume", "url": "https://relume.io/" },
+    { "name": "OpenRead", "url": "https://openread.io/" },
+    { "name": "Hailuo AI", "url": "https://hailuo.ai/" },
+    { "name": "Dverso", "url": "https://landing.dverso.io/" },
+    { "name": "The Voice AI Platform", "url": "https://voice.ai/" },
+    { "name": "HeyGen", "url": "https://heygen.com/" },
+    { "name": "Character.AI", "url": "https://character.ai/" },
+    { "name": "Udio AI Music Generator", "url": "https://udio.ai/" },
+    { "name": "Good Tape", "url": "https://goodtape.io/tapes/new" },
+    { "name": "Talk To Ultravox", "url": "https://ultravox.ai/" },
+    { "name": "Fish Audio", "url": "https://fish.audio/" },
+    { "name": "Suno", "url": "https://suno.ai/" },
+    { "name": "KREA", "url": "https://krea.ai/" },
+    { "name": "Bolt", "url": "https://bolt.new/" },
+    { "name": "Cohesive", "url": "https://cohesive.so/" },
+    { "name": "Getty Images", "url": "https://www.gettyimages.com/" },
+    { "name": "MagicQuill", "url": "https://magicquill.online/" },
+    { "name": "Submagic", "url": "https://www.submagic.co/" },
+    { "name": "WeShop AI", "url": "https://weshop.ai/" },
+    { "name": "fofr/consistent-character", "url": "https://replicate.com/fofr/consistent-character" },
+    { "name": "TLDRThis", "url": "https://www.tldrthis.com/" },
+    { "name": "POLY.AI", "url": "https://www.poly.ai/" },
+    { "name": "VALL-E", "url": "https://lifeiteng.github.io/valle/index.html" },
+    { "name": "DALL-E", "url": "https://openai.com/dall-e" },
+    { "name": "Stable Diffusion", "url": "https://stability.ai/stable-diffusion" },
+    { "name": "Google Collab Stable Diffusion", "url": "https://colab.research.google.com/" },
+    { "name": "DreamBooth", "url": "https://dreambooth.github.io/" },
+    { "name": "MidJourney", "url": "https://www.midjourney.com/" },
+    { "name": "Imagen", "url": "https://imagen.research.google/" }
+  ],
+  "Asistentes Virtuales y Automatización": [
+    { "name": "Gemini", "url": "https://gemini.openai.com/" },
+    { "name": "Learn Prompting", "url": "https://learnprompting.org/" },
+    { "name": "Le Chat - Mistral AI", "url": "https://chat.mistral.ai/" },
+    { "name": "Google AI Studio (Prompts)", "url": "https://aistudio.google.com/prompts/new_chat" },
+    { "name": "Perplexity", "url": "https://www.perplexity.ai/" },
+    { "name": "Abacus.AI Teams", "url": "https://apps.abacus.ai/chatllm/" },
+    { "name": "Botpress", "url": "https://botpress.com/" },
+    { "name": "Microsoft Copilot", "url": "https://www.microsoft.com/en-us/microsoft-365/copilot" },
+    { "name": "IFTTT", "url": "https://ifttt.com/" },
+    { "name": "CustomGPT.ai", "url": "https://www.customgpt.ai/" },
+    { "name": "Humata", "url": "https://humata.ai/" },
+    { "name": "Supernormal", "url": "https://www.supernormal.com/" },
+    { "name": "Dante AI", "url": "https://www.dante.ai/" },
+    { "name": "Essential AI", "url": "https://essentialai.com/" },
+    { "name": "Tost AI", "url": "https://tost.ai/" },
+    { "name": "Quivr", "url": "https://quivr.app/" },
+    { "name": "AI2", "url": "https://allenai.org/" },
+    { "name": "Do Browser", "url": "https://www.dobrowser.io/" }
+  ],
+  "Investigación y Ciencia": [
+    { "name": "PubMed", "url": "https://pubmed.ncbi.nlm.nih.gov/" },
+    { "name": "Research Rabbit", "url": "https://researchrabbitapp.com/" },
+    { "name": "Scite", "url": "https://scite.ai/" },
+    { "name": "Elicit", "url": "https://elicit.org/" },
+    { "name": "SciSpace", "url": "https://typeset.io/" },
+    { "name": "OpenAlex", "url": "https://openalex.org/" },
+    { "name": "Litmaps", "url": "https://www.litmaps.com/" },
+    { "name": "DeepSeek", "url": "https://deepseek.com/" },
+    { "name": "Scenario", "url": "https://scenario.com/" },
+    { "name": "Storm (Stanford)", "url": "https://storm.stanford.edu/" },
+    { "name": "Sourcely", "url": "https://www.sourcely.net/" },
+    { "name": "Trellis", "url": "https://runtrellis.com/" },
+    { "name": "Jenni", "url": "https://jenni.ai/" },
+    { "name": "Protein (Hugging Face)", "url": "https://huggingface.co/protein" },
+    { "name": "MP Repo", "url": "https://310.ai/mp/repo" },
+    { "name": "Glass AI", "url": "https://glass.ai/" },
+    { "name": "HUMATA", "url": "https://humata.ai/" },
+    { "name": "Wolfram Alpha", "url": "https://www.wolframalpha.com/" },
+    { "name": "SemanticScholar", "url": "https://www.semanticscholar.org/" },
+    { "name": "Trinka.ai", "url": "https://www.trinka.ai/" },
+    { "name": "Paperpal", "url": "https://paperpal.com/" },
+    { "name": "ExplainMe a Paper", "url": "https://explainpaper.com/" },
+    { "name": "Scholarcy", "url": "https://www.scholarcy.com/" },
+    { "name": "WriteWise.io", "url": "https://writewise.io/" },
+    { "name": "Quillbot", "url": "https://quillbot.com/" },
+    { "name": "Resoomer", "url": "https://resoomer.com/" },
+    { "name": "Flowcite", "url": "https://flowcite.com/" },
+    { "name": "Paper Digest", "url": "https://paperdigest.net/" },
+    { "name": "Raxter", "url": "https://raxter.io/" },
+    { "name": "Dimensions.ai", "url": "https://www.dimensions.ai/" },
+    { "name": "Wisdom.ai", "url": "https://www.askwisdom.ai/" },
+    { "name": "Genei.io", "url": "https://www.genei.io/" },
+    { "name": "BIT.AI", "url": "https://bit.ai/" }
+  ],
+  "Educación y Aprendizaje": [
+    { "name": "Lucidchart", "url": "https://www.lucidchart.com/" },
+    { "name": "Llama Tutor", "url": "https://llama-tutor.com/" },
+    { "name": "Gamma", "url": "https://gamma.app/" },
+    { "name": "EssayFlow", "url": "https://essayflow.ai/" },
+    { "name": "Illuminate", "url": "https://illuminate.ai/" },
+    { "name": "Kome", "url": "https://kome.ai/" },
+    { "name": "NoteGPT", "url": "https://notegpt.ai/" },
+    { "name": "Masterpiece X", "url": "https://masterpiece.studio/" },
+    { "name": "VisualMath AI", "url": "https://visualmath-ai.vercel.app/" },
+    { "name": "Napkin AI", "url": "https://napkin.ai/" },
+    { "name": "Filosofía de la Inteligencia Artificial", "url": "https://www.intelligence.org/" },
+    { "name": "AI Rankings", "url": "https://airankings.org/" }
+  ],
+  "Desarrollo de Software y Modelos IA": [
+    { "name": "Replit", "url": "https://replit.com/" },
+    { "name": "7Devin", "url": "https://app.devin.ai/" },
+    { "name": "Cerebras Inference", "url": "https://www.cerebras.net/" },
+    { "name": "NotebookLM", "url": "https://notebooklm.google/" },
+    { "name": "Google AI Studio", "url": "https://ai.google/tools/" },
+    { "name": "ChainGPT", "url": "https://www.chaingpt.org/" },
+    { "name": "Hedra", "url": "https://hedra.dev/" },
+    { "name": "Grep", "url": "https://grep.app/" },
+    { "name": "Mendable", "url": "https://mendable.ai/" },
+    { "name": "Rerun", "url": "https://www.rerun.io/" },
+    { "name": "Vercel", "url": "https://vercel.com/" },
+    { "name": "Hugging Face", "url": "https://huggingface.co/" },
+    { "name": "Elink.io", "url": "https://elink.io/" },
+    { "name": "Jasper", "url": "https://www.jasper.ai/" }
+  ]
+};
+
+        const nodes = [];
+        const links = [];
+
+        const vibrantColors = d3.scaleOrdinal(d3.schemeSet2);
+
+        Object.entries(data).forEach(([category, apps], index) => {
+            nodes.push({ id: category, group: "category", size: 30 + apps.length * 2, color: vibrantColors(index) });
+
+            apps.forEach(app => {
+                nodes.push({ id: app.name, group: "app", size: 12, color: vibrantColors(index), url: app.url });
+                links.push({ source: category, target: app.name });
+            });
+        });
+
+        const categoryNodes = nodes.filter(node => node.group === "category");
+        for (let i = 0; i < categoryNodes.length; i++) {
+            for (let j = i + 1; j < categoryNodes.length; j++) {
+                links.push({ source: categoryNodes[i].id, target: categoryNodes[j].id, distance: -100 });
+            }
+        }
+
+        const svg = d3.select("#chart")
+            .append("svg")
+            .attr("width", window.innerWidth - 250)
+            .attr("height", 1000);
+
+        const simulation = d3.forceSimulation(nodes)
+            .force("link", d3.forceLink(links).id(d => d.id).distance(d => d.group === "category" ? 300 : 100))
+            .force("charge", d3.forceManyBody().strength(d => d.group === "app" ? -30 : -500))
+            .force("center", d3.forceCenter((window.innerWidth - 150) / 2, 500))
+            .force("collision", d3.forceCollide().radius(d => d.size + 30))
+            .force("x", d3.forceX().x(d => d.group === "category" ? window.innerWidth / 2 : (d.group === "app" ? window.innerWidth / 4 : window.innerWidth * 3 / 4)))
+            .force("y", d3.forceY().y(d => d.group === "category" ? 250 : 450)); /* Adjusted Y positions to move the nodes up */
+
+        const link = svg.append("g")
+            .attr("class", "links")
+            .selectAll("line")
+            .data(links)
+            .enter().append("line")
+            .attr("class", "link");
+
+        const node = svg.append("g")
+            .attr("class", "nodes")
+            .selectAll("g")
+            .data(nodes)
+            .enter().append("g")
+            .call(d3.drag()
+                .on("start", dragstarted)
+                .on("drag", dragged)
+                .on("end", dragended));
+
+        node.append("circle")
+            .attr("r", d => d.size)
+            .attr("fill", d => d.color)
+            .attr("class", d => d.group)
+            .on("click", (event, d) => {
+                if (d.url) {
+                    window.open(d.url, "_blank");
+                }
+            });
+
+        node.append("text")
+            .attr("dy", d => d.group === "category" ? "0.35em" : "1.5em")
+            .attr("text-anchor", "middle")
+            .text(d => d.id)
+            .attr("fill", "white");
+
+        simulation.on("tick", () => {
+            link
+                .attr("x1", d => d.source.x)
+                .attr("y1", d => d.source.y)
+                .attr("x2", d => d.target.x)
+                .attr("y2", d => d.target.y);
+
+            node
+                .attr("transform", d => `translate(${d.x},${d.y})`);
+        });
+
+        function dragstarted(event, d) {
+            if (!event.active) simulation.alphaTarget(0.3).restart();
+            d.fx = d.x;
+            d.fy = d.y;
+        }
+
+        function dragged(event, d) {
+            d.fx = event.x;
+            d.fy = event.y;
+        }
+
+        function dragended(event, d) {
+            if (!event.active) simulation.alphaTarget(0);
+            d.fx = null;
+            d.fy = null;
+        }
+
+        const categoryList = document.getElementById('category-list');
+        Object.entries(data).forEach(([category, apps], index) => {
+            const categoryLi = document.createElement('li');
+            const categoryTitle = `<a style="color: ${vibrantColors(index)};" onclick="highlightCategory('${category}')">${category}</a>`;
+            categoryLi.innerHTML = categoryTitle;
+            const appList = document.createElement('ul');
+            appList.style.paddingLeft = "15px";
+            apps.forEach(app => {
+                const appLi = document.createElement('li');
+                appLi.innerHTML = `<a href="${app.url}" target="_blank">${app.name}</a>`;
+                appList.appendChild(appLi);
+            });
+            categoryLi.appendChild(appList);
+            categoryList.appendChild(categoryLi);
+        });
+
+        function highlightCategory(category) {
+            node.selectAll("circle")
+                .style("stroke", "")
+                .style("stroke-width", "");
+
+            node.selectAll(".category")
+                .filter(d => d.id === category)
+                .style("stroke", "#FFD700")
+                .style("stroke-width", "3px");
+        }
+    </script>
+</body>
+</html>
