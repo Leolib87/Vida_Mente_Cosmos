@@ -1,101 +1,377 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Red Interactiva de Apps</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <style>
-        body {
-            display: flex;
-            flex-direction: column;
+        * {
             margin: 0;
-            background-color: #1e1e2f;
-            color: #f5f5f5;
-            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            padding: 0;
+            box-sizing: border-box;
         }
-        .title {
-            text-align: center;
-            padding: 20px;
-            background-color: #282a36;
-            color: #bd93f9;
-            font-size: 24px;
-            font-weight: bold;
+        body {
+            background-color: #000000;
+            color: #00FF00;
+            font-family: 'Orbitron', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
         }
-        .content {
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            padding: 15px 0;
+            border-bottom: 2px solid #00FFFF;
+            box-shadow: 0 0 15px #00FFFF;
+        }
+        nav ul {
             display: flex;
-            flex-direction: row;
-            flex-grow: 1;
-        }
-        .sidebar {
-            width: 250px;
-            background-color: #44475a;
-            padding: 10px;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
-            overflow-y: auto;
-        }
-        .sidebar h2 {
-            font-size: 18px;
-            margin: 10px 0;
-            text-align: center;
-        }
-        .sidebar ul {
+            justify-content: center;
             list-style: none;
+            flex-wrap: wrap;
+        }
+        nav ul li {
+            position: relative;
+            margin: 0 20px;
+        }
+        nav ul li a {
+            color: #00FF00;
+            text-decoration: none;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+        }
+        nav ul li a:hover {
+            color: #FFFFFF;
+            text-shadow: 0 0 10px #00FFFF;
+        }
+        .mega-menu {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.95);
+            border: 2px solid #00FFFF;
+            box-shadow: 0 0 20px #00FFFF;
+            width: 800px;
+            max-width: 90vw;
+            padding: 20px;
+            display: none;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        nav ul li:nth-child(2) .mega-menu {
+            left: 0;
+            right: 0;
+            transform: none;
+            margin-left: auto;
+            margin-right: auto;
+            width: 600px;
+            max-width: 85vw;
+        }
+        nav ul li:nth-child(6) .mega-menu {
+            left: 50%;
+            transform: translateX(-50%);
+            width: clamp(300px, 80vw, 600px);
+            max-width: 90vw;
+            margin: 0 auto;
+            right: auto;
+        }
+        nav ul li:hover .mega-menu {
+            display: grid;
+            opacity: 1;
+        }
+        .mega-menu h3 {
+            color: #00FFFF;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            text-shadow: 0 0 5px #00FFFF;
+        }
+        .mega-menu ul {
+            display: block;
             padding: 0;
         }
-        .sidebar li {
-            margin: 10px 0;
-            font-size: 14px;
+        .mega-menu ul li {
+            margin: 5px 0;
         }
-        .sidebar li a {
-            text-decoration: none;
-            color: #f8f8f2;
-            cursor: pointer;
+        .mega-menu a {
+            font-size: 0.9em;
+            color: #00FF00;
         }
-        .sidebar li a:hover {
-            color: #50fa7b;
+        .mega-menu a:hover {
+            color: #FFFFFF;
         }
-        .main {
-            flex-grow: 1;
-            position: relative;
-            overflow: auto;
-            display: flex;
-            justify-content: flex-start;
-            align-items: flex-start;
+        .main-container {
+            max-width: 1400px;
+            margin: 80px auto 0;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 3fr 1fr;
+            gap: 20px;
         }
-        #chart {
-            width: 85%;
-            height: 900px;
-            margin-top: -60px;
-            margin-left: -50px;
+        .content {
+            grid-column: 1 / 2;
         }
-        .node text {
-            font-size: 10px;
-            cursor: pointer;
+        .sidebar {
+            grid-column: 2 / 3;
+            position: sticky;
+            top: 100px;
+            max-height: calc(100vh - 120px);
+            overflow-y: auto;
+            background: rgba(0, 255, 255, 0.1);
+            padding: 20px;
+            border: 2px solid #00FFFF;
+            box-shadow: 0 0 20px #00FFFF;
+        }
+        .section {
+            margin: 50px 0;
+            padding: 30px;
+            border: 2px solid #00FFFF;
+            box-shadow: 0 0 20px #00FFFF;
+            background: rgba(0, 255, 255, 0.05);
+            border-radius: 10px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 30px #00FFFF;
+        }
+        h2 {
+            color: #00FF00;
+            text-shadow: 0 0 8px #00FF00;
+            border-bottom: 1px solid #00FFFF;
+            padding-bottom: 10px;
+        }
+        #network-graph {
+            width: 500%;
+            height: 800px;
+            margin: 30px 0;
         }
         .node circle {
-            stroke: #6272a4;
-            stroke-width: 1.5px;
+            stroke: #00FFFF;
+            stroke-width: 2px;
+            fill: #00FF00;
+            transition: all 0.3s ease;
+        }
+        .node.category circle {
+            fill: #ff00c8;
+        }
+        .node:hover circle {
+            fill: #0408ff;
+            stroke: #00FFFF;
+            r: 100;
+        }
+        .node text {
+            fill: #00FFFF;
+            font-family: 'Orbitron', sans-serif;
+            text-shadow: 0 0 10px #73ff00;
+            font-size: 8px;
+            pointer-events: none;
+            opacity: 1.0;
+            transition: opacity 0.9s ease;
+        }
+        .node.category text {
+            fill: #fffb00;
+            text-shadow: #ff04ff;
+        }
+        .node:hover text {
+            opacity: 1;
         }
         .link {
-            stroke: #8be9fd;
-            stroke-opacity: 0.7;
+            stroke: #00FF00;
+            stroke-opacity: 0.6;
             stroke-width: 1.5px;
+        }
+        .sidebar a {
+            color: #00FF00;
+            text-decoration: none;
+            display: block;
+            margin: 10px 0;
+            transition: all 0.3s ease;
+        }
+        .sidebar a:hover {
+            color: #FFFFFF;
+            text-shadow: 0 0 10px #00FFFF;
+        }
+        @media (max-width: 1200px) {
+            .main-container {
+                grid-template-columns: 2fr 1fr;
+            }
+        }
+        @media (max-width: 900px) {
+            .main-container {
+                grid-template-columns: 1fr;
+                margin-top: 120px;
+            }
+            .sidebar {
+                position: static;
+                max-height: none;
+            }
+            #network-graph {
+                height: 600px;
+            }
+        }
+        @media (max-width: 600px) {
+            .section {
+                padding: 20px;
+                margin: 30px 0;
+            }
+            #network-graph {
+                height: 500px;
+            }
+            .node text {
+                font-size: 9px;
+            }
+        }
+        @media (max-width: 400px) {
+            #network-graph {
+                height: 400px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="title">Red Interactiva de Apps por Categoría</div>
-    <div class="content">
-        <div class="sidebar">
-            <ul id="category-list">
-            </ul>
+    <!-- Navegación con Mega Menú (nuevo) -->
+    <nav>
+        <ul>
+            <li><a href="#inicio">Inicio</a></li>
+            <li>
+                <a href="#">Exploración Conceptual</a>
+                <div class="mega-menu">
+                    <div>
+                        <h3>Ideas y Preguntas Existenciales</h3>
+                        <ul>
+                            <li><a href="#trazado-vida">Origen y Fin de la Vida</a></li>
+                            <li><a href="#biologia">Determinismo vs. Libertad</a></li>
+                            <li><a href="#filosofia-mente">Conducta y Creatividad</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3>Fundamentos Teóricos</h3>
+                        <ul>
+                            <li><a href="#biologia">Filosofía de la Biología</a></li>
+                            <li><a href="#ciencias-cognitivas">Filosofía de las Ciencias Cognitivas</a></li>
+                            <li><a href="#filosofia-mente">Mente y Lenguaje</a></li>
+                            <li><a href="Explorando la Visualización Filosófica.HTML">Visualización Filosófica</a></li>
+                            <li><a href="MAPEO_FILO_MENTE_CHILE.HTML">Mapeo Filosofía de la Mente Chile</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+            <li>
+                <a href="#">Perspectivas Disciplinarias</a>
+                <div class="mega-menu">
+                    <div>
+                        <h3>Biología y Ciencias Naturales</h3>
+                        <ul>
+                            <li><a href="#biologia">Histología y Biología Celular</a></li>
+                            <li><a href="HISTOLOGIA.html">Histología</a></li>
+                            <li><a href="https://leolib87.github.io/herbario/">Herbario</a></li>
+                            <li><a href="cuerpo humano completo plantilla Lt.html">Cuerpo Humano Desplegable</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3>Economía y Política</h3>
+                        <ul>
+                            <li><a href="#economia-politica">Teorías Colectivistas y Liberales</a></li>
+                            <li><a href="#economia-politica">Análisis de Corrientes Ideológicas</a></li>
+                            <li><a href="RED POLITICOS.html">Red de Políticos FA</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3>Educación y Filosofía</h3>
+                        <ul>
+                            <li><a href="red 2.html">Filosofía de la Educación</a></li>
+                            <li><a href="#trazado-vida">Autoconocimiento y Sentido Humano</a></li>
+                            <li><a href="red3.html">Red Tesis de Magíster Ejemplos</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+            <li>
+                <a href="#">Metodología y Datos</a>
+                <div class="mega-menu">
+                    <div>
+                        <h3>Recolección y Procesamiento</h3>
+                        <ul>
+                            <li><a href="#redes-palabras">Visualización y Análisis de Datos</a></li>
+                            <li><a href="#voyant-tools">Herramientas Digitales (Gephi, D3.js)</a></li>
+                            <li><a href="varios graficos.html">Varios Gráficos</a></li>
+                            <li><a href="GRAFICO DE LINEAS Y TREEMAP.html">Gráfico de Líneas y Treemap</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+            <li>
+                <a href="#">Proyectos & Mapas</a>
+                <div class="mega-menu">
+                    <div>
+                        <h3>Mapas de Conocimiento</h3>
+                        <ul>
+                            <li><a href="#elementos-comunes">Filosofía de la Mente</a></li>
+                            <li><a href="#economia-politica">Política Chilena</a></li>
+                            <li><a href="VARELA_CARTOGRAFIA.HTML">Cartografía Varela 3d</a></li>
+                            <li><a href="cartografia_varela_01.html">Cartografía Varela 2d</a></li>                            
+                            <li><a href="AUTOPOIESIS.HTML">Simulación Autopoiesis Maturana y Varela 1974</a></li>
+                            <li><a href="Pedagogia-Biologia.html">Pedagogías en Biologia - Chile</a></li>
+                            <li><a href="Pedagogia-Biologia.html">Investigacion Facultad de Ciencias - Chile</a></li>
+                            <li><a href="FONDECYT.HTML">Fondecyt Chile - Chile</a></li>
+                            <li><a href="IAs.html">Red de IAs</a></li>
+                            <li><a href="googleias.html">IAs de Google</a></li>
+                            <li><a href="treemap_ias.html">Treemap de IAs</a></li>                                          
+                        </ul>
+                    </div>
+                </div>
+            </li>
+            <li>
+                <a href="#">Recursos</a>
+                <div class="mega-menu">
+                    <div>
+                        <h3>Lecturas y Bibliografía</h3>
+                        <ul>
+                            <li><a href="MI_BIBLIOTECA.HTML">Mi Biblioteca de Humanidades</a></li>
+                            <li><a href="BIBLIOTECA_CIENCIAS.HTML">Mi Biblioteca de Ciencias</a></li>
+                            <li><a href="BIBLIOECAS_DIGITALES_SOMBRA.HTML">Bibliotecas Sombra</a></li>
+                            <li><a href="CITAS.HTML">Fragmentos de Mentes</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3>Enlaces de Interés</h3>
+                        <ul>
+                            <li><a href="LEOLIB NEWS BLACK.HTML">Leolib News</a></li>
+                            <li><a href="https://leolib87.github.io/herbario/">Herbario</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+            <li><a href="#contacto">Acerca de / Contacto</a></li>
+        </ul>
+    </nav>
+
+    <!-- Contenedor principal -->
+    <div class="main-container" id="inicio">
+        <div class="content">
+            <div class="section">
+                <h2>Red Interactiva de Apps por Categoría</h2>
+                <div id="network-graph"></div>
+            </div>
         </div>
-        <div class="main">
-            <div id="chart"></div>
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h2>Categorías</h2>
+            <ul id="category-list"></ul>
         </div>
     </div>
+
+    <!-- Scripts D3.js -->
     <script>
         const data = {
             "Creación, Edición y Ventas": [
@@ -135,16 +411,20 @@
             ]
         };
 
+        const width = 900, height = 800;
+        const svg = d3.select("#network-graph")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height);
+
         const nodes = [];
         const links = [];
-
-        const vibrantColors = d3.scaleOrdinal(["#ff79c6", "#8be9fd", "#50fa7b", "#bd93f9", "#ffb86c", "#ff5555"]);
+        const neonColors = d3.scaleOrdinal(["#FF00FF", "#00CCFF", "#FFFF00", "#FF6600", "#FF33CC"]);
 
         Object.entries(data).forEach(([category, apps], index) => {
-            nodes.push({ id: category, group: "category", size: 30 + apps.length * 2, color: vibrantColors(index) });
-
+            nodes.push({ id: category, group: "category", size: 62 + apps.length * 1.5, color: neonColors(index) });
             apps.forEach(app => {
-                nodes.push({ id: app.name, group: "app", size: 12, color: vibrantColors(index), url: app.url });
+                nodes.push({ id: app.name, group: "app", size: 9, url: app.url });
                 links.push({ source: category, target: app.name });
             });
         });
@@ -152,22 +432,17 @@
         const categoryNodes = nodes.filter(node => node.group === "category");
         for (let i = 0; i < categoryNodes.length; i++) {
             for (let j = i + 1; j < categoryNodes.length; j++) {
-                links.push({ source: categoryNodes[i].id, target: categoryNodes[j].id, distance: -100 });
+                links.push({ source: categoryNodes[i].id, target: categoryNodes[j].id, distance: -50 });
             }
         }
 
-        const svg = d3.select("#chart")
-            .append("svg")
-            .attr("width", window.innerWidth - 250)
-            .attr("height", 1000);
-
         const simulation = d3.forceSimulation(nodes)
-            .force("link", d3.forceLink(links).id(d => d.id).distance(d => d.group === "category" ? 300 : 100))
-            .force("charge", d3.forceManyBody().strength(d => d.group === "app" ? -30 : -500))
-            .force("center", d3.forceCenter((window.innerWidth - 150) / 2, 500))
-            .force("collision", d3.forceCollide().radius(d => d.size + 30))
-            .force("x", d3.forceX().x(d => d.group === "category" ? window.innerWidth / 2 : (d.group === "app" ? window.innerWidth / 4 : window.innerWidth * 3 / 4)))
-            .force("y", d3.forceY().y(d => d.group === "category" ? 250 : 450));
+            .force("link", d3.forceLink(links).id(d => d.id).distance(d => d.group === "category" ? 250 : 180))
+            .force("charge", d3.forceManyBody().strength(d => d.group === "app" ? -40 : -500))
+            .force("center", d3.forceCenter(width / 2, height / 2))
+            .force("collision", d3.forceCollide().radius(d => d.size + 24))
+            .force("x", d3.forceX().strength(0.05))
+            .force("y", d3.forceY().strength(0.15));
 
         const link = svg.append("g")
             .attr("class", "links")
@@ -181,6 +456,7 @@
             .selectAll("g")
             .data(nodes)
             .enter().append("g")
+            .attr("class", d => d.group === "category" ? "node category" : "node")
             .call(d3.drag()
                 .on("start", dragstarted)
                 .on("drag", dragged)
@@ -188,52 +464,77 @@
 
         node.append("circle")
             .attr("r", d => d.size)
-            .attr("fill", d => d.color)
-            .attr("class", d => d.group)
+            .attr("fill", d => d.group === "category" ? d.color : "#00FF00")
             .on("click", (event, d) => {
-                if (d.url) {
-                    window.open(d.url, "_blank");
-                }
+                if (d.url) window.open(d.url, "_blank");
             });
 
-        node.append("text")
-            .attr("dy", d => d.group === "category" ? "0.35em" : "1.5em")
+        const label = node.append("text")
             .attr("text-anchor", "middle")
+            .attr("dy", d => d.group === "category" ? "0.35em" : d.size + 10)
+            .attr("font-size", d => d.group === "category" ? `${Math.min(d.size / 2, 16)}px` : "11px")
             .text(d => d.id)
-            .attr("fill", "white");
+            .each(function(d) {
+                d.labelOffset = d.group === "category" ? 0 : d.size + 10;
+            });
 
         simulation.on("tick", () => {
+            node.attr("transform", d => {
+                d.x = Math.max(d.size, Math.min(width - d.size, d.x));
+                d.y = Math.max(d.size, Math.min(height - d.size, d.y));
+                return `translate(${d.x},${d.y})`;
+            });
+
+            label.each(function(d) {
+                const thisNode = d3.select(this);
+                let dx = 0, dy = d.labelOffset;
+                nodes.forEach(other => {
+                    if (other !== d) {
+                        const distX = other.x - d.x;
+                        const distY = other.y - d.y;
+                        const distance = Math.sqrt(distX * distX + distY * distY);
+                        const minDist = d.size + other.size + 20;
+                        if (distance < minDist && distance > 0) {
+                            const angle = Math.atan2(distY, distX);
+                            dx = Math.cos(angle) * (minDist - distance);
+                            dy = Math.sin(angle) * (minDist - distance);
+                            if (d.group === "app") {
+                                dy = Math.abs(dy) + d.size + 10;
+                            }
+                        }
+                    }
+                });
+                thisNode.attr("dx", dx).attr("dy", dy);
+            });
+
             link
                 .attr("x1", d => d.source.x)
                 .attr("y1", d => d.source.y)
                 .attr("x2", d => d.target.x)
                 .attr("y2", d => d.target.y);
-
-            node
-                .attr("transform", d => `translate(${d.x},${d.y})`);
         });
 
-        function dragstarted(event, d) {
+        function dragstarted(event) {
             if (!event.active) simulation.alphaTarget(0.3).restart();
-            d.fx = d.x;
-            d.fy = d.y;
+            event.subject.fx = event.subject.x;
+            event.subject.fy = event.subject.y;
         }
 
-        function dragged(event, d) {
-            d.fx = event.x;
-            d.fy = event.y;
+        function dragged(event) {
+            event.subject.fx = Math.max(0, Math.min(width, event.x));
+            event.subject.fy = Math.max(0, Math.min(height, event.y));
         }
 
-        function dragended(event, d) {
+        function dragended(event) {
             if (!event.active) simulation.alphaTarget(0);
-            d.fx = null;
-            d.fy = null;
+            event.subject.fx = null;
+            event.subject.fy = null;
         }
 
         const categoryList = document.getElementById('category-list');
-        Object.entries(data).forEach(([category, apps], index) => {
+        Object.entries(data).forEach(([category, apps]) => {
             const categoryLi = document.createElement('li');
-            const categoryTitle = `<a style="color: ${vibrantColors(index)};" onclick="highlightCategory('${category}')">${category}</a>`;
+            const categoryTitle = `<a style="color: #FF00CC;" onclick="highlightCategory('${category}')">${category}</a>`;
             categoryLi.innerHTML = categoryTitle;
             const appList = document.createElement('ul');
             appList.style.paddingLeft = "15px";
@@ -248,13 +549,13 @@
 
         function highlightCategory(category) {
             node.selectAll("circle")
-                .style("stroke", "")
-                .style("stroke-width", "");
+                .style("stroke", "#00FFFF")
+                .style("stroke-width", "2px");
 
-            node.selectAll(".category")
+            node.selectAll("circle")
                 .filter(d => d.id === category)
-                .style("stroke", "#FFD700")
-                .style("stroke-width", "3px");
+                .style("stroke", "#FFFFFF")
+                .style("stroke-width", "4px");
         }
     </script>
 </body>
