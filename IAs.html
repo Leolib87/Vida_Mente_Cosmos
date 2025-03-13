@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Red Interactiva de Apps</title>
+    <title>Red Interactiva de IAs</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <style>
@@ -149,43 +149,91 @@
             border-bottom: 1px solid #00FFFF;
             padding-bottom: 10px;
         }
+        .filters {
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+        select {
+            background: #000000;
+            border: 2px solid #00FFFF;
+            color: #00FF00;
+            padding: 8px;
+            font-family: 'Orbitron', sans-serif;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        select:hover, select:focus {
+            background: #00FFFF;
+            color: #000000;
+            outline: none;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95em;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #00FFFF;
+            text-align: left;
+        }
+        th {
+            background: rgba(0, 255, 255, 0.1);
+            color: #00FFFF;
+        }
+        tr:nth-child(even) {
+            background: rgba(0, 255, 255, 0.03);
+        }
+        tr:hover {
+            background: rgba(0, 255, 255, 0.2);
+        }
+        a {
+            color: #00FFFF;
+            text-decoration: none;
+        }
+        a:hover {
+            text-shadow: 0 0 5px #00FFFF;
+        }
         #network-graph {
             width: 500%;
             height: 800px;
             margin: 30px 0;
         }
         .node circle {
-            stroke: #00FFFF; /* Cyan border for all nodes */
+            stroke: #00FFFF;
             stroke-width: 2px;
-            fill: #00FF00; /* Green fill for app nodes */
+            fill: #00FF00;
             transition: all 0.3s ease;
         }
         .node.category circle {
-            fill: #ff00c8; /* Default neon purple (overridden in script) */
+            fill: #ff00c8;
         }
         .node:hover circle {
-            fill: #0408ff; /* White on hover */
+            fill: #0408ff;
             stroke: #00FFFF;
-            r: 100; /* Slightly larger on hover */
+            r: 100;
         }
         .node text {
-            fill: #00FFFF; /* Cyan labels for app nodes */
+            fill: #00FFFF;
             font-family: 'Orbitron', sans-serif;
-            text-shadow: 0 0 10px #73ff00; /* Green glow for app labels */
+            text-shadow: 0 0 10px #73ff00;
             font-size: 8px;
             pointer-events: none;
             opacity: 1.0;
             transition: opacity 0.9s ease;
         }
         .node.category text {
-            fill: #fffb00; /* Neon fuchsia for category labels */
-            text-shadow:#ff04ff; /* No glow for category labels */
+            fill: #fffb00;
+            text-shadow: #ff04ff;
         }
         .node:hover text {
             opacity: 1;
         }
         .link {
-            stroke: #00FF00; /* Green links */
+            stroke: #00FF00;
             stroke-opacity: 0.6;
             stroke-width: 1.5px;
         }
@@ -229,6 +277,14 @@
             .node text {
                 font-size: 9px;
             }
+            .filters {
+                flex-direction: column;
+                align-items: center;
+            }
+            select {
+                width: 100%;
+                max-width: 200px;
+            }
         }
         @media (max-width: 400px) {
             #network-graph {
@@ -238,140 +294,60 @@
     </style>
 </head>
 <body>
-    <!-- Navegación con Mega Menú (unchanged) -->
     <nav>
         <ul>
-            <li><a href="#contacto">Acerca de / Contacto</a></li>
-            <li>
-                <a href="#">Exploración Conceptual</a>
-                <div class="mega-menu">
-                    <div>
-                        <h3>Fundamentos Teóricos</h3>
-                        <ul>
-                            <li><a href="#biologia">Filosofía de la Biología</a></li>
-                            <li><a href="#ciencias-cognitivas">Filosofía de las Ciencias Cognitivas</a></li>
-                            <li><a href="#filosofia-mente">Mente y Lenguaje</a></li>
-                            <li><a href="Explorando la Visualización Filosófica.HTML">Visualización Filosófica</a></li>
-                            <li><a href="MAPEO_FILO_MENTE_CHILE.HTML">Mapeo Filosofía de la Mente Chile</a></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h3>Ideas y Preguntas Existenciales</h3>
-                        <ul>
-                            <li><a href="#trazado-vida">Origen y Fin de la Vida</a></li>
-                            <li><a href="#biologia">Determinismo vs. Libertad</a></li>
-                            <li><a href="#filosofia-mente">Conducta y Creatividad</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </li>
             <li><a href="#inicio">Inicio</a></li>
             <li>
-                <a href="#">Metodología y Datos</a>
+                <a href="#">Exploración de IAs</a>
                 <div class="mega-menu">
                     <div>
-                        <h3>Recolección y Procesamiento</h3>
+                        <h3>Categorías de IA</h3>
                         <ul>
-                            <li><a href="#redes-palabras">Visualización y Análisis de Datos</a></li>
-                            <li><a href="#voyant-tools">Herramientas Digitales (Gephi, D3.js)</a></li>
-                            <li><a href="varios graficos.html">Varios Gráficos</a></li>
-                            <li><a href="GRAFICO DE LINEAS Y TREEMAP.html">Gráfico de Líneas y Treemap</a></li>
+                            <li><a href="#asistentes">Asistentes Virtuales y Automatización</a></li>
+                            <li><a href="#creacion">Creación, Edición de Contenidos y Ventas</a></li>
+                            <li><a href="#desarrollo">Desarrollo de Software y Modelos IA</a></li>
+                            <li><a href="#educacion">Educación y Aprendizaje</a></li>
+                            <li><a href="#investigacion">Investigación y Ciencia</a></li>
                         </ul>
                     </div>
                 </div>
             </li>
-            <li>
-                <a href="#">Perspectivas Disciplinarias</a>
-                <div class="mega-menu">
-                    <div>
-                        <h3>Biología y Ciencias Naturales</h3>
-                        <ul>
-                            <li><a href="#biologia">Histología y Biología Celular</a></li>
-                            <li><a href="HISTOLOGIA.html">Histología</a></li>
-                            <li><a href="https://leolib87.github.io/herbario/">Herbario</a></li>
-                            <li><a href="cuerpo humano completo plantilla Lt.html">Cuerpo Humano Desplegable</a></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h3>Educación y Filosofía</h3>
-                        <ul>
-                            <li><a href="red 2.html">Filosofía de la Educación</a></li>
-                            <li><a href="#trazado-vida">Autoconocimiento y Sentido Humano</a></li>
-                            <li><a href="red3.html">Red Tesis de Magíster Ejemplos</a></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h3>Economía y Política</h3>
-                        <ul>
-                            <li><a href="#economia-politica">Teorías Colectivistas y Liberales</a></li>
-                            <li><a href="#economia-politica">Análisis de Corrientes Ideológicas</a></li>
-                            <li><a href="RED POLITICOS.html">Red de Políticos FA</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </li>
-            <li>
-                <a href="#">Proyectos & Mapas</a>
-                <div class="mega-menu">
-                    <div>
-                        <h3>Mapas de Conocimiento</h3>
-                        <ul>
-                            <li><a href="#elementos-comunes">Filosofía de la Mente</a></li>
-                            <li><a href="#economia-politica">Política Chilena</a></li>
-                            <li><a href="VARELA_CARTOGRAFIA.HTML">Cartografía Varela 3d</a></li>
-                            <li><a href="cartografia_varela_01.html">Cartografía Varela 2d</a></li>                            
-                            <li><a href="AUTOPOIESIS.HTML">Simulación Autopoiesis Maturana y Varela 1974</a></li>
-                            <li><a href="Pedagogia-Biologia.html">Pedagogías en Biologia - Chile</a></li>
-                            <li><a href="Pedagogia-Biologia.html">Investigacion Facultad de Ciencias - Chile</a></li>
-                            <li><a href="FONDECYT.HTML">Fondecyt Chile - Chile</a></li>
-                            <li><a href="IAs.html">Red de IAs</a></li>
-                            <li><a href="googleias.html">IAs de Google</a></li>
-                            <li><a href="treemap_ias.html">Treemap de IAs</a></li>                                          
-                        </ul>
-                    </div>
-                </div>
-            </li>
-            <li>
-                <a href="#">Recursos</a>
-                <div class="mega-menu">
-                    <div>
-                        <h3>Enlaces de Interés</h3>
-                        <ul>
-                            <li><a href="LEOLIB NEWS BLACK.HTML">Leolib News</a></li>
-                            <li><a href="https://leolib87.github.io/herbario/">Herbario</a></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h3>Lecturas y Bibliografía</h3>
-                        <ul>
-                            <li><a href="MI_BIBLIOTECA.HTML">Mi Biblioteca de Humanidades</a></li>
-                            <li><a href="BIBLIOTECA_CIENCIAS.HTML">Mi Biblioteca de Ciencias</a></li>
-                            <li><a href="BIBLIOECAS_DIGITALES_SOMBRA.HTML">Bibliotecas Sombra</a></li>
-                            <li><a href="CITAS.HTML">Fragmentos de Mentes</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </li>
+            <li><a href="#contacto">Acerca de / Contacto</a></li>
         </ul>
     </nav>
 
-    <!-- Contenedor principal -->
     <div class="main-container" id="inicio">
         <div class="content">
             <div class="section">
-                <h2>Red Interactiva de Apps por Categoría</h2>
+                <h2>Red Interactiva de IAs por Categoría</h2>
                 <div id="network-graph"></div>
+            </div>
+            <div class="section">
+                <h2>Catálogo de IAs</h2>
+                <div class="filters">
+                    <select id="categoryFilter">
+                        <option value="">Todas las Categorías</option>
+                    </select>
+                </div>
+                <table id="iaTable">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Enlace</th>
+                            <th>Categoría</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
             </div>
         </div>
 
-        <!-- Sidebar -->
         <div class="sidebar">
             <h2>Categorías</h2>
             <ul id="category-list"></ul>
         </div>
     </div>
 
-    <!-- Scripts D3.js -->
     <script>
         const data = {
             "Asistentes Virtuales y Automatización": [
@@ -503,6 +479,17 @@
             ]
         };
 
+        // Preparar datos para la tabla
+        const ias = Object.entries(data).flatMap(([category, apps]) =>
+            apps.map(app => ({
+                name: app.name,
+                url: app.url,
+                category: category
+            }))
+        );
+        const categories = Object.keys(data).sort();
+
+        // Red D3.js (exactamente como en el código original)
         const width = 900, height = 800;
         const svg = d3.select("#network-graph")
             .append("svg")
@@ -511,7 +498,7 @@
 
         const nodes = [];
         const links = [];
-        const neonColors = d3.scaleOrdinal(["#FF00FF", "#00CCFF", "#FFFF00", "#FF6600", "#FF33CC"]); // Neon palette
+        const neonColors = d3.scaleOrdinal(["#FF00FF", "#00CCFF", "#FFFF00", "#FF6600", "#FF33CC"]);
 
         Object.entries(data).forEach(([category, apps], index) => {
             nodes.push({ id: category, group: "category", size: 62 + apps.length * 1.5, color: neonColors(index) });
@@ -556,15 +543,15 @@
 
         node.append("circle")
             .attr("r", d => d.size)
-            .attr("fill", d => d.group === "category" ? d.color : "#00FF00") // Apply neon colors to categories
+            .attr("fill", d => d.group === "category" ? d.color : "#00FF00")
             .on("click", (event, d) => {
                 if (d.url) window.open(d.url, "_blank");
             });
 
         const label = node.append("text")
             .attr("text-anchor", "middle")
-            .attr("dy", d => d.group === "category" ? "0.35em" : d.size + 10) // Center category text
-            .attr("font-size", d => d.group === "category" ? `${Math.min(d.size / 2, 16)}px` : "11px") // Scale category text
+            .attr("dy", d => d.group === "category" ? "0.35em" : d.size + 10)
+            .attr("font-size", d => d.group === "category" ? `${Math.min(d.size / 2, 16)}px` : "11px")
             .text(d => d.id)
             .each(function(d) {
                 d.labelOffset = d.group === "category" ? 0 : d.size + 10;
@@ -623,6 +610,37 @@
             event.subject.fy = null;
         }
 
+        // Filtros y tabla
+        const categoryFilter = document.getElementById('categoryFilter');
+        categories.forEach(category => {
+            const option = document.createElement('option');
+            option.value = category;
+            option.textContent = category;
+            categoryFilter.appendChild(option);
+        });
+
+        function renderTable() {
+            const selectedCategory = categoryFilter.value;
+            const filteredIAs = selectedCategory ? ias.filter(ia => ia.category === selectedCategory) : ias;
+
+            const tbody = document.querySelector('#iaTable tbody');
+            tbody.innerHTML = '';
+
+            filteredIAs.forEach(ia => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${ia.name}</td>
+                    <td><a href="${ia.url}" target="_blank">Enlace</a></td>
+                    <td>${ia.category}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        categoryFilter.addEventListener('change', renderTable);
+        renderTable();
+
+        // Sidebar
         const categoryList = document.getElementById('category-list');
         Object.entries(data).forEach(([category, apps]) => {
             const categoryLi = document.createElement('li');
@@ -648,6 +666,9 @@
                 .filter(d => d.id === category)
                 .style("stroke", "#FFFFFF")
                 .style("stroke-width", "4px");
+
+            categoryFilter.value = category;
+            categoryFilter.dispatchEvent(new Event('change'));
         }
     </script>
 </body>
