@@ -203,6 +203,7 @@
             <li><a href="#inicio">Inicio</a></li>
             <li><a href="#published">Libros Publicados</a></li>
             <li><a href="#forthcoming">Libros en Preparación</a></li>
+            <li><a href="#as-editor">As Editor</a></li>
             <li><a href="#contacto">Acerca de</a></li>
         </ul>
     </nav>
@@ -212,7 +213,7 @@
         <!-- Introducción -->
         <div class="intro">
             <h1>Francisco Varela: Books Collection</h1>
-            <p>Explora la colección de libros de <span class="highlight">Francisco Varela</span>, desde sus obras seminales sobre autopoiesis y cognición hasta sus próximas publicaciones. Incluye <span class="highlight">Libros Publicados</span> y <span class="highlight">Libros en Preparación</span>, abarcando ediciones en múltiples idiomas.</p>
+            <p>Explora la colección completa de libros de <span class="highlight">Francisco Varela</span>, incluyendo <span class="highlight">Libros Publicados</span>, <span class="highlight">Libros en Preparación</span>, y sus trabajos como editor en <span class="highlight">As Editor</span>. Esta recopilación abarca ediciones en múltiples idiomas y su legado en ciencia cognitiva y autopoiesis.</p>
         </div>
 
         <!-- Filtro -->
@@ -266,6 +267,32 @@
             </table>
         </div>
 
+        <!-- Tabla 3: As Editor -->
+        <div class="table-container" id="as-editor">
+            <h2>As Editor</h2>
+            <table id="table-editor">
+                <thead>
+                    <tr>
+                        <th>Ref #</th>
+                        <th>Editors</th>
+                        <th>Year</th>
+                        <th>Title</th>
+                        <th>Publication Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>[1]</td><td>Varela, F. (Ed.)</td><td>1983</td><td>Comparative Neurobiology of Vision in Vertebrates</td><td>Proceedings of the International Symposium, Punta de Tralca, Chile, November 1982, Biological Research (ex Arch. Biol. Med. Exp.) Vol. 16, No. 2/3, 145 pp</td></tr>
+                    <tr><td>[2]</td><td>Varela, F. and J.P. Dupuy (Eds.)</td><td>1992</td><td>Understanding Origin: Scientific Ideas on the Origin of Life, Mind, and Society</td><td>(A Stanford University International Symposium), Boston Studies Phil. Sci., Kluwer Assoc., Dordrecht</td></tr>
+                    <tr><td>[3]</td><td>F. Varela and P. Bourgine (Eds.)</td><td>1992</td><td>Towards a Practice of Autonomous Systems: The First European Conference on Artificial Life</td><td>MIT Press/Bradford Books, Cambridge, MA</td></tr>
+                    <tr><td>[4]</td><td>J. Hayward and F. Varela (Eds.)</td><td>1992</td><td>Gentle Bridges: Dialogues between the Cognitive Sciences and the Buddhist Tradition</td><td>Shambhala Publishers, Boston; French: Passerelles, Albin Michel, 1995; German: Gewagte Denkwege, Piper Verlag, 1996; Spanish: Un Puente para Dos Miradas, Dolmen, Santiago de Chile, 1997; Italian: Ponti Sottili, Neri Pozzi Editori, Vincenza, 1998; Japanese: Seidosha, Tokyo; Chinese: Cung Sheng Publishing House, Taiwan</td></tr>
+                    <tr><td>[5]</td><td>W. Stein and F. Varela (Eds.)</td><td>1993</td><td>Thinking About Biology: An introduction to Theoretical Biology</td><td>SFI Series on Complexity, Addison-Wesley, NJ</td></tr>
+                    <tr><td>[6]</td><td>F. Varela (Ed.)</td><td>1997</td><td>Sleeping, Dreaming and Dying: Dialogues between the Sciences and the Buddhist Tradition</td><td>Wisdom Book, Boston; French: Dormir, Rêver, Mourir, NIL Editions, Paris, 1998; German: Traum, Schlaf und Tod, Diederichs, München, 1999; Spanish: Dormir, Soñar, Morir, Dolmen Ediciones, Santiago de Chile, 1999</td></tr>
+                    <tr><td>[7]</td><td>F. Varela and J. Shear (Eds.)</td><td>1999</td><td>The View from Within: First-Person Methodologies in the Study of Consciousness</td><td>Special Issue, Journal of Consciousness Studies, 6(2-3), also available as book: Imprint Academic, London, 1999, http://www.imprint.co.uk/books/</td></tr>
+                    <tr><td>[8]</td><td>J. Petitot, F. Varela, B. Pachoud and J.M. Roy (Eds.)</td><td>1999</td><td>Naturalizing Phenomenology: Contemporary Issues in Phenomenology and Cognitive Science</td><td>Stanford University Press, Stanford, http://www.scico.u-bordeaux2.fr/episteme/bbooka/</td></tr>
+                </tbody>
+            </table>
+        </div>
+
         <!-- Contenedor para los Libros en Iframes -->
         <div class="paper-container" id="paper-container">
             <h3>View Selected Book</h3>
@@ -279,6 +306,14 @@
             <iframe class="paper-iframe" id="book-9" src="[URL-Book-9]" frameborder="0"></iframe>
             <iframe class="paper-iframe" id="book-10" src="[URL-Book-10]" frameborder="0"></iframe>
             <iframe class="paper-iframe" id="book-11" src="[URL-Book-11]" frameborder="0"></iframe>
+            <iframe class="paper-iframe" id="editor-1" src="[URL-Editor-1]" frameborder="0"></iframe>
+            <iframe class="paper-iframe" id="editor-2" src="[URL-Editor-2]" frameborder="0"></iframe>
+            <iframe class="paper-iframe" id="editor-3" src="[URL-Editor-3]" frameborder="0"></iframe>
+            <iframe class="paper-iframe" id="editor-4" src="[URL-Editor-4]" frameborder="0"></iframe>
+            <iframe class="paper-iframe" id="editor-5" src="[URL-Editor-5]" frameborder="0"></iframe>
+            <iframe class="paper-iframe" id="editor-6" src="[URL-Editor-6]" frameborder="0"></iframe>
+            <iframe class="paper-iframe" id="editor-7" src="[URL-Editor-7]" frameborder="0"></iframe>
+            <iframe class="paper-iframe" id="editor-8" src="[URL-Editor-8]" frameborder="0"></iframe>
         </div>
 
         <!-- Sección Acerca de -->
@@ -294,26 +329,28 @@
             const input = document.getElementById('search').value.toLowerCase();
             const tables = [
                 document.getElementById('table-published'),
-                document.getElementById('table-forthcoming')
+                document.getElementById('table-forthcoming'),
+                document.getElementById('table-editor')
             ];
             const paperContainer = document.getElementById('paper-container');
             const iframes = document.getElementsByClassName('paper-iframe');
             let selectedBook = null;
 
-            // Filtrar ambas tablas
+            // Filtrar todas las tablas
             tables.forEach(table => {
                 const rows = table.getElementsByTagName('tr');
                 for (let i = 1; i < rows.length; i++) {
                     const cells = rows[i].getElementsByTagName('td');
                     let match = false;
                     const refNumber = cells[0].textContent.toLowerCase();
+                    const prefix = table.id === 'table-editor' ? 'editor-' : 'book-';
 
                     for (let j = 0; j < cells.length; j++) {
                         const cellText = cells[j].textContent.toLowerCase();
                         if (cellText.includes(input)) {
                             match = true;
                             if (!selectedBook && j === 0) {
-                                selectedBook = refNumber.replace('[', '').replace(']', '');
+                                selectedBook = prefix + refNumber.replace('[', '').replace(']', '');
                             }
                             break;
                         }
@@ -329,8 +366,7 @@
 
             // Mostrar el iframe correspondiente al libro filtrado
             if (selectedBook) {
-                const iframeId = `book-${selectedBook}`;
-                const selectedIframe = document.getElementById(iframeId);
+                const selectedIframe = document.getElementById(selectedBook);
                 if (selectedIframe) {
                     selectedIframe.style.display = 'block';
                     paperContainer.style.display = 'block';
