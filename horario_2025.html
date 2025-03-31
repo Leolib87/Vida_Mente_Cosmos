@@ -83,6 +83,12 @@
             color: var(--neon-cyan);
             font-weight: bold;
         }
+        /* Clase para destacar Fundamentos en celeste neón */
+        .fundamentos-highlight {
+            color: var(--neon-cyan);
+            text-shadow: 0 0 5px var(--neon-cyan);
+            font-weight: bold;
+        }
         .table-container {
             overflow-x: auto;
             margin-bottom: 40px;
@@ -97,11 +103,14 @@
         th, td {
             padding: 12px;
             text-align: center;
-            border-bottom: 1px solid var(--neon-cyan);
-            border-right: 1px solid var(--neon-cyan); /* Líneas verticales entre días */
+            border: 2px solid var(--neon-cyan); /* Borde completo en celeste neón */
         }
         th:last-child, td:last-child {
             border-right: none; /* Elimina la línea en la última columna */
+        }
+        /* Eliminar borde inferior en la última fila para evitar duplicación */
+        tbody tr:last-child td {
+            border-bottom: none;
         }
         th {
             background: rgba(0, 0, 0, 0.9);
@@ -204,7 +213,7 @@
                         <td>08:00 - 09:15</td>
                         <td></td>
                         <td></td>
-                        <td><a href="fundamentos.html">*FUNDAMENTOS CAT1 BIOL 1012</a></td>
+                        <td><a href="fundamentos.html" class="fundamentos-highlight">*FUNDAMENTOS CAT1 BIOL 1012</a></td>
                         <td></td>
                         <td><a href="ufo1410-01.html">UFO 1410-01 BASES DE LAS CS. BIOLÓGICAS EN SALUD</a></td>
                         <td></td>
@@ -213,7 +222,7 @@
                         <td>09:30 - 10:45</td>
                         <td></td>
                         <td></td>
-                        <td><a href="fundamentos.html">*FUNDAMENTOS CAT1 BIOL 1012</a></td>
+                        <td><a href="fundamentos.html" class="fundamentos-highlight">*FUNDAMENTOS CAT1 BIOL 1012</a></td>
                         <td></td>
                         <td></td>
                         <td></td>
@@ -223,7 +232,7 @@
                         <td></td>
                         <td><a href="cpb1533.html">CPB 1533 Biología Celular</a></td>
                         <td></td>
-                        <td><a href="fundamentos.html">*FUNDAMENTOS CAT1 BIOL 1012</a></td>
+                        <td><a href="fundamentos.html" class="fundamentos-highlight">*FUNDAMENTOS CAT1 BIOL 1012</a></td>
                         <td></td>
                         <td></td>
                     </tr>
@@ -232,7 +241,7 @@
                         <td></td>
                         <td></td>
                         <td></td>
-                        <td><a href="fundamentos.html">*FUNDAMENTOS CAT1 BIOL 1012</a></td>
+                        <td><a href="fundamentos.html" class="fundamentos-highlight">*FUNDAMENTOS CAT1 BIOL 1012</a></td>
                         <td></td>
                         <td></td>
                     </tr>
@@ -247,7 +256,7 @@
                     </tr>
                     <tr>
                         <td>15:30 - 16:45</td>
-                        <td><a href="fundamentos.html">*14:50-15:50 FUNDAMENTOS CAT1 BIOL 1012</a></td>
+                        <td><a href="fundamentos.html" class="fundamentos-highlight">*14:50-15:50 FUNDAMENTOS CAT1 BIOL 1012</a></td>
                         <td><a href="ufo1410-02.html">B506 UFO 1410-02 BASES DE LAS CS. BIOLÓGICAS EN SALUD</a></td>
                         <td></td>
                         <td><a href="ufo1410-01.html">B506 UFO 1410-01 BASES DE LAS CS. BIOLÓGICAS EN SALUD</a></td>
