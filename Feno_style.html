@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Added for mobile responsiveness -->
   <title>Fenomenología Moderna - Experiencia Interactiva</title>
   <style>
     body { 
@@ -32,6 +33,7 @@
       z-index: 1;
       transition: opacity 0.5s;
       max-width: 600px;
+      padding: 10px; /* Added for better spacing on mobile */
     }
     h1 { 
       font-size: 3em; 
@@ -55,10 +57,12 @@
       display: flex;
       justify-content: center;
       z-index: 10;
+      flex-wrap: wrap; /* Added for mobile */
+      padding: 10px; /* Added for spacing */
     }
     .nav-item {
-      margin: 0 15px;
-      padding: 10px 20px;
+      margin: 5px; /* Adjusted for mobile */
+      padding: 8px 15px; /* Slightly smaller for mobile */
       background: rgba(0, 0, 0, 0.5);
       border: 1px solid #00ffff;
       color: #fff;
@@ -66,6 +70,7 @@
       border-radius: 20px;
       transition: all 0.3s;
       user-select: none;
+      font-size: 0.9em; /* Slightly smaller for mobile */
     }
     .nav-item:hover {
       background: rgba(0, 255, 255, 0.3);
@@ -83,11 +88,11 @@
     }
     .section {
       position: absolute;
-      width: 80%;
+      width: 90%; /* Adjusted for mobile */
       max-width: 800px;
       background: rgba(0, 0, 0, 0.7);
       border-radius: 10px;
-      padding: 30px;
+      padding: 20px; /* Adjusted for mobile */
       opacity: 0;
       transform: translateY(20px);
       transition: all 0.5s;
@@ -216,6 +221,73 @@
       color: rgba(255, 255, 255, 0.7);
       font-size: 0.9em;
       z-index: 10;
+      padding: 0 10px; /* Added for mobile */
+    }
+
+    /* Media Queries for Smartphone Responsiveness */
+    @media (max-width: 768px) {
+      #content {
+        top: 10px;
+        left: 10px;
+        max-width: 90%;
+      }
+      h1 {
+        font-size: 2em; /* Smaller heading on mobile */
+      }
+      p {
+        font-size: 1em; /* Smaller text on mobile */
+        max-width: 100%;
+      }
+      #nav {
+        bottom: 10px;
+        flex-direction: column; /* Stack nav items vertically */
+        align-items: center;
+      }
+      .nav-item {
+        width: 80%; /* Wider buttons for easier tapping */
+        text-align: center;
+        margin: 5px 0;
+        padding: 10px;
+      }
+      .section {
+        width: 95%; /* Nearly full width on mobile */
+        padding: 15px;
+        max-height: 85vh; /* More screen space on mobile */
+      }
+      .philosophers {
+        flex-direction: column; /* Stack philosophers vertically */
+        align-items: center;
+      }
+      .philosopher {
+        width: 100%;
+        max-width: 250px; /* Limit width for readability */
+      }
+      .philosopher img {
+        width: 80px; /* Smaller images on mobile */
+        height: 80px;
+      }
+      #interaction-instructions {
+        bottom: 60px;
+        font-size: 0.8em;
+      }
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.5em; /* Even smaller for very small screens */
+      }
+      p {
+        font-size: 0.9em;
+      }
+      .section h2 {
+        font-size: 1.2em; /* Smaller section headings */
+      }
+      .close-btn {
+        font-size: 1.2em; /* Slightly smaller close button */
+      }
+      .concept h3, .timeline-year {
+        font-size: 1em; /* Smaller subheadings */
+      }
     }
   </style>
 </head>
@@ -230,7 +302,7 @@
     </div>
     
     <div id="interaction-instructions">
-      Mueve el ratón para cambiar la perspectiva • Presiona ESPACIO para cambiar la visualización
+      Mueve el ratón o toca la pantalla para cambiar la perspectiva • Presiona ESPACIO o doble toque para cambiar la visualización
     </div>
     
     <div id="nav">
@@ -242,7 +314,7 @@
     
     <div id="sections">
       <div class="section" id="intro">
-        <button class="close-btn">&times;</button>
+        <button class="close-btn">×</button>
         <h2>La Fenomenología como Movimiento Filosófico</h2>
         <p>La fenomenología es una corriente filosófica del siglo XX que estudia los fenómenos tal como se presentan en la experiencia consciente. Fundada por Edmund Husserl, busca comprender cómo el mundo se manifiesta ante la consciencia, poniendo entre paréntesis (epojé) los presupuestos metafísicos y científicos.</p>
         <div class="quote">
@@ -253,7 +325,7 @@
       </div>
       
       <div class="section" id="philosophers">
-        <button class="close-btn">&times;</button>
+        <button class="close-btn">×</button>
         <h2>Principales Representantes</h2>
         <div class="philosophers">
           <div class="philosopher">
@@ -288,7 +360,7 @@
       </div>
       
       <div class="section" id="concepts">
-        <button class="close-btn">&times;</button>
+        <button class="close-btn">×</button>
         <h2>Conceptos Fundamentales</h2>
         
         <div class="concept">
@@ -322,7 +394,7 @@
       </div>
       
       <div class="section" id="timeline">
-        <button class="close-btn">&times;</button>
+        <button class="close-btn">×</button>
         <h2>Desarrollo Histórico de la Fenomenología</h2>
         
         <div id="timeline">
