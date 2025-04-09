@@ -11,7 +11,7 @@
             --neon-green: #00FF41;
             --neon-cyan: #00E5FF;
             --dark-bg: #0A0A0F;
-            --shadow-glow: 0 0 15px rgba(0, 229, 255, 0.6);
+            --shadow-glow: 0 0 12px rgba(0, 229, 255, 0.6);
         }
 
         * {
@@ -86,6 +86,8 @@
             place-items: center;
             text-align: center;
             padding: 2rem 1rem;
+
+
             color: var(--neon-cyan);
             text-shadow: var(--shadow-glow);
             position: relative;
@@ -133,36 +135,41 @@
         /* Chat Flotante */
         #n8n-chat {
             position: fixed;
-            top: 4rem;
-            right: 0;
-            width: min(90vw, 360px);
-            height: calc(100vh - 4rem);
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: clamp(50vh, 60vh, 600px); /* Altura adaptable entre 50vh y 600px */
+            max-height: 90vh; /* No excede el 90% de la pantalla */
             background: rgba(10, 10, 15, 0.97);
-            border-left: 1px solid var(--neon-cyan);
+            border-top: 1px solid var(--neon-cyan);
             box-shadow: var(--shadow-glow);
             z-index: 2000;
-            transform: translateX(100%);
+            transform: translateY(100%);
             transition: transform 0.3s ease;
-            border-radius: 0 0 0 10px;
+            border-radius: 10px 10px 0 0;
+            display: flex;
+            flex-direction: column;
         }
 
         #n8n-chat.open {
-            transform: translateX(0);
+            transform: translateY(0);
         }
 
         #n8n-chat .chat-header {
             background: rgba(0, 0, 0, 0.9);
             border-bottom: 1px solid var(--neon-cyan);
             color: var(--neon-cyan);
-            padding: 1rem;
+            padding: 0.8rem;
             text-align: center;
-            font-size: 1.2rem;
+            font-size: clamp(1rem, 3vw, 1.2rem);
         }
 
         #n8n-chat .chat-body {
+            flex: 1;
             padding: 1rem;
-            height: calc(100% - 6rem);
             overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--neon-cyan) rgba(0, 0, 0, 0.5);
         }
 
         #n8n-chat .chat-message {
@@ -171,11 +178,7 @@
             border-radius: 5px;
             padding: 0.8rem;
             margin: 0.5rem 0;
-            transition: transform 0.2s ease;
-        }
-
-        #n8n-chat .chat-message:hover {
-            transform: scale(1.02);
+            font-size: clamp(0.85rem, 2.5vw, 1rem);
         }
 
         #n8n-chat .chat-input {
@@ -186,27 +189,27 @@
             border-radius: 5px;
             color: var(--neon-green);
             font-family: 'Orbitron', sans-serif;
+            font-size: clamp(0.9rem, 2.5vw, 1rem);
         }
 
         #n8n-chat .chat-input:focus {
             outline: none;
-            box-shadow: 0 0 10px var(--neon-cyan);
+            box-shadow: 0 0 8px var(--neon-cyan);
         }
 
         .chat-toggle {
             position: fixed;
-            top: 50%;
-            right: 0;
-            transform: translateY(-50%);
+            bottom: 1rem;
+            right: 1rem;
             padding: 0.8rem 1.2rem;
             background: rgba(10, 10, 15, 0.9);
             border: 1px solid var(--neon-cyan);
-            border-right: none;
             color: var(--neon-green);
             font-family: 'Orbitron', sans-serif;
+            font-size: clamp(0.9rem, 2.5vw, 1rem);
             cursor: pointer;
             z-index: 2500;
-            border-radius: 10px 0 0 10px;
+            border-radius: 8px;
             transition: all 0.3s ease;
         }
 
@@ -225,36 +228,31 @@
         }
 
         /* Responsividad */
-        @media (max-width: 768px) {
-            nav {
-                padding: 0.8rem;
-            }
-            nav ul {
-                gap: 1rem;
-            }
-            nav a {
-                font-size: 1rem;
-                padding: 0.4rem 0.8rem;
-            }
+        @media (min-width: 768px) {
             #n8n-chat {
-                top: auto;
-                bottom: 0;
-                width: 100%;
-                height: 60vh;
-                transform: translateX(0) translateY(100%);
-                border-left: none;
-                border-top: 1px solid var(--neon-cyan);
-                border-radius: 10px 10px 0 0;
+                bottom: auto;
+                top: 4rem;
+                right: 0;
+                left: auto;
+                width: clamp(320px, 25vw, 400px); /* Ancho adaptable entre 320px y 400px */
+                height: calc(100vh - 4rem);
+                border-top: none;
+                border-left: 1px solid var(--neon-cyan);
+                border-radius: 0 0 0 10px;
+                transform: translateX(100%);
             }
+
             #n8n-chat.open {
-                transform: translateX(0) translateY(0);
+                transform: translateX(0);
             }
+
             .chat-toggle {
-                top: auto;
-                bottom: 1rem;
-                right: 1rem;
-                border-radius: 8px;
-                border: 1px solid var(--neon-cyan);
+                top: 50%;
+                bottom: auto;
+                right: 0;
+                transform: translateY(-50%);
+                border-radius: 10px 0 0 10px;
+                border-right: none;
             }
         }
 
@@ -265,6 +263,9 @@
             }
             .main-container {
                 padding: 1rem;
+            }
+            #n8n-chat {
+                height: clamp(40vh, 50vh, 500px); /* Altura más baja en móviles pequeños */
             }
         }
     </style>
