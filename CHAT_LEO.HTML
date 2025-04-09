@@ -4,273 +4,159 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Origen, Mente y Cosmos</title>
+
+    <!-- External Dependencies -->
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet">
+    
     <style>
+        /* Root Variables */
         :root {
-            --neon-green: #00FF41;
-            --neon-cyan: #00E5FF;
-            --dark-bg: #0A0A0F;
-            --shadow-glow: 0 0 12px rgba(0, 229, 255, 0.6);
+            --primary-color: #00FF41; /* Primary text and accent color */
+            --secondary-color: #00E5FF; /* Border and shadow color */
+            --dark-bg: #0A0A0F; /* Background color */
+            --chat--window--width: 400px; /* n8n chat window width */
+            --chat--window--height: 500px; /* n8n chat window height */
         }
 
+        /* Global Styles */
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
         }
 
         body {
             background: var(--dark-bg) url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') no-repeat center/cover fixed;
-            color: var(--neon-green);
+            color  color: var(--primary-color);
             font-family: 'Orbitron', sans-serif;
             min-height: 100vh;
-            overflow-x: hidden;
         }
 
-        /* Navegación */
+        /* Navigation */
         nav {
-            position: fixed;
+            backdrop-filter: blur(8px);
+            background: rgba(10, 10, 15, 0.95);
+            border-bottom: 1px solid var(--secondary-color);
+            padding: 1rem;
+            position: sticky;
             top: 0;
             width: 100%;
-            padding: 1rem;
-            background: rgba(10, 10, 15, 0.95);
-            border-bottom: 1px solid var(--neon-cyan);
-            box-shadow: var(--shadow-glow);
-            backdrop-filter: blur(8px);
             z-index: 1000;
-            transition: transform 0.3s ease;
-        }
-
-        nav.hidden {
-            transform: translateY(-100%);
         }
 
         nav ul {
             display: flex;
-            justify-content: center;
-            gap: 2rem;
-            list-style: none;
             flex-wrap: wrap;
+            gap: 1.5rem;
+            justify-content: center;
+            list-style: none;
         }
 
         nav a {
-            color: var(--neon-green);
-            text-decoration: none;
-            font-size: 1.1rem;
-            padding: 0.5rem 1rem;
             border-radius: 20px;
-            transition: all 0.3s ease;
+            color: var(--primary-color);
+            font-size: 1rem;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            transition: background 0.3s ease;
         }
 
         nav a:hover {
-            color: #fff;
             background: rgba(0, 229, 255, 0.2);
-            text-shadow: var(--shadow-glow);
+            color: #fff;
         }
 
-        /* Contenido Principal */
-        .main-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem 1rem;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .hero {
-            flex: 1;
-            display: grid;
-            place-items: center;
-            text-align: center;
-            padding: 2rem 1rem;
-
-
-            color: var(--neon-cyan);
-            text-shadow: var(--shadow-glow);
-            position: relative;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.6);
-            z-index: 1;
-        }
-
-        .hero h1, .hero p {
-            position: relative;
-            z-index: 2;
-            animation: fadeIn 1.5s ease-out;
-        }
-
-        .hero h1 {
-            font-size: clamp(2rem, 5vw, 4.5rem);
-            background: linear-gradient(45deg, var(--neon-green), var(--neon-cyan));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            animation: glow 2s infinite alternate;
-        }
-
-        .hero p {
-            font-size: clamp(1rem, 2.5vw, 1.5rem);
-            max-width: 700px;
-            margin-top: 1rem;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes glow {
-            from { text-shadow: 0 0 5px var(--neon-green); }
-            to { text-shadow: 0 0 20px var(--neon-cyan); }
-        }
-
-        /* Chat Flotante */
+        /* Chat Container */
         #n8n-chat {
+            cursor: move;
+            height: var(--chat--window--height);
             position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: clamp(50vh, 60vh, 600px); /* Altura adaptable entre 50vh y 600px */
-            max-height: 90vh; /* No excede el 90% de la pantalla */
-            background: rgba(10, 10, 15, 0.97);
-            border-top: 1px solid var(--neon-cyan);
-            box-shadow: var(--shadow-glow);
-            z-index: 2000;
-            transform: translateY(100%);
-            transition: transform 0.3s ease;
-            border-radius: 10px 10px 0 0;
-            display: flex;
-            flex-direction: column;
-        }
-
-        #n8n-chat.open {
-            transform: translateY(0);
+            width: var(--chat--window--width);
+            z-index: 999;
         }
 
         #n8n-chat .chat-header {
-            background: rgba(0, 0, 0, 0.9);
-            border-bottom: 1px solid var(--neon-cyan);
-            color: var(--neon-cyan);
+            background: var(--dark-bg);
+            color: var(--primary-color);
+            font-size: clamp(1rem, 3vw, 1.2rem);
             padding: 0.8rem;
             text-align: center;
-            font-size: clamp(1rem, 3vw, 1.2rem);
+            user-select: none;
         }
 
         #n8n-chat .chat-body {
+            background: var(--dark-bg);
+            color: var(--primary-color);
+            display: flex;
             flex: 1;
-            padding: 1rem;
+            flex-direction: column-reverse; /* Top-down messages */
             overflow-y: auto;
-            scrollbar-width: thin;
-            scrollbar-color: var(--neon-cyan) rgba(0, 0, 0, 0.5);
+            padding: 1rem 0;
         }
 
         #n8n-chat .chat-message {
-            background: rgba(0, 229, 255, 0.1);
-            border: 1px solid var(--neon-green);
+            background: rgba(0, 255, 65, 0.2);
+            border: none;
             border-radius: 5px;
-            padding: 0.8rem;
-            margin: 0.5rem 0;
+            color: var(--primary-color);
             font-size: clamp(0.85rem, 2.5vw, 1rem);
+            margin: 0.5rem 0;
+            padding: 0.8rem;
         }
 
         #n8n-chat .chat-input {
-            width: 100%;
-            padding: 0.8rem;
-            background: rgba(0, 0, 0, 0.9);
-            border: 1px solid var(--neon-cyan);
+            background: var(--dark-bg);
+            border: 1px solid var(--secondary-color);
             border-radius: 5px;
-            color: var(--neon-green);
+            color: var(--primary-color);
             font-family: 'Orbitron', sans-serif;
             font-size: clamp(0.9rem, 2.5vw, 1rem);
+            padding: 0.8rem;
+            width: 100%;
         }
 
         #n8n-chat .chat-input:focus {
+            box-shadow: 0 0 8px var(--secondary-color);
             outline: none;
-            box-shadow: 0 0 8px var(--neon-cyan);
         }
 
-        .chat-toggle {
-            position: fixed;
-            bottom: 1rem;
-            right: 1rem;
-            padding: 0.8rem 1.2rem;
-            background: rgba(10, 10, 15, 0.9);
-            border: 1px solid var(--neon-cyan);
-            color: var(--neon-green);
-            font-family: 'Orbitron', sans-serif;
-            font-size: clamp(0.9rem, 2.5vw, 1rem);
+        /* Color Picker */
+        .color-picker {
+            background-color: var(--primary-color);
+            border: 1px solid var(--secondary-color);
             cursor: pointer;
-            z-index: 2500;
-            border-radius: 8px;
-            transition: all 0.3s ease;
+            height: 20px;
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            width: 20px;
         }
 
-        .chat-toggle:hover {
-            background: rgba(0, 229, 255, 0.2);
-            color: #fff;
+        .color-input {
+            height: 0;
+            opacity: 0;
+            position: absolute;
+            width: 0;
         }
 
-        /* Footer */
-        .footer {
-            padding: 1.5rem;
-            text-align: center;
-            color: var(--neon-cyan);
-            border-top: 1px solid var(--neon-green);
-            background: rgba(10, 10, 15, 0.8);
-        }
-
-        /* Responsividad */
-        @media (min-width: 768px) {
-            #n8n-chat {
-                bottom: auto;
-                top: 4rem;
-                right: 0;
-                left: auto;
-                width: clamp(320px, 25vw, 400px); /* Ancho adaptable entre 320px y 400px */
-                height: calc(100vh - 4rem);
-                border-top: none;
-                border-left: 1px solid var(--neon-cyan);
-                border-radius: 0 0 0 10px;
-                transform: translateX(100%);
-            }
-
-            #n8n-chat.open {
-                transform: translateX(0);
-            }
-
-            .chat-toggle {
-                top: 50%;
-                bottom: auto;
-                right: 0;
-                transform: translateY(-50%);
-                border-radius: 10px 0 0 10px;
-                border-right: none;
-            }
-        }
-
+        /* Responsive Design */
         @media (max-width: 480px) {
             nav ul {
                 flex-direction: column;
                 gap: 0.5rem;
             }
-            .main-container {
-                padding: 1rem;
-            }
+
             #n8n-chat {
-                height: clamp(40vh, 50vh, 500px); /* Altura más baja en móviles pequeños */
+                height: clamp(250px, 60vh, 400px);
+                width: 95vw;
             }
         }
     </style>
 </head>
+
 <body>
+    <!-- Navigation Section -->
     <nav>
         <ul>
             <li><a href="#inicio">Inicio</a></li>
@@ -279,55 +165,133 @@
         </ul>
     </nav>
 
-    <div class="main-container" id="inicio">
-        <div class="hero">
-            <h1>Origen, Mente y Cosmos</h1>
-            <p>Un viaje transdisciplinario a través de la vida, la conciencia y las redes del saber</p>
-        </div>
-        <div class="footer" id="contacto">
-            <p>La vida es un juego cósmico | Febrero 2025</p>
-        </div>
+    <!-- Chat Container -->
+    <div id="n8n-chat">
+        <div class="color-picker"></div>
+        <input type="color" class="color-input" id="colorPicker">
     </div>
 
-    <button class="chat-toggle" id="chat-toggle">Chat</button>
-    <div id="n8n-chat"></div>
-
+    <!-- Chat Initialization Script -->
     <script type="module">
         import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
 
+        /**
+         * Main initialization function
+         */
         document.addEventListener('DOMContentLoaded', () => {
-            const chatElement = document.querySelector('#n8n-chat');
-            const chatToggle = document.querySelector('#chat-toggle');
-            const nav = document.querySelector('nav');
-            let lastScroll = 0;
+            initializeChat();
+            setupDraggableChat();
+            setupColorPicker();
+        });
 
-            // Inicializar chat
+        /**
+         * Initialize n8n Chat with custom configuration
+         */
+        function initializeChat() {
             createChat({
                 webhookUrl: 'https://leolib1987.app.n8n.cloud/webhook/4c920a6e-4bb8-4273-9536-b85a322c81fb/chat',
-                webhookConfig: { method: 'POST', headers: { 'Content-Type': 'application/json' } },
+                webhookConfig: {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                },
                 target: '#n8n-chat',
                 mode: 'window',
+                chatInputKey: 'chatInput',
+                chatSessionKey: 'sessionId',
+                showWelcomeScreen: false,
                 defaultLanguage: 'es',
-                initialMessages: ['¡Hola, explorador! 🌌', '¿Cómo puedo guiarte en este viaje cósmico?'],
+                initialMessages: [
+                    '¡Hola, explorador! 🌌',
+                    '¿Cómo puedo guiarte en este viaje cósmico?'
+                ],
                 i18n: {
                     es: {
                         title: 'Cosmos Chat',
                         subtitle: 'Explora el saber',
-                        inputPlaceholder: 'Escribe aquí...',
+                        inputPlaceholder: 'Escribe aquí...'
                     }
                 }
             });
+        }
 
-            // Toggle chat
-            chatToggle.addEventListener('click', () => chatElement.classList.toggle('open'));
+        /**
+         * Setup draggable functionality for chat window
+         */
+        function setupDraggableChat() {
+            const chatContainer = document.getElementById('n8n-chat');
+            let isDragging = false;
+            let currentX;
+            let currentY;
+            let initialX;
+            let initialY;
 
-            // Ocultar/mostrar nav al hacer scroll
-            window.addEventListener('scroll', () => {
-                const currentScroll = window.scrollY;
-                nav.classList.toggle('hidden', currentScroll > lastScroll && currentScroll > 80);
-                lastScroll = currentScroll;
+            // Center chat initially
+            const width = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--chat--window--width'));
+            const height = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--chat--window--height'));
+            currentX = (window.innerWidth - width) / 2;
+            currentY = (window.innerHeight - height) / 2;
+            chatContainer.style.left = `${currentX}px`;
+            chatContainer.style.top = `${currentY}px`;
+
+            chatContainer.addEventListener('mousedown', (e) => {
+                if (e.target.className === 'chat-header') {
+                    initialX = e.clientX - currentX;
+                    initialY = e.clientY - currentY;
+                    isDragging = true;
+                }
             });
-        });
+
+            document.addEventListener('mousemove', (e) => {
+                if (isDragging) {
+                    e.preventDefault();
+                    currentX = e.clientX - initialX;
+                    currentY = e.clientY - initialY;
+                    chatContainer.style.left = `${currentX}px`;
+                    chatContainer.style.top = `${currentY}px`;
+                }
+            });
+
+            document.addEventListener('mouseup', () => {
+                isDragging = false;
+            });
+        }
+
+        /**
+         * Setup color picker functionality
+         */
+        function setupColorPicker() {
+            const colorPickerSquare = document.querySelector('.color-picker');
+            const colorInput = document.getElementById('colorPicker');
+
+            colorPickerSquare.addEventListener('click', () => {
+                colorInput.click();
+            });
+
+            colorInput.addEventListener('change', (e) => {
+                const newColor = e.target.value;
+                document.documentElement.style.setProperty('--primary-color', newColor);
+                colorPickerSquare.style.backgroundColor = newColor;
+
+                const rgb = hexToRgb(newColor);
+                document.querySelectorAll('.chat-message').forEach(msg => {
+                    msg.style.background = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.2)`;
+                });
+            });
+        }
+
+        /**
+         * Convert hex color to RGB
+         * @param {string} hex - Hex color code
+         * @returns {Object} RGB values
+         */
+        function hexToRgb(hex) {
+            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? {
+                r: parseInt(result[1], 16),
+                g: parseInt(result[2], 16),
+                b: parseInt(result[3], 16)
+            } : null;
+        }
     </script>
 </body>
 </html>
