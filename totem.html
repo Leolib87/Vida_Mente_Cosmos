@@ -4,21 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Canciones & Mapas Conceptuales 🎸🗺️</title>
-    <script src="https://unpkg.com/mermaid@10/dist/mermaid.min.js"></script>
-    <!-- Fallback local copy of Mermaid.js (optional, uncomment if needed) -->
-    <!-- <script src="mermaid.min.js"></script> -->
+    <!-- Mermaid.js for rendering diagrams -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <!-- Google Fonts: Orbitron for cyberpunk aesthetic -->
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     <style>
+        /* Color variables for maintainability */
         :root {
-            --primary-color: #00FFFF; /* Neon cyan */
-            --secondary-color: #FF00FF; /* Neon magenta */
-            --bg-color: #000000; /* Black background */
-            --text-color: #00FF00; /* Neon green */
-            --card-bg: rgba(0, 255, 255, 0.05); /* Translucent cyan */
-            --shadow: 0 0 20px #00FFFF; /* Cyan glow */
-            --nav-bg: #000000; /* Solid black for nav */
+            --primary-color: #00FFFF; /* Neon cyan for borders, accents */
+            --secondary-color: #FF00FF; /* Neon magenta for highlights */
+            --bg-color: #000000; /* Solid black for background */
+            --text-color: #00FF00; /* Neon green for text */
+            --card-bg: #000000; /* Black for collapsible content */
+            --shadow: 0 0 20px #00FFFF; /* Cyan glow effect */
+            --nav-bg: #000000; /* Solid black for navigation */
         }
 
+        /* Base styles */
         body {
             font-family: 'Orbitron', sans-serif;
             line-height: 1.6;
@@ -28,25 +30,28 @@
             padding: 0;
         }
 
+        /* Header with solid black background */
         header {
-            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            background: var(--bg-color);
             color: var(--text-color);
             text-align: center;
-            padding: 2rem;
-            text-shadow: 0 0 15px #00FF00;
+            padding: 2rem 1rem;
+            text-shadow: 0 0 15px #00FFFF;
         }
 
         header h1 {
             margin: 0;
-            font-size: 2.5rem;
+            font-size: clamp(1.8rem, 5vw, 2.5rem);
             animation: glow 2s infinite alternate;
         }
 
+        /* Glow animation for header title */
         @keyframes glow {
             from { text-shadow: 0 0 5px #00FF00; }
             to { text-shadow: 0 0 20px #00FFFF; }
         }
 
+        /* Sticky navigation bar */
         nav {
             background: var(--nav-bg);
             padding: 1rem;
@@ -70,6 +75,8 @@
             color: var(--primary-color);
             text-decoration: none;
             font-weight: bold;
+            font-size: clamp(0.9rem, 3vw, 1rem);
+            padding: 0.5rem;
             transition: text-shadow 0.3s;
         }
 
@@ -77,12 +84,14 @@
             text-shadow: 0 0 10px #00FFFF;
         }
 
+        /* Main content container */
         main {
             max-width: 1200px;
             margin: 2rem auto;
             padding: 0 1rem;
         }
 
+        /* Song sections with collapsible content */
         .song-section {
             background: var(--card-bg);
             border: 2px solid var(--primary-color);
@@ -93,21 +102,28 @@
         }
 
         .song-header {
-            background: var(--primary-color);
+            background: var(--bg-color); /* Black header */
             color: var(--text-color);
             padding: 1rem;
             cursor: pointer;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border-bottom: 1px solid var(--primary-color); /* Cyan separator */
             transition: background 0.3s;
         }
 
         .song-header:hover {
-            background: var(--secondary-color);
+            background: var(--secondary-color); /* Magenta on hover */
+        }
+
+        .song-header h2 {
+            margin: 0;
+            font-size: clamp(1.2rem, 4vw, 1.5rem);
         }
 
         .song-content {
+            background: var(--card-bg);
             padding: 1rem;
             display: none;
         }
@@ -116,6 +132,7 @@
             display: block;
         }
 
+        /* Callout for reflections */
         .callout {
             border-left: 4px solid var(--secondary-color);
             background: rgba(255, 0, 255, 0.05);
@@ -124,19 +141,20 @@
             border-radius: 4px;
         }
 
+        /* Mermaid diagram container */
         .mermaid-diagram {
             margin: 1rem 0;
             text-align: center;
-            overflow: visible; /* Ensure diagram isn't clipped */
+            overflow: auto;
         }
 
-        /* Ensure Mermaid SVG is visible */
         .mermaid-diagram svg {
             max-width: 100%;
             height: auto;
             background: transparent;
         }
 
+        /* Tables for index and glossary */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -148,6 +166,7 @@
             border: 1px solid var(--primary-color);
             padding: 0.8rem;
             text-align: left;
+            font-size: clamp(0.8rem, 2.5vw, 0.9rem);
         }
 
         th {
@@ -156,6 +175,7 @@
             text-shadow: 0 0 8px #00FF00;
         }
 
+        /* Images with cyan border */
         img {
             max-width: 100%;
             height: auto;
@@ -164,30 +184,81 @@
             border: 1px solid var(--primary-color);
         }
 
+        /* Footer styling */
         footer {
             text-align: center;
-            padding: 2rem;
+            padding: 2rem 1rem;
             background: var(--card-bg);
             box-shadow: var(--shadow);
             border-top: 2px solid var(--primary-color);
         }
 
+        /* Responsive design for smartphones */
         @media (max-width: 768px) {
-            header h1 {
-                font-size: 1.8rem;
+            header {
+                padding: 1.5rem 0.5rem;
             }
 
             nav ul {
                 flex-direction: column;
                 align-items: center;
+                gap: 0.5rem;
             }
 
-            .song-header h2 {
-                font-size: 1.2rem;
+            nav a {
+                padding: 0.75rem;
+                min-height: 44px; /* Touch target size */
+                display: block;
+                text-align: center;
+            }
+
+            .song-header {
+                padding: 0.75rem;
+            }
+
+            .song-content {
+                padding: 0.75rem;
+            }
+
+            .mermaid-diagram {
+                overflow-x: auto;
             }
 
             .mermaid-diagram svg {
-                max-width: 90%; /* Adjust for smaller screens */
+                max-width: 100%;
+            }
+
+            table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+
+            /* Smaller fonts for small screens */
+            h2 {
+                font-size: clamp(1.1rem, 3.5vw, 1.3rem);
+            }
+
+            p, li {
+                font-size: clamp(0.85rem, 2.5vw, 0.95rem);
+            }
+        }
+
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: clamp(1.5rem, 4.5vw, 1.8rem);
+            }
+
+            .song-header h2 {
+                font-size: clamp(1rem, 3vw, 1.2rem);
+            }
+
+            .callout {
+                padding: 0.5rem;
+            }
+
+            img {
+                margin: 0.5rem 0;
             }
         }
     </style>
@@ -255,8 +326,8 @@
         </section>
 
         <!-- Song Sections -->
-        <section class="song-section" id="song-1">
-            <div class="song-header">
+        <section class="song-section" id="song-1" role="region" aria-labelledby="song-1-header">
+            <div class="song-header" id="song-1-header" role="button" aria-expanded="false">
                 <h2>1 • Aquello que llaman amor 💗</h2>
                 <span>▼</span>
             </div>
@@ -312,8 +383,8 @@
         </section>
 
         <!-- Placeholder Song Sections -->
-        <section class="song-section" id="song-2">
-            <div class="song-header">
+        <section class="song-section" id="song-2" role="region" aria-labelledby="song-2-header">
+            <div class="song-header" id="song-2-header" role="button" aria-expanded="false">
                 <h2>2 • Acero Chino 🔥</h2>
                 <span>▼</span>
             </div>
@@ -346,8 +417,8 @@
             </div>
         </section>
 
-        <section class="song-section" id="song-3">
-            <div class="song-header">
+        <section class="song-section" id="song-3" role="region" aria-labelledby="song-3-header">
+            <div class="song-header" id="song-3-header" role="button" aria-expanded="false">
                 <h2>3 • Presagio 🔮</h2>
                 <span>▼</span>
             </div>
@@ -370,8 +441,8 @@
             </div>
         </section>
 
-        <section class="song-section" id="song-4">
-            <div class="song-header">
+        <section class="song-section" id="song-4" role="region" aria-labelledby="song-4-header">
+            <div class="song-header" id="song-4-header" role="button" aria-expanded="false">
                 <h2>4 • 10 Minutos ⏱️</h2>
                 <span>▼</span>
             </div>
@@ -394,8 +465,8 @@
             </div>
         </section>
 
-        <section class="song-section" id="song-5">
-            <div class="song-header">
+        <section class="song-section" id="song-5" role="region" aria-labelledby="song-5-header">
+            <div class="song-header" id="song-5-header" role="button" aria-expanded="false">
                 <h2>5 • Valor 🦁</h2>
                 <span>▼</span>
             </div>
@@ -418,8 +489,8 @@
             </div>
         </section>
 
-        <section class="song-section" id="song-6">
-            <div class="song-header">
+        <section class="song-section" id="song-6" role="region" aria-labelledby="song-6-header">
+            <div class="song-header" id="song-6-header" role="button" aria-expanded="false">
                 <h2>6 • Cielo ☁️</h2>
                 <span>▼</span>
             </div>
@@ -442,8 +513,8 @@
             </div>
         </section>
 
-        <section class="song-section" id="song-7">
-            <div class="song-header">
+        <section class="song-section" id="song-7" role="region" aria-labelledby="song-7-header">
+            <div class="song-header" id="song-7-header" role="button" aria-expanded="false">
                 <h2>7 • Para Siempre Joven 👶</h2>
                 <span>▼</span>
             </div>
@@ -466,8 +537,8 @@
             </div>
         </section>
 
-        <section class="song-section" id="song-8">
-            <div class="song-header">
+        <section class="song-section" id="song-8" role="region" aria-labelledby="song-8-header">
+            <div class="song-header" id="song-8-header" role="button" aria-expanded="false">
                 <h2>8 • Palabras miles 📚</h2>
                 <span>▼</span>
             </div>
@@ -490,8 +561,8 @@
             </div>
         </section>
 
-        <section class="song-section" id="song-9">
-            <div class="song-header">
+        <section class="song-section" id="song-9" role="region" aria-labelledby="song-9-header">
+            <div class="song-header" id="song-9-header" role="button" aria-expanded="false">
                 <h2>9 • Escaleras 🪜</h2>
                 <span>▼</span>
             </div>
@@ -514,8 +585,8 @@
             </div>
         </section>
 
-        <section class="song-section" id="song-10">
-            <div class="song-header">
+        <section class="song-section" id="song-10" role="region" aria-labelledby="song-10-header">
+            <div class="song-header" id="song-10-header" role="button" aria-expanded="false">
                 <h2>10 • Las hojas caen 🍂</h2>
                 <span>▼</span>
             </div>
@@ -538,8 +609,8 @@
             </div>
         </section>
 
-        <section class="song-section" id="song-11">
-            <div class="song-header">
+        <section class="song-section" id="song-11" role="region" aria-labelledby="song-11-header">
+            <div class="song-header" id="song-11-header" role="button" aria-expanded="false">
                 <h2>11 • Tótem 🗿</h2>
                 <span>▼</span>
             </div>
@@ -562,8 +633,8 @@
             </div>
         </section>
 
-        <section class="song-section" id="song-12">
-            <div class="song-header">
+        <section class="song-section" id="song-12" role="region" aria-labelledby="song-12-header">
+            <div class="song-header" id="song-12-header" role="button" aria-expanded="false">
                 <h2>12 • Planetas vecinos 🪐</h2>
                 <span>▼</span>
             </div>
@@ -586,8 +657,8 @@
             </div>
         </section>
 
-        <section class="song-section" id="song-13">
-            <div class="song-header">
+        <section class="song-section" id="song-13" role="region" aria-labelledby="song-13-header">
+            <div class="song-header" id="song-13-header" role="button" aria-expanded="false">
                 <h2>13 • La vida que merezco ⚖️</h2>
                 <span>▼</span>
             </div>
@@ -610,8 +681,8 @@
             </div>
         </section>
 
-        <section class="song-section" id="song-14">
-            <div class="song-header">
+        <section class="song-section" id="song-14" role="region" aria-labelledby="song-14-header">
+            <div class="song-header" id="song-14-header" role="button" aria-expanded="false">
                 <h2>14 • 1000 años 🕰️</h2>
                 <span>▼</span>
             </div>
@@ -634,8 +705,8 @@
             </div>
         </section>
 
-        <section class="song-section" id="song-15">
-            <div class="song-header">
+        <section class="song-section" id="song-15" role="region" aria-labelledby="song-15-header">
+            <div class="song-header" id="song-15-header" role="button" aria-expanded="false">
                 <h2>15 • Buscaré 🔍</h2>
                 <span>▼</span>
             </div>
@@ -658,8 +729,8 @@
             </div>
         </section>
 
-        <section class="song-section" id="song-16">
-            <div class="song-header">
+        <section class="song-section" id="song-16" role="region" aria-labelledby="song-16-header">
+            <div class="song-header" id="song-16-header" role="button" aria-expanded="false">
                 <h2>16 • Animal 🦁</h2>
                 <span>▼</span>
             </div>
@@ -682,8 +753,8 @@
             </div>
         </section>
 
-        <section class="song-section" id="song-17">
-            <div class="song-header">
+        <section class="song-section" id="song-17" role="region" aria-labelledby="song-17-header">
+            <div class="song-header" id="song-17-header" role="button" aria-expanded="false">
                 <h2>17 • Well is small 🌊</h2>
                 <span>▼</span>
             </div>
@@ -773,14 +844,14 @@
     </footer>
 
     <script>
-        // Wait for DOM to load before initializing Mermaid
+        // Initialize Mermaid for diagram rendering
         document.addEventListener('DOMContentLoaded', () => {
             try {
                 if (typeof mermaid !== 'undefined') {
                     mermaid.initialize({
                         startOnLoad: true,
-                        theme: 'dark', // Matches cyberpunk aesthetic
-                        securityLevel: 'loose' // Allows external content
+                        theme: 'dark',
+                        securityLevel: 'loose'
                     });
                     console.log('Mermaid initialized successfully');
                 } else {
@@ -791,22 +862,25 @@
             }
         });
 
-        // Toggle song content
-        document.querySelectorAll('.song-header').forEach(header => {
-            header.addEventListener('click', () => {
+        // Event delegation for toggling song content
+        document.addEventListener('click', (e) => {
+            const header = e.target.closest('.song-header');
+            if (header) {
                 const content = header.nextElementSibling;
-                content.classList.toggle('active');
-                header.querySelector('span').textContent = content.classList.contains('active') ? '▲' : '▼';
-            });
+                const isActive = content.classList.toggle('active');
+                header.querySelector('span').textContent = isActive ? '▲' : '▼';
+                header.setAttribute('aria-expanded', isActive);
+            }
         });
 
-        // Smooth scrolling for navigation
-        document.querySelectorAll('nav a').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
+        // Smooth scrolling for navigation links
+        document.addEventListener('click', (e) => {
+            const anchor = e.target.closest('nav a');
+            if (anchor) {
                 e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
+                const target = document.querySelector(anchor.getAttribute('href'));
                 target.scrollIntoView({ behavior: 'smooth' });
-            });
+            }
         });
     </script>
 </body>
